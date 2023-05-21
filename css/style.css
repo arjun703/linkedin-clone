@@ -1,0 +1,635 @@
+:root {
+  --border: 1px solid rgba(0, 0, 0, 0.2);
+  --bgColorOfCards: white;
+  --bgColorOfBody: #f2f2f2;
+  --colorOfBody:black;
+  --divBackground:rgba(0, 0, 0, 0.05);
+  --boxShadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+  --fontSize20Color:green;
+  --fontSize17Color:green;
+}
+
+
+body{
+	overflow-x: hidden;
+	background-color: white;
+	background-color: var(--bgColorOfBody);
+	color: var(--colorOfBody); 
+}
+
+
+.leftSidebarOptionsHolder, .rightSidebarOptionsHolder{
+	border: var(--border);
+	background-color: var(--bgColorOfCards);
+	margin-bottom: 20px;
+
+}
+
+.leftSidebarOptions{
+	transition: transform 0.5s ease;
+
+}
+
+#hdr{
+	border-bottom: var(--border);
+	background-color: var(--bgColorOfCards);
+	position: sticky;
+	top: 0px;
+	z-index: 200;
+	padding-top: 1px;
+	padding-bottom: 1px;
+}
+
+.hdrTable, .fixedLayoutRightSidebar{
+	table-layout: fixed;
+	width: 100%;
+}
+
+.hdrTable{
+		text-align: center;
+}
+
+.hdrTable td:hover{
+	background: var(--divBackground);
+	cursor:pointer;
+}
+
+#hdr i, .fixedLayoutRightSidebar i {
+	font-size: 25px;
+}
+
+.activeTab{
+	color:blue;
+	font-weight: bold;
+}
+
+.stickyLeftOrRight{
+
+position: sticky;
+
+}
+
+.stickyMiddle{
+box-shadow: var(--boxShadow);
+max-width:350px; 
+margin: 0 auto; 
+z-index:2;
+border-radius:15px; 
+}
+
+.jobMainInfo{
+	border:var(--border);
+	margin:5px;
+	background-color: var(--bgColorOfCards);
+	transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.jobMainInfo:hover{
+	transform: translateY(-5px);
+	box-shadow: var(--boxShadow);
+	cursor: pointer;
+	border: none;
+}
+
+.gridHolder {
+  display: grid;
+  gap: 10px;
+}
+
+.gridHolder div{
+	padding: 2px;
+}
+
+
+
+.fixedLayoutRightSidebar tr td:first-child{
+	width: 50px;
+	text-align: center;
+}
+.fixedLayoutRightSidebar tr{
+	margin-top: 10px;
+}
+
+/** right sidevar **/
+
+.rightSidebarOptionsHolder{
+	list-style:none;
+	padding: 5px;
+}
+
+.animateScaleUP{
+	animation: scaleup 1s;
+}
+
+.option{
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-weight: 400;
+  overflow:hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.option i{
+	width:45px;
+	text-align: center;
+	font-size: 20px;
+}
+
+.option:hover {
+  color: #fff;
+  background-color: #007bff;
+  cursor: pointer;
+}
+
+form input, form select, form textarea{
+	border:var(--border);
+	background-color: var(--bgColorOfCards);
+	color: var(--colorOfBody);
+	display: block;
+	padding:5px;
+	margin-top: 5px;
+	width:100%;
+}
+
+#jobDescription{
+	width: 100%;
+}
+
+form button{
+	text-align: center;
+	font-weight: bold;
+	min-width: 50%;
+}
+footer{
+	height: 50px;
+}
+
+.rso a{
+/*
+right sidebar lower div
+	
+*/
+padding-left:3px;
+
+}
+
+.topRightIcon{
+	border: var(--border);
+	padding: 4px;
+	padding-left: 8px;
+	padding-right: 8px;
+	border-radius: 15px;
+
+}
+
+.topRightIcon:hover{
+	cursor: pointer;
+	opacity: 0.8;
+}
+
+
+#menuItems{
+ 	display: none;
+}
+
+
+a{
+	color: var(--colorOfBody)
+}
+
+
+
+
+#locationHolder:hover .locatioNameAutoComplete, #locationHolderCCA:hover .locatioNameAutoComplete{
+	display: block;
+	animation: scaleup 1s;
+}
+
+.locatioNameAutoComplete{
+	background: var(--bgColorOfCards);
+
+	box-shadow: var(--boxShadow);
+
+	width: 100%;
+
+
+	display: none;
+	border-radius: 5px;
+	list-style: none;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+@keyframes scaleup{
+	from{
+		scale:0;
+	}
+
+	to{
+		scale:1;
+	}
+}
+
+@keyframes scaleDown{
+	from{
+		scale:1;
+	}
+
+	to{
+		scale:0;
+	}
+}
+
+
+#locationHolder:not(:hover) .locatioNameAutoComplete {
+	animation: scaleDown 1s;
+}
+
+
+.subHdrTable{
+	width: 100%;
+	text-align: center;
+	border-collapse: separate; 
+	border-spacing: 5px;
+}
+
+.subHdrTable td{
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border-radius: 15px;
+}
+
+.activeSubHdr{
+	font-weight: bold;
+	color: white;
+	background: green;
+}
+
+.subHdrTable td:not(.activeSubHdr){
+	border:2px solid lightgreen;
+}
+
+.subHdrTable td:not(.activeSubHdr):hover{
+	background: rgba(0, 255, 0, 0.3);
+	cursor: pointer;
+}
+
+
+.generalHdrTable{
+	width: 100%;
+	border-collapse: separate; 
+	border-spacing: 5px;
+}
+
+#middleMainContent div{
+	animation: slideRight 1s;
+}
+
+@keyframes slideRight{
+	from{
+		margin-left: -12px;
+		width: 100%;
+	}
+
+	to{
+		margin-left: 0px;
+		width: 100%;
+	}
+}
+
+.savedJobsSubHdrHolder{
+	background: green;
+	margin-left: 5px;
+	margin-right: 5px;
+	padding: 2px;
+	border-radius: 20px;
+}
+
+.savedJobsSubHdr{
+	width: 100%;
+	text-align: center;
+	border-collapse: separate; 
+	border-spacing: 5px;
+}
+.loginNameHolder{
+	font-weight: bold;
+}
+
+.savedJobsSubHdr td{
+	padding: 2px;
+	border-radius: 20px;
+}
+
+.activeSavedJobsSubHdr{
+	background: white;
+	color: green;
+}
+
+.savedJobsSubHdr td{
+	border: 3px solid transparent;
+	font-weight: bold;
+}
+
+.savedJobsSubHdr td:not(.activeSavedJobsSubHdr){
+	color: white;
+	cursor: pointer;
+}
+
+.savedJobsSubHdr td:not(.activeSavedJobsSubHdr):hover{
+	border: 3px solid white;	
+}
+
+small{
+	font-size: 12px;
+}
+
+
+.lso{
+	cursor: pointer;
+}
+
+.leftSidebarOptionsHolder div{
+	padding-left:  5px;
+	padding-right: 5px;
+}
+
+.formHolder{
+	border: var(--border);
+	margin: 5px;
+	padding: 15px;
+}
+
+@keyframes fadeOut{
+	from{
+		background: var(--colorOfBody)
+		opacity: 0.5;
+	}
+
+	to{
+		background: var(--colorOfBody);
+		opacity:0.1;
+	}
+}
+
+.fadeOut{
+	animation: fadeOut 1.5s infinite;
+}
+
+.softLink{
+	color: var(--colorOfBody);
+	text-decoration: underline;
+}
+
+.softLink:hover{
+	color: blue;
+	cursor: pointer;
+}
+
+
+.orHolder::before,
+.orHolder::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  height: 1px;
+  background: var(--colorOfBody);
+  opacity: 0.5;
+}
+
+.orHolder::before {
+	left:10%;
+	width:35%;
+}
+
+.orHolder::after {
+	right:10%;
+	width:35%;
+}
+
+.textUnderlineOnHover:hover{
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.lessOpacity{
+	opacity: 0.8;
+	font-weight: 550;
+}
+
+.fontSize20{
+	font-weight: bold;
+	color: var(--fontSize20Color);
+}
+
+.fontSize17{
+	font-size: 17px;
+	color: var(--fontSize17Color);
+}
+
+
+.outerOverlay{
+	position: fixed;
+	overflow-y:scroll;
+	left: 0px;
+	top: 0px;
+	z-index: 400;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.7);
+}
+
+.overlay{
+	position: absolute;
+	top:100px;
+	left: 50%;
+	animation: scaleup 1s;
+	opacity: 1;
+	z-index: 800;
+	transform: translate(-50%, 0%);
+	background: var(--bgColorOfCards);
+	border: var(--border);
+	padding: 10px;
+	max-width: 400px;
+	border-radius: 15px;
+	width: 90%;
+}
+
+
+.btnHighlighted{
+	font-weight: bold;
+	color: white;
+}
+
+.btnSuccessMyOwn{
+background: var(--fontSize17Color);
+border:3px solid var(--fontSize17Color);
+
+}
+
+.btnDangerMyOwn{
+	background:red;
+	border: 3px solid red;
+}
+
+.btnBordered{
+	border:3px solid green;
+	font-weight: bold;
+	color:var(--fontSize17Color);
+	border:3px solid var(--fontSize17Color) ;
+}
+
+.simpleTable{
+	width: 100%;
+	text-align: center;
+	border-collapse: separate;
+	table-layout: fixed;
+	border-spacing: 10px;
+	font-size: 15px;
+}
+
+.simpleTable td{
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border-radius: 10px;
+}
+
+.simpleTable td:hover{
+	cursor: pointer;
+}
+
+.fixedTable{
+	width: 100%;
+	table-layout: fixed;
+}
+.cursorPointer:hover{
+cursor: pointer;
+}
+
+.hdrPreLoader{
+	min-height: 50px;
+}
+
+.blockPreLoader{
+	min-height: 30vh;
+	width: 100%;
+	background: var(--bgColorOfCards);
+	border:var(--border);
+	margin-bottom: 20px;
+}
+
+#preLoaderHolder{
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	overflow: hidden;
+}
+
+.line-animation{
+ position: fixed;
+  width: 0;
+  height: 0;
+  box-shadow: 0px -30px 30px -30px rgba(0, 0, 0, 0.2);
+  top: 0;
+  left: 0;
+  transform: rotate(-45deg);
+  animation: moveLine 2s linear forwards infinite;
+}
+
+@keyframes moveLine {
+  0% {
+    width: 30%;
+    height: 30%;
+    left: 0;
+    top: 0;
+  }
+  100% {
+    width: 100%;
+    height: 100%;
+    left: calc(100% - 2px);
+    top: calc(100% - 2px);
+  }
+}
+
+.longButton{
+	min-width: 50%;
+	font-weight: bold;
+}
+
+.gridHolderModified div{
+	background: var(--bgColorOfCards);
+	border:var(--border);
+	padding: 5px;
+	align-self: start; 
+}
+
+.gridHolderModified, .gridHolderModified2{
+	display: grid;
+	gap:10px;
+	margin-top: 15px;
+}
+
+
+
+@media (max-width: 2000px) {
+
+
+.gridHolderModified, .gridHolderModified2{
+	grid-template-columns: 1fr 1fr;
+}
+
+}
+
+@media (max-width: 500px) {
+
+
+.gridHolderModified, .gridHolderModified2{
+	grid-template-columns: 1fr;
+}
+
+}
+
+.editDeleteOptions button{
+	width: 100%;
+}
+
+.flex-container{
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.flex-item{
+	 text-align: center;
+	 border-radius: 15px;
+	 margin: 5px;
+	 padding-top: 5px;
+	 padding-bottom: 5px;
+	 padding-left: 10px;
+	 padding-right: 10px;
+	 border: 2px solid var(--fontSize17Color);
+}
+
+.attractive-table {
+  border-collapse: collapse;
+}
+
+.attractive-table th,
+.attractive-table td {
+  border: 2px solid #ddd;
+  padding: 8px;
+}
+
+.attractive-table th {
+  background-color: #f2f2f2;
+  color: #333;
+}
+button{
+	font-weight: bold;
+}
+
+.overlayHeader{
+	position: sticky;
+	top: 0px;
+	background: var(--bgColorOfCards);
+}
