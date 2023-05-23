@@ -53,10 +53,10 @@ async function handleLocationInput(elementId, divId, URl){
 	}
 }
 
-var menuShown = false;
+var menuShown = true;
 
 function toggleMenuInDesktop(){
-	document.getElementById('menuItems').style.display = menuShown === true ? 'none' : 'block'
+	document.getElementById('menuItems').style.display = menuShown == true ? 'none' : 'block'
 	menuShown = !menuShown;
 }
 

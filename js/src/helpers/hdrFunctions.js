@@ -3,7 +3,7 @@ const  createHomeHdr = (activeTab) => {
 
 var newTable = document.createElement('table');
 
-newTable.className = "hdrTable";
+newTable.className = "hdrTable homeHdr ";
 
 var newRow =document.createElement('tr');
 
@@ -66,7 +66,7 @@ var newRow = document.createElement('tr');
 
 var backBtnHolder = createBackButton(); //function from searchBox.js
 
-var hdrTextHolder = document.createElement('td');
+var hdrTextHolder = document.createElement('th');
 
 hdrTextHolder.innerText = hdrText;
 

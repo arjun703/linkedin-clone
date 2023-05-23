@@ -2,7 +2,15 @@
 <?php 
 
 session_start();
-sleep(2);
+
+// Turn off output buffering
+ob_end_clean();
+
+// Enable implicit flushing of output buffers
+ob_implicit_flush(true);
+
+
+
 	if(isset($_SESSION['loginName']) 
 		&& isset($_POST['jobPostJobPosition'])
 		&& isset($_POST['jobPostCompanyName'])
@@ -13,30 +21,53 @@ sleep(2);
 		&& isset($_POST['jobPostJobIndustry'])
 		&& isset($_POST['jobPostEducationLevel'])
 		&& isset($_POST['jobPostJobDescription'])
+		&& isset($_POST['hiddenCompanyWebsite'])
+		&& isset($_POST['postJobFormEmployeeEmail'])
 		){
 			$position = htmlspecialchars(trim($_POST['jobPostJobPosition']));
 			$companyName = htmlspecialchars(trim($_POST['jobPostCompanyName']));
 			$location = htmlspecialchars(trim($_POST['jobPostLocation']));
-			$deadline = htmlspecialchars(trim($_POST['jobPostDeadline']));
 			$jobType = htmlspecialchars(trim($_POST['jobPostJobType']));		
 			$jobSite = htmlspecialchars(trim($_POST['jobPostJobSite']));
 			$jobIndustry = htmlspecialchars(trim($_POST['jobPostJobIndustry']));
 			$educationLevel = htmlspecialchars(trim($_POST['jobPostEducationLevel']));
 			$jobDescription = htmlspecialchars(trim($_POST['jobPostJobDescription']));
+			$companyWebsite = htmlspecialchars(trim($_POST['hiddenCompanyWebsite']));
+			$employeeEmail = htmlspecialchars(trim($_POST['postJobFormEmployeeEmail']));
 
-			include('../db.php');
+				include('../db.php');
 
-			if(isEmpty($position, $companyName, $location, $deadline, $jobType, $jobSite, $jobIndustry, $educationLevel) or strlen($jobDescription) < 100 ){
-				echo json_encode(array('error' => 'Error - Insufficient length.'));
+
+			if(isEmpty($position, $companyName, $location, $jobType, $jobSite, $jobIndustry, $educationLevel, $companyWebsite, $employeeEmail) or strlen($jobDescription) < 100 ){
+				die(json_encode(array('error' => 'Error - Fill out all the fields.')));
 			}
 			else{
+
+
+				verifyEmailAndWebsite($employeeEmail, $companyWebsite);
 				
 				$loginName = $_SESSION['loginName'];
 
-				$query = " INSERT INTO `jobs` (`location`, `job_poster`, `for_company`, `position`, `deadline`, `job_type`, `industry`, `job_site`, `education_level`, `description`) VALUES ('".$location."', '".$loginName."','".$companyName."','".$position."', '".$deadline."','".$jobType."','".$jobIndustry."','".$jobSite."','".$educationLevel."','".$jobDescription."') ";
+
+				if(mysqli_num_rows(checkIfTheUserHasPendingJob()) > 0 ){
+					die(json_encode(array('error' => 'You already have one unverified posted job. You can post other jobs only after verifying the previous job')));
+				}
+
+				$token = rand();
+
+				$query = " INSERT INTO `jobs` (`location`, `job_poster`, `for_company`, `position`,  `job_type`, `industry`, `job_site`, `education_level`, `description`, `temp_email`, `token`, `company_website`) VALUES ('".$location."', '".$loginName."','".$companyName."','".$position."','".$jobType."','".$jobIndustry."','".$jobSite."','".$educationLevel."','".$jobDescription."', '".$employeeEmail."', ".$token.", '".$companyWebsite."') ";
 
 				if(connectToDatabase($query)){
-					echo json_encode(array('jobPosted' => true));
+					
+					echo (json_encode(array('jobPosted' => true)));
+
+					flush();
+
+					require_once '../sendMailTo/employee.php';
+
+					verifyOfficiaEmailProvidedByCompany($employeeEmail, $loginName, 'Verification code', composeEmailToEmployee($loginName, $token));
+					
+
 				}
 				else{
 					echo json_encode(array('error' => 'Database Error!', 'query' => $query));

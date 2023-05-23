@@ -19,7 +19,7 @@ function createLoginForm(){
 				<label for = "loginLoginName">Login_name</label>
 				<input id = "loginLoginName"  type = "text" required name = "loginLoginName">
 			</div>
-			<div>
+			<div class = "mt-2">
 				<label for = "loginPassword">Password</label>
 				<input id = "loginPassword"   type = "password"  required name = "loginPassword">
 			</div>
@@ -27,7 +27,7 @@ function createLoginForm(){
 
 		</form>
 
-		<div class = 'text-center'>
+		<div class = 'text-center mt-2'>
 			<button id = "loginButton" class= "longButton btn mt-2 btn-primary" onclick = "handleLogin()">
 				Log In
 			</button>

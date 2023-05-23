@@ -18,14 +18,14 @@ function createRegisterForm(){
 				<label for = "registerName">Name</label>
 				<input id = 'registerName'  type = "text" required name = "registerName">
 			</div>
-			<div>
+			<div class  = "mt-2">
 				<label for = "registerLoginName">Login_name</label>
 				 ( 
 				<small>It is used while logging in the next time.</small>
 				 )
 				<input id = "registerLoginName"  required type = "text" name = "registerLoginName">
 			</div>
-			<div>
+			<div class = "mt-2">
 				<label for = "registerPassword">Password</label>
 				<input  type = "password" id = "registerPassword" required name = "registerPassword">
 			</div>
@@ -35,7 +35,7 @@ function createRegisterForm(){
 		</form>
 
 
-		<div class = 'text-center'>
+		<div class = 'text-center mt-2'>
 				<button onclick = "handleRegister()"  class= "longButton btn mt-2 btn-primary" id = "registerButton">
 					Create New Account
 				</button>

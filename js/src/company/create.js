@@ -22,6 +22,7 @@ const form = `
 			<input required type="text"
 			name = "companyPageCompanyLocation" 
 					id = "locationNameInputCCA"
+					placeholder = "Search"
 					onkeyup = "handleLocationInputInCreateCompanyPage()">
 			<div id="locatioNameAutoCompleteInCreateCompanyPage" 
 			style = "position:absolute" class = "locatioNameAutoComplete"></div> 
@@ -30,6 +31,7 @@ const form = `
 		<div>
 			<label for = "companyPageCompanyWebsite"> Company Website </label>
 			<input required   
+			placeholder ="http://abc.com"
 			name = "companyPageCompanyWebsite" id = "companyPageCompanyWebsite" >
 		</div>
 
@@ -66,7 +68,7 @@ const form = `
 	</div>
 	
 </form>
-<div class = "text-center">
+<div class = "text-center mt-3">
 	<button id  = "createCompanyPageButton"
 		onclick = " (IS_LOGGED_IN) ? handleCompanyCreation() : displayLoginOverlay('Create Company Page', 'create the company page')"
 	 class = "longButton btn btn-primary" 
@@ -109,12 +111,17 @@ function handleCompanyCreation(){
 	var text  = `Are you sure that the data is valid? Click 
 					on cancel if you are unsure, otherwise click continue
 				to confirm and create the company page.`
-	displayPrompt(title = 'Comapny Data', text, callback = 'createCompanyPage()')
+	displayPrompt(title = 'Verify Company Data', text, callback = 'createCompanyPage()')
 }	
 
 
 
 function createCompanyPage(){
+
+	hideOverlay();
+
+	displayPromptWithoutFooterOptions('Please wait...', 'Please wait while we process your data.');
+
 
 	var companyPageDataHolder = document.getElementById('companyPageForm')
 
@@ -125,14 +132,17 @@ function createCompanyPage(){
 	var xmlhttp = new XMLHttpRequest;
 	xmlhttp.onreadystatechange = function(){
 		if(this.readyState == 4 && this.status == 200){
-			console.log(this.responseText);
 			var data = JSON.parse(this.responseText);
 			if(data.error){
 				alert(data.error);
 				activateButton('createCompanyPageButton', 'Create Company Page');
+				hideOverlay();
 			}
 			else{
-				activateButton('postJobButton', 'Company Creation Successful');
+				if(data.companyPageCreated){
+					verifyOfficialCompanyEmail();
+					document.getElementById('createCompanyPageButton').style.display = "none";
+				}
 			}
 		}
 	}
@@ -140,3 +150,111 @@ function createCompanyPage(){
 	xmlhttp.send(formData);
 }
 
+function verifyOfficialCompanyEmail(error = false){
+
+	hideOverlay();
+
+
+	var text = `
+
+		${ !error 
+			? 'A verification code has been sent to the company email. It may take up to 5 minutes to receive the email.'
+			: '<h4 class = "text-danger">Invalid code. Please enter it again</h4> '  
+		}
+
+		${	!error 
+			? '<p> Don\'t forget to give a look to the spam page.</p>'
+			: ''
+		}
+
+		
+		<div class = "mt-3">
+			<form>
+				<label>Enter the Code</label>
+				<input id = "verifyCompanyEmailBeforeCreatingPage"  
+				type = "number">
+			</form>
+		</div>
+	`;
+
+
+	displayPrompt('Enter Verification Code', 
+					text,
+					"proceedCompanyCreationVerifyCode()",
+				);
+}
+
+
+
+function activateCompanyPage(){
+
+	var text = `
+
+		A verification code has already been sent to the company email you 
+		entered while creating the page.
+		
+		<p>
+			Don't forget to give a look at the spam page.
+		</p>
+
+		<div class = "mt-3">
+			<form>
+				<label>Enter the Code</label>
+				<input id = "verifyCompanyEmailBeforeCreatingPage"  
+				type = "number">
+			</form>
+		</div>
+
+	
+
+	`;
+
+
+	displayPrompt('Enter Verification Code', 
+					text,
+					"proceedCompanyCreationVerifyCode()"
+				);
+
+}
+
+
+function proceedCompanyCreationVerifyCode(){
+
+	// extract code
+
+	if(document.getElementById('verifyCompanyEmailBeforeCreatingPage')){
+		window.codeEnteredByUser = document.getElementById('verifyCompanyEmailBeforeCreatingPage').value;
+	}
+
+
+	if(codeEnteredByUser.trim().length == ''){
+		alert('Invalid Code. Enter it again');
+		return;
+	}
+
+	hideOverlay();
+
+	var text = `
+		<div>
+				Please wait while we check the code you sent. The company page will
+				be activated if the code is correct.
+				<br>
+		</div>
+
+	`
+
+	displayPromptWithoutFooterOptions('Please Wait...', text);
+
+	fetch('php/companyPage/verify.php?code='+codeEnteredByUser)
+	.then(response => response.json())
+	.then(data => {
+		if(data.error){
+			verifyOfficialCompanyEmail(error = true);
+		}
+		else if(data.companyPageVerified){
+			hideOverlay();
+			displayPromptWithoutFooterOptions('Success!', 'You have successfully created a company page. Now jobs can be posted for this compaany');
+		}
+	})
+	.catch(error => console.log(error));
+}

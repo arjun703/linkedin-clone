@@ -65,8 +65,6 @@ function loadSearchBox(){
 	
 	var hdrTable = createSearchBoxHdr();
 	
-
-	
 	execFrontendOnlyFunction(divId, hdrTable, displaySearchBox);
 	
 }

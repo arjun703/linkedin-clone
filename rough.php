@@ -1,24 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Bootstrap Example</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-</head>
-<body>
-                                  
-  <div class="dropdown">
-    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
-      Dropdown button
-    </button>
-    <ul class="dropdown-menu">
-      <li><a class="dropdown-item" href="#">Link 1</a></li>
-      <li><a class="dropdown-item" href="#">Link 2</a></li>
-      <li><a class="dropdown-item" href="#">Link 3</a></li>
-    </ul>
-  </div>
+<?php
 
-</body>
-</html>
+
+function returnCityAndCountry(){
+    // Get the visitor's IP address
+  $ip = "2400:1a00:b030:3002:d42a:dcf8:d2:436c";
+  //$ip = $_SERVER['REMOTE_ADDR'];
+
+
+  // Send a request to the IP geolocation service
+  $response = file_get_contents("http://ip-api.com/json/{$ip}");
+
+  // Decode the JSON response
+  $locationData = json_decode($response);
+
+  // Retrieve the location details
+  $country = $locationData->country;
+  $city = $locationData->city;
+  return [$city, $country];
+
+}
+
+
+?>

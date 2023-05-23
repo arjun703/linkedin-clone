@@ -1,6 +1,8 @@
 
 function createProjectOptions(project){
 return`
+	<div class = "spareDiv2">
+	</div>
 	<div class = "editDeleteOptions">
 		<table class = "simpleTable" >
 			<tr>
@@ -19,7 +21,8 @@ return`
 function displayEachProject(project){
 
 return `
-	<div class = "editDeleteOptionsHolder" >
+
+	<div class = "jobMainInfoClone" >
 		<div class = "fontSize20"> ${project.title} </div>
 		<div class = "fontSize17"> ${project.description} </div>
 		<div> ${project.link} </div>

@@ -65,13 +65,19 @@ function beforeLoadTab(divId, hdrTable, serverURL, callback){
 
 
 
-function loadTab(divId, serverURL, callback){
+function loadTab(divId, serverURL, callback, hdrTable = ''){
 
 	/*
 	 *
 	 callback: fn to be called when loaded from server
 	 *
 	 */
+
+	clearHdrAndPut(hdrTable);
+
+	locationToHdrMapper[divId] = hdrTable; 
+
+
 
 	if(!currentlyBeingLoadedURLs.includes(divId)){
 		if(document.location == divId){
@@ -100,19 +106,8 @@ function display(data, inThisDiv, callback){
 
 		var newDiv = document.createElement('div');
 		
-		newDiv.className = "gridHolder";
+		newDiv.className = "gridHolderModified2";
 
-		switch(noOfElementPerRow()){
-			case 1:
-				newDiv.style.gridTemplateColumns = '1fr'; // sets 3 columns of equal width
-				break;
-			case 2:
-				newDiv.style.gridTemplateColumns = '1fr 1fr'; // sets 3 columns of equal width
-				break;
-			case 3:
-				newDiv.style.gridTemplateColumns = 'repeat(3, 1fr)'; // sets 3 columns of equal width
-				break;
-		}
 
 		inThisDiv.appendChild(newDiv);
 

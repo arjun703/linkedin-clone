@@ -3,6 +3,8 @@ function createExperienceOptions(experience){
 
 
 return`
+<div class = "spareDiv2">
+	</div>
 	<div class = "editDeleteOptions">
 		<table class = 'simpleTable'>
 			<tr>
@@ -23,7 +25,7 @@ return`
 function displayEachExperience(experience){
 
 return `
-	<div class = "editDeleteOptionsHolder" >
+	<div class = "jobMainInfoClone" >
 		<div class = "fontSize20"> ${experience.position}</div>
 		<div class = "fontSize17"> ${experience.company}</div>
 		<div>${experience.task_description}</div>

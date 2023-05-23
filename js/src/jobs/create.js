@@ -18,161 +18,157 @@ const form = `
 
 <form id = "postJobForm" method = "POST">
 
-	<div class = "gridHolder" id="formHolder">
-		
-		<div>
-			<label for = "position"> Position </label>
-			<input required  name = "jobPostJobPosition" id = "position" >
-		</div>
-		
+	<div id = "postJobForm_step_1" >
 
-		
+		<div class = "gridHolderModified2" >
 			
-		<div id = "companyHolder">
-			<label for = "companyNameInput">Company Name</label>
-			<input required name = "jobPostCompanyName" id = "companyNameInput">
-			<div id = "companyNameAutocomplete"></div>
+			<div>
+				<label for = "position"> Position </label>
+				<input required  name = "jobPostJobPosition" id = "position" >
+			</div>
+			
+
+			
+				
+			<div id = "companyHolderInPostJobForm" style = "position:relative">
+				<label for = "companyNameInput">Company Name</label>
+				<input onkeyup = "handleCompanyInputInPostJobForm()" 
+				 required name = "jobPostCompanyName" 
+				 placeholder = "search"
+				 id = "companyNameInputInJobPost">
+				<div id = "companyNameAutocomplete" class = "locatioNameAutoComplete"
+					style = "position:absolute">
+						<p class = "text-center">Enter Company Name</p>
+
+					</div>
+			</div>
+
+			<input type = "hidden" value = "" id= "hiddenCompanyWebsite"
+			 name = "hiddenCompanyWebsite">
+
+			<div id = "locationHolder" style = "position:relative">
+				<label for = "locationNameInputPostJobForm">Location</label>
+				<input required type="text"
+						name = "jobPostLocation"
+						placeholder = "search" 
+						id = "locationNameInputPostJobForm"
+						onkeyup = "handleLocationInputInPostJobForm()">
+				<div id="locatioNameAutoComplete" 
+				style = "position:absolute" 
+				class = "locatioNameAutoComplete">
+					<p class = "text-center">Enter Location</p>
+				</div> 
+			</div> 
+
+		
+
+			<div>
+				<label for="jobPostJobType">Select Job Type</label>
+				<select name = "jobPostJobType" required id="jobPostJobType">
+				    <option value="f">Full Time</option>
+				    <option value="p">Part Time</option>
+				    <option value="i">Internship</option>
+				</select>
+			</div>
+
+			<div>
+				<label for="jobPostJobIndustry">Select Job Industry</label>
+				<select required name = "jobPostJobIndustry" id="jobPostJobIndustry">
+				    <option value="sw">Software</option>
+				    <option value="nh">Networking and Hardware</option>
+				    <option value="hr">Human Resources</option>
+				    <option value="te">Teacher / Instructer</option>
+				</select>
+			</div>
+
 		</div>
 
-		<div id = "locationHolder" style = "position:relative">
-			<label for = "locationNameInputPostJobForm">Location</label>
-			<input required type="text"
-					name = "jobPostLocation" 
-					id = "locationNameInputPostJobForm"
-					onkeyup = "handleLocationInputInPostJobForm()">
-			<div id="locatioNameAutoComplete" style = "position:absolute" class = "locatioNameAutoComplete"></div> 
-		</div> 
+	</div>
 
-		<div>
-			<label for = "jobPostDeadline"> Deadline </label>
-			<input required type = "date" id = "jobPostDeadline" 
-			name = "jobPostDeadline">
+	<div id = 'postJobForm_step_2'>
+		<div class = "gridHolderModified2">
+			<div>
+				<label for="jobPostJobSite">Select Job Site</label>
+				<select required  id="jobPostJobSite" name = 'jobPostJobSite'>
+				    <option value="os">On-Site</option>
+				    <option value="r">Remote/option>
+				    <option value="h">Hybrid</option>
+				</select>
+			</div>
 
+
+			<div>
+				<label for="jobPostEducationLevel">Minimum Education Level</label>
+				<select id = 'jobPostEducationLevel' name = "jobPostEducationLevel" required>
+				    <option value="12">Intermediate (Plus 2)</option>		    
+				    <option value="16">Bachelor's Degree</option>
+				    <option value="18">Master's Degree</option>
+				   	<option value="23">PhD. Degree</option>
+				</select>
+			</div>
+		</div>	
+
+		<div class = "mt-3">
+			<label for = "jobPostJobDescription"> Job Description </label>
+			<textarea required rows = "8" 
+			name = "jobPostJobDescription"
+			style = "width:100%" id = "jobPostJobDescription" name="jobDescription"></textarea>
 		</div>
 
-		<div>
-			<label for="jobPostJobType">Select Job Type</label>
-			<select name = "jobPostJobType" required id="jobPostJobType">
-			    <option value="Full Time">Full Time</option>
-			    <option value="Part Time">Part Time</option>
-			    <option value="Internship">Internship</option>
-			</select>
-		</div>
-
-		<div>
-			<label for="jobPostJobIndustry">Select Job Industry</label>
-			<select required name = "jobPostJobIndustry" id="jobPostJobIndustry">
-			    <option value="Software">Software</option>
-			    <option value="Networking and Hardware">Networking and Hardware</option>
-			    <option value="Human Resources">Human Resources</option>
-			    <option value="Teacher / Instructer">Teacher / Instructer</option>
-			</select>
-		</div>
-
-		<div>
-			<label for="jobPostJobSite">Select Job Site</label>
-			<select required  id="jobPostJobSite" name = 'jobPostJobSite'>
-			    <option value="On-Site">On-Site</option>
-			    <option value="Remote">Remote/option>
-			    <option value="Hybrid">Hybrid</option>
-			</select>
-		</div>
+	</div>
 
 
+	<div id = "postJobForm_step_3">
 		<div>
-			<label for="jobPostEducationLevel">Minimum Education Level</label>
-			<select id = 'jobPostEducationLevel' name = "jobPostEducationLevel" required>
-			    <option value="Any Level">Any Level</option>
-			    <option value="Intermediate (Plus 2)">Intermediate (Plus 2)</option>		    
-			    <option value="Bachelor's Degree">Bachelor's Degree</option>
-			    <option value="Master's Degree">Master's Degree</option>
-			   	<option value="PhD. Degree">PhD. Degree</option>
-			</select>
+			<label for = "postJobFormEmployeeEmail"> Enter your email provided by this
+			company to you
+			</label>
+			<input class = "mt-3" type = "mail" 
+			for = "postJobFormEmployeeEmail" name = "postJobFormEmployeeEmail">
 		</div>
 	</div>
-	<div>
-		<label for = "jobPostJobDescription"> Job Description </label>
-		<textarea required rows = "12" 
-		name = "jobPostJobDescription"
-		style = "width:100%" id = "jobPostJobDescription" name="jobDescription"></textarea>
-	</div>
+
 
 </form>
-
-	<div class = "mt-3 text-center">
-		<button id = "postJobButton" 
-			onclick =  " (IS_LOGGED_IN) ? handleJobUpload() : displayLoginOverlay('Post New Job', 'post the job')  " style = "font-weight:bold" class = "longButton btn btn-primary">
-			Continue
-		</button>
+	<hr>
+	<div class = 'mt-3' style = "font-weight:bold" id = 'controlHolder'>
+		<div class = "text-center">
+			<button onclick = "loadSubTab(2)" 
+			class = "btn btn-primary" id = "controlButton">
+				Continue
+			</button>
+		</div>
 	</div>
-
 `
 
 document.getElementById(divId).innerHTML = form;
 
-var formHolder = document.getElementById('formHolder')
-
-manageGrid(formHolder);
+loadSubTab(1);
 
 
 }
 
 
-function verifyCompanyEmail(){
 
-	hideOverlay();
+function VerifyYourEmail(error = false){
 
-	var text = `
-		<div>
-
-			You need to be an employee of this company to post the job.
-			
-			
-			<br>
-
-			You may cancel now if your are unauthorized to post the job
-			for this company.
-			<BR>
-			<div class =  "mt-2">
-				<form = "verifyCompanyEmailBeforePostingJobEnterEmail"
-					<label> Your Company Email</label>
-					<input type = "text" name = "companyEmail">
-				</form>
-			</div>
-
-		</div>
-	`;
-
-
-	displayPrompt('Enter Company Email', 
-					text,
-					"continueVerifyCompanyEmail()",
-				);
-
-
-}
-
-function continueVerifyCompanyEmail(){
-
-hideOverlay();
 
 	// retrieve email and send request to send the code
 
 
+	if(document.getElementById('hiddenCompanyWebsite').value == "") return;
+
 	var text = `
+
+		${ !error 
+			? '<div class = "text-danger text-center" style = "font-weight:bold"> The job was posted successfully, but it remains inactive unless you verify your email.</div> Verification code has been sent to the email you provided before. It may take up to 5 minutes to receive an email. <br>Don\'t forget to give a look at the spam folder.'
+			: '<div class = "text-center text-danger h5"> Invalid code. Enter it again </div> '
+		}
 		
-		Email sent. It may take up to 5 minutes to receive email.
-
-		<div class = "text-danger" style = "font-weight:bold">
-			Don't close this box without entering the correct code. 
-			You need to wait 5 minutes before requesting another 
-			verification code.		
-		</div>
-
 		<div class = "mt-2">
-			<form = "verifyCompanyEmailBeforePostingJobActualCode"
-				<label>Enter the Code</label>
-				<input type = "text" name = "companyEmail">
+			<form>
+				<label for = 'verifyYourEmailBeforePostingJob'>Enter the Code</label>
+				<input id = "verifyYourEmailBeforePostingJob" type = "text" placeholder = "Enter code" name = "verifyYourEmailBeforePostingJob">
 			</form>
 		</div>
 	`;
@@ -182,35 +178,131 @@ hideOverlay();
 					text,
 					"proceedJobUploadVerifyCode()",
 				);
-
 }
 
-
-
-
-
 function proceedJobUploadVerifyCode(){
+	var token = document.getElementById('verifyYourEmailBeforePostingJob').value;
+
+	if(token.trim().length == 0) return;
 	// verfiy the code
-
 	hideOverlay();
-
 	var text = `
 		<div>
-				Please wait while we check the code you sent. Your job will
-				be posted if the code is correct.
+				Please wait while we check the code you sent. Your job post will
+				be activated if the code is correct.
 				<br>
 		</div>
 
 	`
-
 	displayPromptWithoutFooterOptions('Please Wait...', text);
 
+	fetch('php/jobs/verify.php?token='+token)
+	.then(response => response.json())
+	.then(data => {
 
-	// check whether code is true
+		hideOverlay();
 
-	// if true post the job
+		if(data.error){
+			VerifyYourEmail(error = true);
+		}
+		else{
+
+			var text = `
+				<div class = "h5">Job Posted Successfully!</div>
+				<br>
+				<span class = "softLink" onclick = "loadPostedJobs()">Click Here</span>  to view the posted 
+				jobs.
+				<br><br>
+			`
+				displayPromptWithoutFooterOptions('Success!', 
+					text
+				);
+		}
+	})
+}
+
+
+function handleJobUpload(){
+	var text  = `Are you sure that the data is valid? Click 
+					on cancel if you are unsure, otherwise click continue
+				to confirm and post the new job.`
+	displayPrompt(title = 'Verify Job Data', text, callback = 'uploadJob()')
+}	
+
+function uploadJob(){
+
+	hideOverlay();
+
+	var jobDataHolder = document.getElementById('postJobForm')
+
+	var formData = new FormData(jobDataHolder);
+	
+	document.getElementById('controlHolder').style.display = "none";
+
+	displayPromptWithoutFooterOptions('Please Wait...', 'Please wait while we process your data<br><br>');
+
+
+	var xmlhttp = new XMLHttpRequest;
+	xmlhttp.onreadystatechange = function(){
+		if(this.readyState == 4 && this.status == 200){
+			console.log(this.responseText);
+			hideOverlay();
+
+			var data = JSON.parse(this.responseText);
+			if(data.error){
+				alert(data.error);
+				document.getElementById('controlHolder').style.display = "block";
+			}
+			else if(data.jobPosted){
+				//alert('Job Post Successful');
+				 VerifyYourEmail()
+			}
+		}
+	}
+	xmlhttp.open('POST', siteName + '/php/jobs/post.php');
+	xmlhttp.send(formData);
 
 }
+
+
+
+
+function loadSubTab(tab){
+
+	const numberOfTabs = 3;
+
+	for(var i = 1; i <= numberOfTabs; i++){
+    document.getElementById('postJobForm_step_'+i).style.display = "none";
+}
+
+document.getElementById('postJobForm_step_'+tab).style.display = "block";
+
+var controls =  `
+		<table class = "w-100">
+			<tr>
+				<td style = "text-align:center" >
+					<button class = "btn btn-primary" 
+						onclick = "loadSubTab(${tab-1})" style = "${ tab==1 ? '' : 'font-weight: bold' }" title = "Step ${tab-1}" ${tab == 1 ? 'disabled' : ''}
+					>
+						Previous Step
+					</button>
+				</td>
+				<td style = "text-align:center">
+					<button style = "font-weight:bold" class = "btn btn-primary"  title = "Step ${tab+1}"
+						onclick = "${tab == numberOfTabs ? 'handleJobUpload()' : 'loadSubTab('+(tab+1)+')' }"		
+					>
+						Next Step
+					</button>
+				</td>
+			</tr>
+		</table>
+
+	`
+document.getElementById('controlHolder').innerHTML = controls;
+
+}
+
+
 
 
 async function handleLocationInputInPostJobForm() {
@@ -221,40 +313,44 @@ async function handleLocationInputInPostJobForm() {
 
 }
 
-function handleJobUpload(){
-	var text  = `Are you sure that the data is valid? Click 
-					on cancel if you are unsure, otherwise click continue
-				to confirm and post the new job.`
-	displayPrompt(title = 'Job Data', text, callback = 'verifyCompanyEmail()')
-}	
-
-function uploadJob(){
-
-
-	var jobDataHolder = document.getElementById('postJobForm')
-
-	var formData = new FormData(jobDataHolder);
+function updateCompanyNameInputField(suggestion){
 	
-	deactivateButton('postJobButton', 'Please Wait...');
+	document.getElementById('companyNameInputInJobPost').value = suggestion.company_name;
 
-	var xmlhttp = new XMLHttpRequest;
-	xmlhttp.onreadystatechange = function(){
-		if(this.readyState == 4 && this.status == 200){
-			console.log(this.responseText);
-			var data = JSON.parse(this.responseText);
-			if(data.error){
-				alert(data.error);
-				activateButton('postJobButton', 'Post Job');
-				
-			}
-			else{
-				//alert('Job Post Successful');
-				activateButton('postJobButton', 'Job Post Successful.');
 
-			}
-		}
+	document.getElementById('hiddenCompanyWebsite').value = suggestion.company_website;
+
+}
+
+
+function companyNameSuggestions(suggestions){
+
+var ul = ``;	
+
+	if(suggestions.length > 0){
+		for(var i =0; i< suggestions.length; i++) {
+			ul += `<li onclick = 'updateCompanyNameInputField( ${JSON.stringify(suggestions[i])} )' title = "${suggestions[i].company_name}"  class = "option p-2"> ${suggestions[i].company_name }  </li>`;
+		};		
+		return ul;
 	}
-	xmlhttp.open('POST', siteName + '/php/jobs/post.php');
-	xmlhttp.send(formData);
+	else{
+		return '<p class = "text-center">No suggestions</p>'
+	}
+}
 
+async function handleCompanyInputInPostJobForm(){
+	var inputValue = document.getElementById('companyNameInputInJobPost').value;
+
+	if(inputValue.trim().length >= 2){
+		document.getElementById('companyNameAutocomplete').innerHTML = '<p class="text-center">Loading</p>'
+
+		fetch('php/companyPage/suggestions.php?incompleteName=' + inputValue )
+		.then(response => response.json())
+		.then(data => {
+			document.getElementById('companyNameAutocomplete').innerHTML = companyNameSuggestions(data);
+		} )
+	}
+	else{
+		document.getElementById('companyNameAutocomplete').innerHTML = '<p class ="text-center">Enter Company Name</p>';
+	}
 }

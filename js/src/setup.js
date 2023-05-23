@@ -16,6 +16,7 @@ function handleCheckLoginStatusData(data){
 		window.PROFILE_VISITS_COUNT = data.profileVisitsCount;
 		window.CV_DOWNLOADS_COUNT = data.CVdownloadsCount;
 		window.LOGIN_NAME = data.loginName;
+		window.HAS_COMPANY_PAGE = data.hasCompanyPage;
 	}
 	
 
@@ -61,7 +62,6 @@ function handleHdrLeftPart(){
 		</div>
 	`
 }
-
 
 function handleHdrRightPart(){
 	return `
@@ -154,9 +154,22 @@ function createRightSidebar(){
 				</li>
 				
 				<li class="option"
-				 onclick="loadCreateCompanyPage()"
+				 onclick=" ${ 
+						 		IS_LOGGED_IN
+						 		? HAS_COMPANY_PAGE
+						 			? 'loadCompanyPage()'
+						 		   	: 'loadCreateCompanyPage()'
+						 		: 'loadCreateCompanyPage()'
+				  			}
+				  		" 
 				>
-					<i class="fa fa-plus"></i>Create Company Page
+					${ 
+				 		IS_LOGGED_IN
+				 		? HAS_COMPANY_PAGE
+			 				? "<i class = 'fa fa-edit'></i>Your Company Page"
+			 		   		: "<i class = 'fa fa-plus'></i>Create Company Page"
+				 		: "<i class = 'fa fa-plus'></i>Create Company Page"
+				  	} 
 				</li>
 				<li class="option" onclick="toggle()">
 					<i class="fa fa-moon"></i>Night Mode

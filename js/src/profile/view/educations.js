@@ -1,5 +1,7 @@
 function createEducationOptions(education){
 return`
+<div class = "spareDiv2">
+	</div>
 	<div class = "editDeleteOptions ">
 		<table class = "simpleTable">
 			<tr>
@@ -17,7 +19,7 @@ return`
 
 function displayEachEducation(education){
   return `
-    <div class="editDeleteOptionsHolder bb">
+    <div class="jobMainInfoClone">
        <div style="font-weight:bold" class="fontSize17">${education.level}</div>
 
       <div class="fontSize20">

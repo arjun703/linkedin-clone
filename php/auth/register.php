@@ -1,5 +1,5 @@
 <?php 
-sleep(1);
+
 session_start();
 
 if(isset($_GET['registerName']) && isset($_GET['registerLoginName']) && isset($_GET['registerPassword'])){

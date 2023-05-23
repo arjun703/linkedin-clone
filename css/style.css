@@ -19,15 +19,9 @@ body{
 
 
 .leftSidebarOptionsHolder, .rightSidebarOptionsHolder{
-	border: var(--border);
 	background-color: var(--bgColorOfCards);
 	margin-bottom: 20px;
-
-}
-
-.leftSidebarOptions{
-	transition: transform 0.5s ease;
-
+	padding: 5px;
 }
 
 #hdr{
@@ -37,7 +31,7 @@ body{
 	top: 0px;
 	z-index: 200;
 	padding-top: 1px;
-	padding-bottom: 1px;
+	padding-bottom: 0px;
 }
 
 .hdrTable, .fixedLayoutRightSidebar{
@@ -58,9 +52,17 @@ body{
 	font-size: 25px;
 }
 
+
+
+.homeHdr td:not(.activeTab) {
+ 	opacity: 0.7;
+
+}
+
 .activeTab{
-	color:blue;
+	opacity: 1;
 	font-weight: bold;
+	border-bottom: 3px solid var(--colorOfBody);
 }
 
 .stickyLeftOrRight{
@@ -77,18 +79,25 @@ z-index:2;
 border-radius:15px; 
 }
 
-.jobMainInfo{
-	border:var(--border);
+.jobMainInfo, .jobMainInfoClone{
+	padding: 5px;
+	position: relative;
+
 	margin:5px;
 	background-color: var(--bgColorOfCards);
 	transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
-.jobMainInfo:hover{
-	transform: translateY(-5px);
+.jobMainInfoClone{
 	box-shadow: var(--boxShadow);
+
+}
+
+.jobMainInfo:hover{
+	box-shadow: var(--boxShadow);
+
+	transform: translateY(-5px);
 	cursor: pointer;
-	border: none;
 }
 
 .gridHolder {
@@ -189,9 +198,6 @@ padding-left:3px;
 }
 
 
-#menuItems{
- 	display: none;
-}
 
 
 a{
@@ -201,7 +207,7 @@ a{
 
 
 
-#locationHolder:hover .locatioNameAutoComplete, #locationHolderCCA:hover .locatioNameAutoComplete{
+#companyHolderInPostJobForm:hover .locatioNameAutoComplete,  #locationHolder:hover .locatioNameAutoComplete, #locationHolderCCA:hover .locatioNameAutoComplete{
 	display: block;
 	animation: scaleup 1s;
 }
@@ -213,7 +219,7 @@ a{
 
 	width: 100%;
 
-
+z-index: 100;
 	display: none;
 	border-radius: 5px;
 	list-style: none;
@@ -284,7 +290,7 @@ a{
 }
 
 #middleMainContent div{
-	animation: slideRight 1s;
+	animation: slideRight 0.3s;
 }
 
 @keyframes slideRight{
@@ -356,7 +362,6 @@ small{
 }
 
 .formHolder{
-	border: var(--border);
 	margin: 5px;
 	padding: 15px;
 }
@@ -515,7 +520,6 @@ cursor: pointer;
 	min-height: 30vh;
 	width: 100%;
 	background: var(--bgColorOfCards);
-	border:var(--border);
 	margin-bottom: 20px;
 }
 
@@ -557,18 +561,13 @@ cursor: pointer;
 	font-weight: bold;
 }
 
-.gridHolderModified div{
-	background: var(--bgColorOfCards);
-	border:var(--border);
-	padding: 5px;
-	align-self: start; 
-}
 
 .gridHolderModified, .gridHolderModified2{
 	display: grid;
 	gap:10px;
 	margin-top: 15px;
 }
+
 
 
 
@@ -589,6 +588,17 @@ cursor: pointer;
 }
 
 }
+
+.editDeleteOptions{
+	position: absolute;
+	bottom: 0px;
+}
+
+.spareDiv2{
+	height: 60px;
+}
+
+
 
 .editDeleteOptions button{
 	width: 100%;
@@ -632,4 +642,57 @@ button{
 	position: sticky;
 	top: 0px;
 	background: var(--bgColorOfCards);
+}
+
+.simpleFlexItem{
+	padding-right: 15px;
+}
+
+.smallCircle{
+	height: 3px;
+	width: 3px;
+	top:50%;
+	margin-left: 7px;
+	border-radius: 50%;
+	background: var(--colorOfBody);
+}
+
+.viewApplicantHolder{
+	bottom: 15px;
+	position: absolute;
+	text-align: center;
+	left: 50%;
+	transform: translateX(-50%);
+
+}
+
+.simpleButton{
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	font-size: 15px;
+	overflow:hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	border-radius: 15px;
+	border: 2px solid var(--fontSize17Color);
+	color: var(--fontSize17Color);
+	font-weight: bold;
+	transition-delay: 0.1s;
+
+}
+
+.spareDiv{
+	height: 70px;
+}
+
+.simpleButton:hover{
+	background: var(--fontSize17Color);
+	color: white;
+	cursor: pointer;
+}
+
+.btnPrimaryMyOwn{
+	background: blue;
 }

@@ -11,13 +11,9 @@ function loadNoti(){
 	
 	var hdrTable = createHomeHdr(activeTab = 'noti');
 
-	clearHdrAndPut(hdrTable);
-
-	locationToHdrMapper[divId] = hdrTable;
-
 	var serverURL = apiFolder + '/notifications.php';
 
-	loadTab(divId, serverURL, displayNoti);
+	loadTab(divId, serverURL, displayNoti, hdrTable);
 }
 
 function returnEachNoti(noti){

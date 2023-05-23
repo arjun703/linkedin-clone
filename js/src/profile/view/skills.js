@@ -10,7 +10,7 @@ return`
 
 function createDeleteSkillIcon(id){
 	return`
-		<span style = "padding-left:5px; padding-right:5px; cursor:pointer " onclick = "deleteSkill(${id})">
+		<span  style = "padding-left:5px; padding-right:5px; cursor:pointer " onclick = "deleteSkill(${id})">
 			<i class = "fa fa-close"></i>
 		</span>
 	`
