@@ -59,9 +59,12 @@ function handleLogin(){
 	var loginPassword = document.getElementById('loginPassword').value;
 	document.getElementById('loginButton').disabled = true;
 	document.getElementById('loginButton').innerText = "Please Wait...";
+	document.getElementById('loginButton').classList.add('fadeOutAnimation');
 	fetch(siteName + '/php/auth/login.php?loginLoginName='+loginLoginName+'&loginPassword='+loginPassword)
 	.then(response => response.json())
 	.then(data => {
+	document.getElementById('loginButton').classList.remove('fadeOutAnimation');
+
 		if(data.error){
 			alert('Incorrect username or password!');
 			document.getElementById('loginButton').disabled = false;

@@ -37,6 +37,8 @@ return`
 
 function createDateInput(label,  name, value, disabled = false, id = '', onchangeCallback = '' ){
 	
+	var value  =  !isNaN(new Date(value).getTime()) ? value : ''; 
+
 	return createInput(type = 'date', label, name, value, disabled, id, onchangeCallback)
 
 }
@@ -48,7 +50,7 @@ return `
 	<div>
 		<form id = "experienceForm" method = "POST">
 
-			<input type = "hidden" name = "experienceId" value = "${experienceId}">
+			<input type = "hidden" name = "id" value = "${experienceId}">
 
 
 			<div class = "gridHolderModified2">
@@ -93,10 +95,10 @@ return createExperienceForm(
 		experienceId = experience.id,
 		position = experience.position,
 		company = experience.company,
-		taskDescription = experience.task_description,
-		from = experience.from,
-		to = experience.to == 'Present' ? '' : experience.to ,
-		currentlyWorkingHere = experience.to == 'Present' ? true : false
+		taskDescription = experience.description,
+		from = experience._from,
+		to = experience._to,
+		currentlyWorkingHere = experience._to == 'Present' ? true : false
 	)
 }
 
@@ -109,7 +111,7 @@ function createAddNewExperienceForm(){
 
 function displayEditExperienceForm(experience){
 
-	displayPrompt('Edit Experience', createEditExperienceForm(experience), 'handleEditExperienceSubmit()');
+	displayPrompt('Edit Experience', createEditExperienceForm(experience), `handleEditExperienceSubmit('${experience.divId}')`);
 
 }
 
@@ -119,8 +121,82 @@ function displayAddNewExperienceForm(){
 
 
 
-function handleEditExperienceSubmit(){
+function handleEdits(formId, divId, callback, serverURL){
+	var formData = new FormData(document.getElementById(formId));	
+	var xmlhttp = new XMLHttpRequest();
+	var personalHolder = document.getElementById(divId);
+	personalHolder.classList.add('fadeOutAnimation');
+	xmlhttp.onreadystatechange = function(){
+		if(this.readyState == 4 && this.status == 200){
+			var data = JSON.parse(this.responseText);
+			personalHolder.classList.remove('fadeOutAnimation');
+			if(data.error){
+				alert('Error - ' + data.error);
+			}
+			else{
+				personalHolder.innerHTML = callback(data);
+			}
+		}
+	}
+	
+	xmlhttp.open('POST', serverURL);
+	xmlhttp.send(formData);
+	hideOverlay();
+}
 
+
+
+function handleAddNew(formId, divId, callback, serverURL, preId){
+
+	var formData = new FormData(document.getElementById(formId));
+	var overlayFooterAction = document.getElementById('overlayFooterAction');
+	overlayFooterAction.classList.add('fadeOutAnimation');
+	var xmlhttp = new XMLHttpRequest();
+	var contentHolder = document.getElementById(divId);
+	xmlhttp.onreadystatechange = function(){
+		if(this.readyState == 4 && this.status == 200){
+			var data = JSON.parse(this.responseText);
+			if(data.error){
+				alert('Error - ' + data.error);
+				overlayFooterAction.classList.remove('fadeOutAnimation');
+			}
+			else{
+				hideOverlay();
+				let newDiv = document.createElement('div');
+				newDiv.className = "jobMainInfoClone";
+				newDiv.id = preId + '_'+ data.login_name +'_'+ data.id;
+				newDiv.classList.add("scaleUpAnimation");
+				newDiv.innerHTML = callback(data);
+				contentHolder.appendChild(newDiv);
+				setTimeout(() => {newDiv.classList.remove('scaleUpAnimation')}, 1000);
+
+			}
+		}
+	}
+	
+	xmlhttp.open('POST', serverURL);
+	xmlhttp.send(formData);
+}
+
+
+function handleAddNewExperienceSubmit(){
+	handleAddNew('experienceForm', 
+					'experiences_'+LOGIN_NAME, 
+					displayEachExperience,
+					siteName+'/php/profile/create/experience.php',
+					'experience'
+	)
+}
+
+
+
+function handleEditExperienceSubmit(divId){
+
+	handleEdits('experienceForm', 
+					divId, 
+					displayEachExperience,
+					siteName+'/php/profile/edit/experience.php'
+	)
 
 }
 

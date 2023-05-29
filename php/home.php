@@ -1,24 +1,44 @@
 <?php 
-
+sleep(1);
 session_start();
 
-include 'db.php';
+/*
+// Iterate over all cookies
+foreach ($_COOKIE as $cookieName => $cookieValue) {
+    // Set the cookie expiration time to the past to delete it
+    setcookie($cookieName, '', time() - 3600);
+    
+    // Unset the cookie variable
+    unset($_COOKIE[$cookieName]);
+}
+*/
 
-	$preQuery = "SELECT Distinct j.id, c.id as company_id, j.for_company, j.position, j.location, j.job_type, j.job_site, j.education_level, j.description, j.location, j.num_applicants 
-		FROM jobs j
-		INNER JOIN companies  c ON j.company_website = c.company_website 
-		WHERE j.active_status = 1 ";
-
-	$postQuery = " ORDER BY num_applicants DESC LIMIT 10";
 
 
 
-	if(isset($_SESSION['loginName'])){
+	include 'db.php';
+
+	$position = '';
+	$location = '';
+
+
+	if(isset($_COOKIE['location']) && isset($_COOKIE['position'])){
+		$position = $_COOKIE['position']; $location = $_COOKIE['location'];
+
+		$needToFormSecondQuery = true;
 
 	}
 	else{
-		$query = $preQuery.$postQuery;
+		
+		$needToFormSecondQuery = false;
+
+		if(isset($_SESSION['loginName'])){
+			//access the most recent search;
+		}
 	}
+
+	$query = querybuilder($position, $location);
+
 
 	$result = connectToDatabase($query);
 
@@ -29,9 +49,5 @@ include 'db.php';
 	}
 
 	echo (json_encode($jobs));
-
-
-
-
 
  ?>

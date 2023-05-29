@@ -1,138 +1,43 @@
-function loadViewProfile(of){
+function loadViewProfile(of, jobId = ''){
 
-	
 
-	var divId = siteName + '/viewProfile/' + of+'/personal';
+	var divId = siteName + '/profile/' + of;
 	var hdrTable = createHomeHdr(activeTab = 'sdfdsf');
-	var serverURL = 'php/profile/view/personal.php?loginName=' + of;
-	//beforeLoadTab(divId, hdrTable, serverURL, displayProfile);
+	var serverURL = siteName + '/php/profile/view.php?of='+ of+'&fromJobId='+jobId;
+	loadTab(divId, serverURL, displayProfile, hdrTable);
 
-	execFrontendOnlyFunction(divId, hdrTable, displayProfile);
 
 }
 
-const displayProfile = () => {
+const displayProfile = (data, divIdd) => {
 	
-	window.VIEWING_PROFILE_OF = LOGIN_NAME; // global
 
-	var divIdd = siteName + '/viewProfile/' + LOGIN_NAME +'/personal';
-
-	const data = {
-		personal : {
-			name: 'Arjun Poudel',
-			summary: ' Very talentd  Very talentd  Very talentd ',
-			email: 'arjunpoudel703@gmail.com',
-			phone: '9840030080',
-			portfolio: 'https://mydj.great-site.net',
-			address: 'Dahachowk, Kathmandu, Nepal'
-		},
-
-		experiences: [
-			{
-				id: 12,
-				position: 'PHP Developer',
-				company: 'Javra Software',
-				task_description: 'Handling all the website',
-				from: '2020-12-15',
-				to: 'Present',
-			},
-			{
-				id: 14,
-				position: 'Network Administrator',
-				company: 'Sanskriti School',
-				task_description: 'Handling Network Devices',
-				from: '2020-02-15',
-				to: '2023-02-12',
-			}
-		],
-
-		skills: [
-			{
-				id: 1,
-				skill: 'PHP'
-			},
-			{
-				id: 3,
-				skill: 'Javascript'
-			},
-			{
-				id: 6,
-				skill: 'SEO'
-			},
-			{
-				id: 43,
-				skill: 'Marketing'
-			},
-			{
-				id: 45,
-				skill: 'CSS'
-			},
-			{
-				id: 444,
-				skill: 'HTML'
-			}
-		],
-		projects: [
-			{
-				id: 34,
-				title: 'Mimicly',
-				description: 'video sharingsharing sharing sharing sharing sharing sharing sharing sharing sharing sharing  website',
-				link: 'http://mimicly.rf.gd'
-			},
-			{
-				id: 35,
-				title: 'GodJob',
-				description: 'LinkedIn',
-				link: 'http://godjob.rf.gd'
-			},
-			{
-				id: 36,
-				title: 'itsVidTime',
-				description: 'video calling website',
-				link: 'http://abc.rf.gd'
-			},
-		],
-		educations: [
-			{
-				id: 33,
-				level: 'Intermediate',
-				institution: 'Pulchowk Campus',
-				from: '2020-03-03',
-				to: '2020-03-04',
-				grade: '91%'
-			},
-			{
-				id: 3,
-				level: 'Bachelor',
-				field: 'Electronics',
-				institution: 'Pulchowk Campus',
-				from: '2020-03-03',
-				to: '2020-03-04',
-				grade: '81%'
-			},
-			
-			{
-				id: 35,
-				level: 'Master',
-				field: 'VLSI',
-				institution: 'Pulchowk Campus',
-				from: '2020-03-03',
-				to: '2020-03-04',
-				grade: '91%'
-			}
-		]
-
-	}
 
 	var profileHolder = ``
 
-	profileHolder += displayPersonal(data.personal);
-	profileHolder += displayExperiences(data.experiences);
-	profileHolder += displaySkills(data.skills);
-	profileHolder += displayProjects(data.projects);
-	profileHolder += displayEducations(data.educations);
-	
-	document.getElementById(divIdd).innerHTML = profileHolder;
+	const loginName = data.personal.login_name;
+
+	window.VIEWING_PROFILE_OF = loginName;
+
+	var jobId = data.jobId;
+			
+		
+	var personalHolder = 	displayProfileHeader(loginName, jobId) + 
+							`<div id = "personal_${loginName}">` +
+								displayPersonal(data.personal) + 
+						 	 `</div>`;
+
+	var experienceHolder = displayExperiences(data.experiences);
+
+	var skillsHolder =  displaySkills(data.skills);
+
+	var projectsHolder = 	displayProjects(data.projects);
+
+	var educationsHolder =  	displayEducations(data.educations);
+
+
+	document.getElementById(divIdd).innerHTML =
+		personalHolder+ experienceHolder+ skillsHolder+projectsHolder+educationsHolder;
 
 }
 
@@ -154,35 +59,57 @@ function createProfileSubHeader(title, profileOwnershipRequired, btnText = '', c
 		<div>
 			<table class = 'fixedTable'>
 				<tr>
-					<td class = "h4">
+					<td class = "h5">
 						${title}
 					</td>
 					${
 						( profileOwnershipRequired
 						  ? 
-						  ( VIEWING_PROFILE_OF == LOGIN_NAME
-						  	? 
-						  	createTd(callback, btnText)
-						  	: ''
+						  ( IS_LOGGED_IN
+							  ? (VIEWING_PROFILE_OF == LOGIN_NAME)	
+								  	? createTd(callback, btnText)
+								  	: ''
+							  : ''
 						  )
 
 						:  createTd(callback, btnText)
 						
 						)
 					}
+
 				</tr>
 			</table>
 		</div>
 	`;
 }
 
-	  
-function displayProfileHeader(of){
+function createSuccessButton(text){
 	return `
-		<div  class = "stickyMiddle p-2 mt-5 mb-5"
-				style = "background: var(--bgColorOfCards); top: ${returnTopOfMiddleMainContent()}"
+		<button class = "btn btn-success">
+			${text}
+		</button>
+	`
+}
+	  
+
+
+function displayProfileHeader(of, jobId= ''){
+	return `
+		
+		<div  class = "profileHader p-2 mt-4 mb-5"
+				style = " max-width:350px; background: var(--bgColorOfCards); top: ${returnTopOfMiddleMainContent()}"
 			> 
-				${createProfileSubHeader("@"+of+"'s Profile", profileOwnershipRequired = false, "Dowwnload CV", "downloadCV('"+of+"'')")}
+				<table class= "fixedTable">
+					<tr>
+						<td style="font-weight:bold;text-align:center">
+							@${of}
+						</td>
+
+
+						${createTd('dowloadCV(\''+of+'\', '+jobId+')' , 'Download CV')}
+
+					</tr>
+				</table>
 
 		</div>
 		<hr>

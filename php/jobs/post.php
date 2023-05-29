@@ -13,13 +13,10 @@ ob_implicit_flush(true);
 
 	if(isset($_SESSION['loginName']) 
 		&& isset($_POST['jobPostJobPosition'])
-		&& isset($_POST['jobPostCompanyName'])
 		&& isset($_POST['jobPostLocation'])
-		&& isset($_POST['jobPostDeadline'])
 		&& isset($_POST['jobPostJobType'])
 		&& isset($_POST['jobPostJobSite'])
 		&& isset($_POST['jobPostJobIndustry'])
-		&& isset($_POST['jobPostEducationLevel'])
 		&& isset($_POST['jobPostJobDescription'])
 		&& isset($_POST['hiddenCompanyWebsite'])
 		&& isset($_POST['postJobFormEmployeeEmail'])
@@ -30,7 +27,6 @@ ob_implicit_flush(true);
 			$jobType = htmlspecialchars(trim($_POST['jobPostJobType']));		
 			$jobSite = htmlspecialchars(trim($_POST['jobPostJobSite']));
 			$jobIndustry = htmlspecialchars(trim($_POST['jobPostJobIndustry']));
-			$educationLevel = htmlspecialchars(trim($_POST['jobPostEducationLevel']));
 			$jobDescription = htmlspecialchars(trim($_POST['jobPostJobDescription']));
 			$companyWebsite = htmlspecialchars(trim($_POST['hiddenCompanyWebsite']));
 			$employeeEmail = htmlspecialchars(trim($_POST['postJobFormEmployeeEmail']));
@@ -38,7 +34,7 @@ ob_implicit_flush(true);
 				include('../db.php');
 
 
-			if(isEmpty($position, $companyName, $location, $jobType, $jobSite, $jobIndustry, $educationLevel, $companyWebsite, $employeeEmail) or strlen($jobDescription) < 100 ){
+			if(isEmpty($position, $companyName, $location, $jobType, $jobSite, $jobIndustry, $companyWebsite, $employeeEmail) or strlen($jobDescription) < 100 ){
 				die(json_encode(array('error' => 'Error - Fill out all the fields.')));
 			}
 			else{
@@ -55,7 +51,7 @@ ob_implicit_flush(true);
 
 				$token = rand();
 
-				$query = " INSERT INTO `jobs` (`location`, `job_poster`, `for_company`, `position`,  `job_type`, `industry`, `job_site`, `education_level`, `description`, `temp_email`, `token`, `company_website`) VALUES ('".$location."', '".$loginName."','".$companyName."','".$position."','".$jobType."','".$jobIndustry."','".$jobSite."','".$educationLevel."','".$jobDescription."', '".$employeeEmail."', ".$token.", '".$companyWebsite."') ";
+				$query = " INSERT INTO `jobs` (`location`, `job_poster`,  `position`,  `job_type`, `industry`, `job_site`, `description`, `temp_email`, `token`, `company_website`) VALUES ('".$location."', '".$loginName."', '".$position."','".$jobType."','".$jobIndustry."','".$jobSite."', '".$jobDescription."', '".$employeeEmail."', ".$token.", '".$companyWebsite."') ";
 
 				if(connectToDatabase($query)){
 					

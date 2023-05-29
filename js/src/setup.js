@@ -18,19 +18,25 @@ function handleCheckLoginStatusData(data){
 		window.LOGIN_NAME = data.loginName;
 		window.HAS_COMPANY_PAGE = data.hasCompanyPage;
 	}
-	
 
+	if(getCookieValue('employerMode') != '' )	window.EMPLOYER_MODE = true
+	else window.EMPLOYER_MODE = false;
+	
+	
 	document.getElementById('preLoaderHolder').remove();
 
 	manageSidebars();
 
-	loadHome();
+	if(EMPLOYER_MODE && IS_LOGGED_IN) loadPostedJobs()
+	else if( !EMPLOYER_MODE ) loadHome()
+	else loadPostJobForm()
 }
 
 
 function returnTopOfMiddleMainContent(){
 	return document.getElementById('middleMainContent').getBoundingClientRect().top + 5+ "px";
 }
+
 
 function makeSidebarsSticky(){
 	var elements = document.getElementsByClassName('stickyLeftOrRight')
@@ -43,12 +49,23 @@ function makeSidebarsSticky(){
 }
 
 function manageSidebars(){
+	
 	document.getElementById('hdrLeftPart').innerHTML = handleHdrLeftPart();
 	document.getElementById('hdrRightPart').innerHTML = handleHdrRightPart();
-	document.getElementById('leftSidebar').innerHTML = createLeftSidebar();
 	document.getElementById('rightSidebar').innerHTML = createRightSidebar();
-	makeSidebarsSticky();
+
 	window.middleMainContent = document.getElementById('middleMainContent');
+	
+	if(EMPLOYER_MODE){
+		document.getElementById('leftSidebar').remove();
+		document.getElementById('middleMainContent').classList.remove('col-md-6');
+		document.getElementById('middleMainContent').classList.add('col-md-9');
+	}
+	else{
+		document.getElementById('leftSidebar').innerHTML = createLeftSidebar();
+	}
+	makeSidebarsSticky();
+
 }
 
 
@@ -92,7 +109,7 @@ function createLeftSidebar(){
 	return `
 		<div class="stickyLeftOrRight">
 
-			<div class="animateScaleUP leftSidebarOptionsHolder">
+			<div class="animateScaleUP ${EMPLOYER_MODE ? 'd-none' : ''} leftSidebarOptionsHolder">
 				
 				<div  class="text-center pt-2">
 					Good ${getPartOfDay()}, 
@@ -125,17 +142,29 @@ function createLeftSidebar(){
 					</div>
 				</div>
 			</div>
-			<div class="rso  text-center">
-				<a href=""> About us </a> 
-				<a href=""> Careers </a>  
-				<a href=""> Privacy Policy </a>
-				<a href=""> Give us Feedback </a>
-				<a href=""> Get our App </a>
+
+			<div class = "rightSidebarOptionsHolder  ${EMPLOYER_MODE ? 'd-none' : ''} ">
+				<h6 class="text-center">Jobs Categories</h6>
+				<a href="">Networking and Hardware</a>
+				<br>
+				<a href="">Human Resources</a>
+				<br>
+				<a href="">Software</a>
+
 			</div>
 		</div>
 	`	
 }
 
+
+function setEmployerMode(){
+	
+	if(getCookieValue('employerMode') == '') document.cookie = 'employerMode=true'
+	else document.cookie = 'employerMode='
+	document.getElementById('employerMode').classList.add('rotateAnimation')
+	setTimeout(()=>{location.href = siteName;}, 1000);
+	
+}
 
 function createRightSidebar(){
 	return `
@@ -166,37 +195,32 @@ function createRightSidebar(){
 					${ 
 				 		IS_LOGGED_IN
 				 		? HAS_COMPANY_PAGE
-			 				? "<i class = 'fa fa-edit'></i>Your Company Page"
+			 				? "<i class = 'fa fa-building'></i>Your Company Page"
 			 		   		: "<i class = 'fa fa-plus'></i>Create Company Page"
 				 		: "<i class = 'fa fa-plus'></i>Create Company Page"
 				  	} 
 				</li>
 				<li class="option" onclick="toggle()">
-					<i class="fa fa-moon"></i>Night Mode
+					<i class="fa fa-moon"></i>Day/Night Mode
 				</li>
-				<li class="option" onclick="alert('Next time you open this website, you will see your posted jobs instead of home feed.')">
-					<i class="fa fa-toggle-off"></i>Employer Mode
+				<li class="option" onclick="setEmployerMode()">
+					<i id ="employerMode" class="fa fa-toggle-off"></i>Employer/Employee Mode
 				</li>
 				<li class = " option ${ (!IS_LOGGED_IN) ? 'd-none': ''}" id="logOutOption" onclick="logOut()">
 					<i class="fa fa-sign-out"></i>Log Out
 				</li>
 			</div>
-			<div class = "rightSidebarOptionsHolder">
-				<h6>Jobs Categories</h6>
-				<a href="">Networking and Hardware</a>
-				<br>
-				<a href="">Human Resources</a>
-				<br>
-				<a href="">Software</a>
-				<br>
-				<a href="">Internships</a>
-				<br>
-				<a href="">Full Time</a>
-				<br>
-				<a href="">Part Time</a>
-				<br>
-				<a href="">Contract</a>
+
+
+
+			<div class="rso  text-center">
+				<a href=""> About us </a> 
+				<a href=""> Careers </a>  
+				<a href=""> Privacy Policy </a>
+				<a href=""> Give us Feedback </a>
+				<a href=""> Get our App </a>
 			</div>
+
 		</div>
 	`
 }

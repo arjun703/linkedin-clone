@@ -2,89 +2,71 @@ function createSubHeaderForSavedJobs(activeTab){
 	var top = returnTopOfMiddleMainContent();
 	return `
 	
-	<div  class = "stickyLeftOrRight mt-5  center-div text-center" style = "top: ${top}; max-width:400px; width:100%; margin: 0 auto ">
+	<div  class = "stickyLeftOrRight mt-4 mb-4  center-div text-center" style = "top: ${top}; z-index:2; max-width:400px; width:100%; margin: 0 auto; ">
 		<div  class = "savedJobsSubHdrHolder">
 			<table class = "savedJobsSubHdr">
 				<tr>
-					<td onclick = "loadSavedJobs()" class = ${ (activeTab === 'applied') ? 'activeSavedJobsSubHdr' : '' } >
+					<td  onclick = "loadAppliedJobs()" class = " ${ (activeTab === 'applied') ? 'activeSavedJobsSubHdr' : '' } ${EMPLOYER_MODE ? 'd-none' : '' } " >
 						Applied
 					</td>
 					<td onclick = "loadPostedJobs()" class = ${ (activeTab === 'posted' ) ? 'activeSavedJobsSubHdr' : '' } >
 						Posted
 					</td>
+					<td onclick = "loadClosedJobs()" class = ${ (activeTab === 'closed' ) ? 'activeSavedJobsSubHdr' : '' } >
+						Closed
+					</td>
 				</tr>
 			</table>
 		</div>
-		</div>
-
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
 	`;	
 }
 
-function loadSavedJobs(){
+function loadSaved(type, callback, hardRefresh = false){
 
-	var divId = siteName + '/savedJobs/applied';
+	var divId = siteName + `/jobs/saved/${type}`;
 	
-	var hdrTable = createHomeHdr(activeTab = 'savedJobs');
+	var hdrTable = createHomeHdr(activeTab = 'applied');
 
-	clearHdrAndPut(hdrTable);
+	var serverURL = siteName + `/php/jobs/saved/${type}.php`;
 
-	locationToHdrMapper[divId] = hdrTable; 
-	
-	var serverURL = apiFolder + '/savedJobs/applied.php';
-
-	execFrontendOnlyFunction(divId, displayApplied,  pushOrReplace = 'push');
-
+	loadTab(divId, serverURL, callback, hdrTable, hardRefresh);
 }
 
-const displayApplied = () => {
-	document.getElementById(siteName + '/savedJobs/applied').innerHTML = createSubHeaderForSavedJobs('applied');	
+function loadAppliedJobs(){
+	loadSaved('applied', displayApplied);
+}
+
+const displaySaved=  (divId, type, jobs) => {
+	var div = document.getElementById(divId);
+
+	div.innerHTML = createSubHeaderForSavedJobs(type);
+
+	var displayInThisDiv = div;
+
+	display(jobs, displayInThisDiv, callback = returnEachJob, divId); // library.js
 }
 
 
-function loadPostedJobs(){
-	var divId = siteName + '/savedJobs/posted';
-	
-	var hdrTable = createHomeHdr(activeTab = 'savedJobs');
-
-	clearHdrAndPut(hdrTable);
-
-	locationToHdrMapper[divId] = hdrTable; 
-		
-	var serverURL = apiFolder + '/savedJobs/posted.php';
-
-	execFrontendOnlyFunction(divId, displayPostedJobs,  pushOrReplace = 'push');
-
+const displayApplied = (jobs, divId) => {
+	displaySaved(divId, 'applied', jobs);
 }
 
-const displayPostedJobs = () => {
-	document.getElementById(siteName + '/savedJobs/posted').innerHTML = createSubHeaderForSavedJobs('posted');		
+
+function loadPostedJobs(hardRefresh = false){
+	loadSaved('posted', displayPosted, hardRefresh);
+}
+
+
+const displayPosted = (jobs, divId) => {
+	displaySaved(divId, 'posted', jobs);
+}
+
+
+function loadClosedJobs(){
+	loadSaved('closed', displayClosed);
+}
+
+
+const displayClosed = (jobs, divId) => {
+	displaySaved(divId, 'closed', jobs);
 }

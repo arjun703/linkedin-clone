@@ -1,58 +1,3 @@
-function manageGrid(element){
-	switch(noOfElementPerRow()){ //library.js
-		case 1:
-			element.style.gridTemplateColumns = '1fr'; // sets 3 columns of equal width
-			break;
-		case 2:
-			element.style.gridTemplateColumns = '1fr 1fr'; // sets 3 columns of equal width
-			break;
-		case 3:
-			element.style.gridTemplateColumns = 'repeat(3, 1fr)'; // sets 3 columns of equal width
-			break;
-	}
-}
-
-function putTextInInputField(elementId, text){
-	document.getElementById(elementId).value = text;
-}
-
-function escapeSingleQuotes(str) {
-  return str.replace(/'/g, "\\'");
-}
-
-function returnList(inputElementId, suggestions){
-var ul = ``;	
-
-	if(suggestions.length > 0){
-		for(var i =0; i< suggestions.length; i++) {
-			ul += `<li onclick = 'putTextInInputField("${inputElementId}", "${escapeSingleQuotes(suggestions[i])}")' title = "${suggestions[i]}"  class = "option p-2"> ${suggestions[i]}  </li>`;
-		};		
-		return ul;
-	}
-	else{
-		return '<p class = "text-center">No suggestions</p>'
-	}
-
-}
-
-
-async function handleLocationInput(elementId, divId, URl){
-	const autocompleteDiv = document.getElementById(divId);
-	
-	const inputValue = document.getElementById(elementId).value;
-	
-	if(inputValue.trim().length > 2){
-		autocompleteDiv.innerHTML = '<p class="text-center">Loading</p>';			
-		const response = await fetch(URl);
-		const data = await response.json();
-		const suggestions = data.features.map(feature => feature.properties.formatted);
-		autocompleteDiv.innerHTML = returnList(elementId,  suggestions); 
-	}
-	else{
-		autocompleteDiv.innerHTML = '<p class = "text-center">Enter Location</p>';
-	}
-}
-
 var menuShown = true;
 
 function toggleMenuInDesktop(){
@@ -115,16 +60,14 @@ function performOperationsOnBody(){
 	document.body.style.overflowY = "hidden";
 }
 
-function deperformOperationsOnBody(){
-	document.body.style.overflowY = "scroll";
-}
+
 
 function createOverlayAndInsert(innerhtml){
 var newDiv = document.createElement('div');
 
 newDiv.innerHTML = `
 	<div id = "outerOverlay" class  = "outerOverlay">
-		<div class = "overlay">
+		<div class = "overlay" id = "overlay">
 			${innerhtml}
 		</div>
 	</div>
@@ -142,22 +85,6 @@ createOverlayAndInsert(createLoginAlertForm(title, message))
 
 }
 
-function hideOverlay(){
-	deperformOperationsOnBody();
-	document.getElementById('outerOverlay').remove();
-}
-
-function deactivateButton(id, text){
-
-	document.getElementById(id).disabled = true;
-	document.getElementById(id).innerText = text;
-}
-
-function activateButton(id, text){
-	document.getElementById(id).disabled = false;
-	document.getElementById(id).innerText = text;
-
-}
 
 function createOverlayFooterOptions(callback, actionBtnDanger){
 	return`
@@ -167,7 +94,7 @@ function createOverlayFooterOptions(callback, actionBtnDanger){
 					<td class = "btnBordered" onclick = "hideOverlay()">
 						Cancel
 					</td>
-					<td class = "btnHighlighted ${ actionBtnDanger ? 'btnDangerMyOwn' : 'btnSuccessMyOwn'  } " 
+					<td id = 'overlayFooterAction' class = "btnHighlighted ${ actionBtnDanger ? 'btnDangerMyOwn' : 'btnSuccessMyOwn'  } " 
 						onclick = "${callback}" >
 						Continue
 					</td>
@@ -233,4 +160,98 @@ function displayPromptWithoutFooterOptions(title, text){
 performOperationsOnBody();
 createOverlayAndInsert(createPromptWithoutFooterOptions(title, text));
 
+}
+
+
+function putTextInInputField(elementId, text, callback = ''){
+	document.getElementById(elementId).value = text;
+	if(callback !=''){
+		callback();
+	}
+}
+
+function escapeSingleQuotes(str) {
+  return str.replace(/'/g, "\\'");
+}
+
+function returnList(inputElementId, suggestions, callback = ''){
+var ul = ``;	
+
+	if(suggestions.length > 0){
+		for(var i =0; i< suggestions.length; i++) {
+			ul += `<li onclick = 'putTextInInputField("${inputElementId}", "${escapeSingleQuotes(suggestions[i])}", ${callback})' title = "${suggestions[i]}"  class = "option p-2"> ${suggestions[i]}  </li>`;
+		};		
+		return ul;
+	}
+	else{
+		return '<p class = "text-center">No suggestions</p>'
+	}
+
+}
+
+
+async function handleLocationInput(elementId, divId, URl){
+	const autocompleteDiv = document.getElementById(divId);
+	
+	const inputValue = document.getElementById(elementId).value;
+	
+	if(inputValue.trim().length > 2){
+		autocompleteDiv.innerHTML = '<p class="text-center">Loading</p>';			
+		const response = await fetch(URl);
+		const data = await response.json();
+		const suggestions = data.features.map(feature => feature.properties.formatted);
+		autocompleteDiv.innerHTML = returnList(elementId,  suggestions); 
+	}
+	else{
+		autocompleteDiv.innerHTML = '<p class = "text-center">Enter Location</p>';
+	}
+}
+
+
+
+function deperformOperationsOnBody(){
+	document.body.style.overflowY = "scroll";
+	if(document.getElementById('outerOverlay')){
+		document.getElementById('outerOverlay').remove();
+	}
+}
+
+
+
+function hideOverlay(){
+	deperformOperationsOnBody();
+}
+
+function deactivateButton(id, text){
+
+	document.getElementById(id).disabled = true;
+	document.getElementById(id).innerText = text;
+}
+
+function activateButton(id, text){
+	document.getElementById(id).disabled = false;
+	document.getElementById(id).innerText = text;
+
+}
+
+
+
+
+
+function getCookieValue(cookieName) {
+  var name = cookieName + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var cookieArray = decodedCookie.split(';');
+
+  for (var i = 0; i < cookieArray.length; i++) {
+    var cookie = cookieArray[i];
+    while (cookie.charAt(0) === ' ') {
+      cookie = cookie.substring(1);
+    }
+    if (cookie.indexOf(name) === 0) {
+      return cookie.substring(name.length, cookie.length);
+    }
+  }
+  
+  return "";
 }

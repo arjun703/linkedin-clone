@@ -8,9 +8,10 @@ newTable.className = "hdrTable homeHdr ";
 var newRow =document.createElement('tr');
 
 var newDataForHome = document.createElement('td');
-if(activeTab == 'home') newDataForHome.className = "activeTab";
+if(activeTab == 'home') newDataForHome.className = `activeTab `;
 newDataForHome.onclick =  () =>  loadHome()
 newDataForHome.innerHTML = "<i class = 'fa fa-home'> </i> <br> <small>Home</small> ";
+if(EMPLOYER_MODE) newDataForHome.classList.add('d-none')
 
 var newDataForNoti = document.createElement('td');
 newDataForNoti.className = "requiresLogin";
@@ -18,15 +19,17 @@ if(activeTab == 'noti') newDataForNoti.className = "activeTab"
 newDataForNoti.onclick = () => (IS_LOGGED_IN) ? loadNoti() : displayLoginOverlay('Notifications', 'view notifications.');
 newDataForNoti.innerHTML = "<i class = 'fa fa-bell'> </i> <br> <small>Notifications</small> ";
 
+
 var newDataForMyJobs = document.createElement('td');
 newDataForMyJobs.className = "requiresLogin";
-if(activeTab == 'savedJobs') newDataForMyJobs.className = "activeTab"
-newDataForMyJobs.onclick = () => (IS_LOGGED_IN) ? loadSavedJobs() : displayLoginOverlay('Saved Jobs', 'view applied and posted jobs');
+if(activeTab == 'applied') newDataForMyJobs.className = "activeTab"
+newDataForMyJobs.onclick = () => IS_LOGGED_IN ? EMPLOYER_MODE ? loadPostedJobs() : loadAppliedJobs() : displayLoginOverlay('Saved Jobs', 'view applied and posted jobs');
 newDataForMyJobs.innerHTML = "<i class = 'fa fa-bookmark'> </i> <br> <small>Saved Jobs</small> ";
 
 var newwDataForSearch = document.createElement('td');
 newwDataForSearch.onclick = () => loadSearchBox();
 newwDataForSearch.innerHTML = "<i class ='fa fa-search'> </i> <br> <small>Search</small>  "
+if(EMPLOYER_MODE) newwDataForSearch.classList.add('d-none')
 
 var uploadJobPost = document.createElement('td');
 uploadJobPost.className  = "d-none d-md-block"
@@ -45,8 +48,8 @@ if(activeTab == 'menu') menuHolder.className = "activeTab"
 
 newRow.appendChild(newDataForHome);
 newRow.appendChild(newDataForMyJobs);
-newRow.appendChild(newDataForNoti);
 newRow.appendChild(uploadJobPost);
+newRow.appendChild(newDataForNoti);
 newRow.appendChild(newwDataForSearch);
 newRow.appendChild(menuHolder);
 

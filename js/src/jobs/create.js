@@ -12,13 +12,32 @@ const displayPostJobForm = () => {
 var divId = siteName + '/postJobForm';
 
 const form = `
+<div class = "formHolder" style = "background: var(--bgColorOfCards)">
 <h4 class = "text-center" >Post a Job </h4>
 
 <hr>
 
+<p class = "text-warning text-center" style ="font-weight:bold">
+	${
+		IS_LOGGED_IN 
+			? HAS_COMPANY_PAGE
+				? ''
+				: 'You need to <span class = "softLink" onclick="loadCreateCompanyPage()">create a company page</span> before you can post jobs.<HR>'
+			: 'You need to <span class = "softLink" onclick="loadCreateCompanyPage()">create a company page</span> before you can post jobs.<HR>'
+	}
+</p>
+
+<p class = "text-center">
+	${
+		EMPLOYER_MODE
+			? ''
+			: '<small>You can switch to </small> <span class="softLink" onclick = "setEmployerMode()">Employer Mode</span><small> for more clean user interface (UI)</small> <HR> '
+	}
+</p>
+
 <form id = "postJobForm" method = "POST">
 
-	<div id = "postJobForm_step_1" >
+	<div id = "postJobForm_step_1" class = "animationSlideRight">
 
 		<div class = "gridHolderModified2" >
 			
@@ -65,45 +84,37 @@ const form = `
 			<div>
 				<label for="jobPostJobType">Select Job Type</label>
 				<select name = "jobPostJobType" required id="jobPostJobType">
-				    <option value="f">Full Time</option>
-				    <option value="p">Part Time</option>
-				    <option value="i">Internship</option>
+				    <option value="fu">Full Time</option>
+				    <option value="pa">Part Time</option>
+				    <option value="in">Internship</option>
 				</select>
 			</div>
 
-			<div>
-				<label for="jobPostJobIndustry">Select Job Industry</label>
-				<select required name = "jobPostJobIndustry" id="jobPostJobIndustry">
-				    <option value="sw">Software</option>
-				    <option value="nh">Networking and Hardware</option>
-				    <option value="hr">Human Resources</option>
-				    <option value="te">Teacher / Instructer</option>
-				</select>
-			</div>
+
 
 		</div>
 
 	</div>
 
-	<div id = 'postJobForm_step_2'>
+	<div id = 'postJobForm_step_2' class = "animationSlideRight">
 		<div class = "gridHolderModified2">
 			<div>
 				<label for="jobPostJobSite">Select Job Site</label>
 				<select required  id="jobPostJobSite" name = 'jobPostJobSite'>
-				    <option value="os">On-Site</option>
-				    <option value="r">Remote/option>
-				    <option value="h">Hybrid</option>
+				    <option value="on">On-Site</option>
+				    <option value="re">Remote</option>
+				    <option value="hy">Hybrid</option>
 				</select>
 			</div>
 
 
 			<div>
-				<label for="jobPostEducationLevel">Minimum Education Level</label>
-				<select id = 'jobPostEducationLevel' name = "jobPostEducationLevel" required>
-				    <option value="12">Intermediate (Plus 2)</option>		    
-				    <option value="16">Bachelor's Degree</option>
-				    <option value="18">Master's Degree</option>
-				   	<option value="23">PhD. Degree</option>
+				<label for="jobPostJobIndustry">Select Job Industry</label>
+				<select required name = "jobPostJobIndustry" id="jobPostJobIndustry">
+				    <option value="so">Software</option>
+				    <option value="ne">Networking and Hardware</option>
+				    <option value="hu">Human Resources</option>
+				    <option value="te">Teacher / Instructer</option>
 				</select>
 			</div>
 		</div>	
@@ -118,7 +129,7 @@ const form = `
 	</div>
 
 
-	<div id = "postJobForm_step_3">
+	<div id = "postJobForm_step_3" class = "animationSlideRight">
 		<div>
 			<label for = "postJobFormEmployeeEmail"> Enter your email provided by this
 			company to you
@@ -139,6 +150,7 @@ const form = `
 			</button>
 		</div>
 	</div>
+</div>
 `
 
 document.getElementById(divId).innerHTML = form;
@@ -155,8 +167,6 @@ function VerifyYourEmail(error = false){
 
 	// retrieve email and send request to send the code
 
-
-	if(document.getElementById('hiddenCompanyWebsite').value == "") return;
 
 	var text = `
 
@@ -196,7 +206,7 @@ function proceedJobUploadVerifyCode(){
 	`
 	displayPromptWithoutFooterOptions('Please Wait...', text);
 
-	fetch('php/jobs/verify.php?token='+token)
+	fetch(siteName + '/php/jobs/verify.php?token='+token)
 	.then(response => response.json())
 	.then(data => {
 
@@ -209,9 +219,9 @@ function proceedJobUploadVerifyCode(){
 
 			var text = `
 				<div class = "h5">Job Posted Successfully!</div>
-				<br>
-				<span class = "softLink" onclick = "loadPostedJobs()">Click Here</span>  to view the posted 
-				jobs.
+				<span class ="softLink" onclick = "hideOverlay(); loadPostedJobs(true)" >
+					Click Here
+				</span> to view the posted jobs
 				<br><br>
 			`
 				displayPromptWithoutFooterOptions('Success!', 

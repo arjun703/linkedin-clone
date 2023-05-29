@@ -17,25 +17,28 @@ return`
 `
 }
 
-function displayEachEducation(education){
-  return `
-    <div class="jobMainInfoClone">
-       <div style="font-weight:bold" class="fontSize17">${education.level}</div>
+const displayEachEducation = (education) => {
+  
+	education.divId  = `education_${education.login_name}_${education.id}`
 
-      <div class="fontSize20">
+  return `
+       <div class="fontSize20">${education.level}</div>
+
+      <div  style="font-weight:bold" class = "fontSize17">
       	${ education.field !== undefined
       		? education.field
       		: '---------'
       	}
       </div>
       <div class="fontSize17">${education.institution}</div>
-      <div>${education.from} to ${education.to}</div>
+      <div>${education._from} to ${education._to}</div>
       
-      ${ (VIEWING_PROFILE_OF == LOGIN_NAME)
-        ? createEducationOptions(education)
-        : ''
+      ${ IS_LOGGED_IN
+      	?  (VIEWING_PROFILE_OF == LOGIN_NAME)
+		        ? createEducationOptions(education)
+		        : ''
+		: ''
       }
-    </div>
   `;
 }
 
@@ -46,18 +49,18 @@ var educationsHolder = ``;
 
 if(educations.length > 0){
 	for(var i = 0; i < educations.length; i++){
-		educationsHolder += displayEachEducation(educations[i])
+		var id  = `education_${educations[i].login_name}_${educations[i].id}`
+		educationsHolder += `<div class =  "jobMainInfoClone" id = '${id}' >` 
+							+  displayEachEducation(educations[i])
+							+ `</div>`	
 	}
-}
-else{
-	educationsHolder += '<div class = "h6" > No education info to show. </div>'
 }
 
 
 return `
 	${ createProfileSubHeader('Education', profileOwnershipRequired = true,  "Add New", "displayAddNewEducationForm()") }
 	
-	<div class = "gridHolderModified">
+	<div class = "gridHolderModified mt-3" id= "educations_${VIEWING_PROFILE_OF}">
 		${educationsHolder}
 	</div>
 	

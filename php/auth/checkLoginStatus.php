@@ -1,4 +1,5 @@
 <?php 
+sleep(2);
 session_start();
 if(isset($_SESSION['loginName'])){
 

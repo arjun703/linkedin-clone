@@ -34,6 +34,11 @@ function refresh(divId, serverFile, functionToBeCalled){
 
 	deleteThisDiv(divId);
 
+	var loadingSignHolder = document.createElement('div');
+	loadingSignHolder.id = divIdd+ '_loadingSign'
+	loadingSignHolder.innerHTML= createLoadingSign('');
+	document.getElementById(divIdd).appendChild(loadingSignHolder);
+
 	hideAllDivsExceptDivWithThis(divId);
 
 	currentlyBeingLoadedURLs.push(divId);
@@ -43,6 +48,8 @@ function refresh(divId, serverFile, functionToBeCalled){
 		return response.json()
 	})
 	.then(function(data){
+
+		document.getElementById(divIdd+ '_loadingSign').remove();
 
 		currentlyBeingLoadedURLs = currentlyBeingLoadedURLs.filter(item => item != divIdd);
 
@@ -65,7 +72,7 @@ function beforeLoadTab(divId, hdrTable, serverURL, callback){
 
 
 
-function loadTab(divId, serverURL, callback, hdrTable = ''){
+function loadTab(divId, serverURL, callback, hdrTable = '', hardRefresh = false){
 
 	/*
 	 *
@@ -77,8 +84,6 @@ function loadTab(divId, serverURL, callback, hdrTable = ''){
 
 	locationToHdrMapper[divId] = hdrTable; 
 
-
-
 	if(!currentlyBeingLoadedURLs.includes(divId)){
 		if(document.location == divId){
 			refresh(divId, serverURL, callback); //  library.js
@@ -89,7 +94,8 @@ function loadTab(divId, serverURL, callback, hdrTable = ''){
 			
 			// check if the tab already exists 
 			if(document.getElementById(divId)){
-				hideAllDivsExceptDivWithThis(divId);
+				if(!hardRefresh) hideAllDivsExceptDivWithThis(divId);
+				else refresh(divId, serverURL, callback);
 			}
 			else{
 				refresh(divId, serverURL, callback); //  library.js
@@ -100,7 +106,9 @@ function loadTab(divId, serverURL, callback, hdrTable = ''){
 
 
 
-function display(data, inThisDiv, callback){
+function display(data, inThisDiv, callback, divIdd = ''){
+
+
 
 	if(data.length > 0){
 
@@ -108,6 +116,7 @@ function display(data, inThisDiv, callback){
 		
 		newDiv.className = "gridHolderModified2";
 
+		newDiv.id = "grid_" + divIdd;
 
 		inThisDiv.appendChild(newDiv);
 

@@ -18,23 +18,30 @@ return`
 `
 }
 
-function displayEachProject(project){
+const displayEachProject =  (project) => {
+
+
+project.divId  = `project_${project.login_name}_${project.id}`
+
 
 return `
 
-	<div class = "jobMainInfoClone" >
-		<div class = "fontSize20"> ${project.title} </div>
+
+		<div class = "fontSize20"> ${project.project_name} </div>
 		<div class = "fontSize17"> ${project.description} </div>
 		<div> ${project.link} </div>
 		
-		${ ( VIEWING_PROFILE_OF == LOGIN_NAME )
-			? createProjectOptions(project)
+		${ IS_LOGGED_IN
+			? ( VIEWING_PROFILE_OF == LOGIN_NAME )
+				? createProjectOptions(project)
+				: ''
 			: ''
 		}
-
-	</div>
 `
+
 }
+
+
 
 function displayProjects(projects){
 
@@ -42,17 +49,20 @@ var projectsHolder = ``;
 
 if(projects.length > 0){
 	for(var i = 0; i < projects.length; i++){
-		projectsHolder += displayEachProject(projects[i])
+		
+		var id  = `project_${projects[i].login_name}_${projects[i].id}`
+
+		projectsHolder += `<div class="jobMainInfoClone" id = '${id}' >` 
+							+  displayEachProject(projects[i])
+							+ `</div>`	
 	}
-}
-else{
-	projectsHolder += '<div class = "h6" > No projects to show. </div>'
+	
 }
 
 
 return `
 	${ createProfileSubHeader('Projects', profileOwnershipRequired = true,  "Add New", "displayAddNewProjectForm()") }
-	<div class = "gridHolderModified ">
+	<div class = "gridHolderModified mt-3" id= "projects_${VIEWING_PROFILE_OF}">
 		${projectsHolder}
 	</div>
 	<hr>

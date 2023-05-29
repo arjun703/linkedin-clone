@@ -21,7 +21,7 @@ body{
 .leftSidebarOptionsHolder, .rightSidebarOptionsHolder{
 	background-color: var(--bgColorOfCards);
 	margin-bottom: 20px;
-	padding: 5px;
+	padding: 2px;
 }
 
 #hdr{
@@ -37,6 +37,8 @@ body{
 .hdrTable, .fixedLayoutRightSidebar{
 	table-layout: fixed;
 	width: 100%;
+	max-width: 500px;
+
 }
 
 .hdrTable{
@@ -67,30 +69,43 @@ body{
 
 .stickyLeftOrRight{
 
-position: sticky;
+	position: sticky;
 
 }
 
-.stickyMiddle{
+.profileHader{
 box-shadow: var(--boxShadow);
-max-width:350px; 
 margin: 0 auto; 
 z-index:2;
 border-radius:15px; 
 }
 
+.profileHader table{
+border-collapse: separate; 
+border-spacing: 5px;
+}
+
+.profileHader table td{
+	text-align:center;
+}
+
+.profileHader td button{
+	width: 100%;
+}
+
 .jobMainInfo, .jobMainInfoClone{
 	padding: 5px;
 	position: relative;
-
-	margin:5px;
 	background-color: var(--bgColorOfCards);
 	transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
 .jobMainInfoClone{
-	box-shadow: var(--boxShadow);
+	border-radius: 8px;
+}
 
+.boxShadowed{
+	box-shadow: var(--boxShadow);
 }
 
 .jobMainInfo:hover{
@@ -128,6 +143,10 @@ border-radius:15px;
 
 .animateScaleUP{
 	animation: scaleup 1s;
+}
+
+.scaleDownAnimation{
+	animation: scaleDown 1s;
 }
 
 .option{
@@ -212,7 +231,7 @@ a{
 	animation: scaleup 1s;
 }
 
-.locatioNameAutoComplete{
+.locatioNameAutoComplete, .listHolder{
 	background: var(--bgColorOfCards);
 
 	box-shadow: var(--boxShadow);
@@ -227,7 +246,9 @@ z-index: 100;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
-
+.listHolder{
+	display: block;
+}
 @keyframes scaleup{
 	from{
 		scale:0;
@@ -289,13 +310,21 @@ z-index: 100;
 	border-spacing: 5px;
 }
 
-#middleMainContent div{
+.container{
+	margin-top: 15px;
+}
+
+#middleMainContent > div{
+	animation: slideRight 0.3s;
+}
+
+.animationSlideRight{
 	animation: slideRight 0.3s;
 }
 
 @keyframes slideRight{
 	from{
-		margin-left: -12px;
+		margin-left: -20px;
 		width: 100%;
 	}
 
@@ -362,17 +391,25 @@ small{
 }
 
 .formHolder{
-	margin: 5px;
+
 	padding: 15px;
+	max-width: 600px;
+	margin: 0 auto;
+}
+
+.fadeOutAnimation{
+	animation: fadeOut 0.5s infinite;
 }
 
 @keyframes fadeOut{
 	from{
+		border-radius: 15px;
 		background: var(--colorOfBody)
 		opacity: 0.5;
 	}
 
 	to{
+		border-radius: 15px;
 		background: var(--colorOfBody);
 		opacity:0.1;
 	}
@@ -445,6 +482,10 @@ small{
 	background: rgba(0, 0, 0, 0.7);
 }
 
+.scaleUpAnimation{
+	animation: scaleup 1s;
+}
+
 .overlay{
 	position: absolute;
 	top:100px;
@@ -468,7 +509,7 @@ small{
 }
 
 .btnSuccessMyOwn{
-background: var(--fontSize17Color);
+background: green;
 border:3px solid var(--fontSize17Color);
 
 }
@@ -565,26 +606,45 @@ cursor: pointer;
 .gridHolderModified, .gridHolderModified2{
 	display: grid;
 	gap:10px;
-	margin-top: 15px;
 }
 
 
-
+.ml5{
+	margin-left: 5px;
+}
 
 @media (max-width: 2000px) {
 
 
-.gridHolderModified, .gridHolderModified2{
+.gridHolderModified, .gridHolderModified2, .gridHolder{
 	grid-template-columns: 1fr 1fr;
 }
+
+
+.applicantOptions{
+	visibility: hidden;
+}
+
+.jobMainInfo:hover .applicantOptions{
+	visibility: visible;
+}
+
 
 }
 
 @media (max-width: 500px) {
 
 
-.gridHolderModified, .gridHolderModified2{
+.gridHolderModified, .gridHolderModified2, .gridHolder{
 	grid-template-columns: 1fr;
+}
+
+.gridHolderModified2 > div, .gridHolderModified > div{
+	border:var(--border);
+}
+
+.applicantOptions{
+	visibility: visible;
 }
 
 }
@@ -688,11 +748,136 @@ button{
 }
 
 .simpleButton:hover{
-	background: var(--fontSize17Color);
+	background: green;
 	color: white;
 	cursor: pointer;
 }
 
 .btnPrimaryMyOwn{
 	background: blue;
+}
+
+.emptyContentImage{
+	width: 200px;
+	height: 200px;
+	border-radius: 50%;
+	margin-top: 10px;
+}
+
+.loadingSignHolder{
+	margin-top: 50px;
+	text-align: center;
+}
+
+.loadingSign{
+	font-size: 25px;
+	color: var(--colorOfBody);
+	opacity: 0.9;
+}
+
+.disabled{
+	opacity: 0.5;
+	cursor: not-allowed;
+	  pointer-events: none;
+
+}
+
+.myOwnBadge{
+	color:white;
+	background: green;
+	font-size: 12px;
+	padding: 3px;
+	border-radius: 5px;
+}
+
+.editDeleteOptions{
+	display: none;
+}
+
+.jobMainInfoClone .spareDiv2{
+	display: none;
+}
+
+.jobMainInfoClone:hover .editDeleteOptions{
+	display: block;
+}
+
+.jobMainInfoClone:hover .spareDiv2{
+	display: block;
+}
+
+.rotateAnimation{
+	animation: rotate189 1s;
+}
+
+@keyframes rotate189{
+	from{
+		transform: rotateY(0deg);
+	}
+
+	to{
+		transform: rotateY(180deg);
+	}
+}
+
+.navLinksHolder:not(.activeNavLink){
+	cursor: pointer;
+}
+
+
+
+.nav-flex-item{
+	padding:2px 10px 2px 10px;
+	border:1px solid var(--fontSize17Color);
+}
+
+
+
+.activeNavLink{
+	background: green;
+	color:white;
+}
+
+.successIcon, .dangerIcon{
+	padding: 10px;
+    border-radius: 50%;
+    font-size: 20px;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.successIcon{
+	color: white;
+	background: green;
+	border: 2px solid var(--fontSize17Color);
+
+}
+
+.dangerIcon{
+	border: 2px solid red;
+
+	background: red;
+	color: white;
+	margin-left: 5px;
+}
+
+.successIcon:hover{
+
+	color: var(--fontSize17Color);
+    background: none;
+}
+
+.dangerIcon:hover{
+	color: red;
+	background: none;
+
+}
+
+
+.applicantOptions{
+	justify-content: flex-end;
+		  flex: 1 1 auto;
+
 }

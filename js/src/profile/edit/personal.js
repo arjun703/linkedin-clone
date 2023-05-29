@@ -1,6 +1,5 @@
 
 function createEditPersonalForm(data){
-   	console.log(data);
 
 return `
 	<div>
@@ -9,7 +8,7 @@ return `
 				${createTextInput('Name', 'editPersonalName', data.name)}
 				${createTextInput('Email', 'editPersonalEmail', data.email)}
 				${createTextInput('Phone', 'editPersonalPhone', data.phone)}
-				${createTextInput('PortFolio', 'editPersonalPortfolio', data.portfolio)}
+				${createTextInput('Website', 'editPersonalWebsite', data.website)}
 			</div>
 			<div class = "mt-2">
 				<label for = "editPersonalSummary">
@@ -24,12 +23,27 @@ return `
 
 }
 
+
 function displayEditPersonalForm(data){
 
-	displayPrompt('Edit Personal Info', createEditPersonalForm(data), handleEditPersonalSubmit());
+	displayPrompt( 
+			'Edit Personal Info', 
+			createEditPersonalForm(data), 
+			`handleEditPersonalSubmit('${data.divId}')`
+			);
 
 }
 
-function handleEditPersonalSubmit(){
+
+
+function handleEditPersonalSubmit(divId){
+	
+
+
+	handleEdits('editPersonalForm', 
+					divId, 
+					displayPersonal,
+					siteName+'/php/profile/edit/personal.php'
+	);
 
 }

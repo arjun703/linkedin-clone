@@ -10,7 +10,7 @@ const form = `
 
 	<form id = "companyPageForm" method = "POST" >
 
-	<div class = "gridHolder" id="formHolderForCreateCompanyPage">
+	<div class = "gridHolderModified2" id="formHolderForCreateCompanyPage">
 		
 		<div>
 			<label for = "companyPageCompanyName"> Company Name </label>
@@ -80,9 +80,6 @@ const form = `
 document.getElementById(divId).innerHTML = form;
 
 var formHolder = document.getElementById('formHolderForCreateCompanyPage')
-
-manageGrid(formHolder);
-
 
 }
 

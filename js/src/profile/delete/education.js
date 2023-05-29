@@ -2,15 +2,13 @@ function deleteEducation(educationId){
 
 	var text = `
 		
-		Are you sure to delete this education info? Please be
-		informed that this can't be
-		undone.
+		Are you sure to delete this education info?
 	
 	`
 
 	displayPrompt('Delete Education?', 
 					text,
-					"proceedEducationDeletion(\'"+educationId+"\')",
+					`proceedEducationDeletion(${educationId})`,
 					 actionBtnDanger = true
 				);
 
@@ -18,6 +16,7 @@ function deleteEducation(educationId){
 
 
 function proceedEducationDeletion(id){
+	deletee(siteName+'/php/profile/delete.php?table=educations&id='+id, 'education_'+LOGIN_NAME+'_'+id);
 
 }
 

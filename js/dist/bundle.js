@@ -1,4 +1,4 @@
-function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json()).then(e=>{handleCheckLoginStatusData(e)})}function handleCheckLoginStatusData(e){e.isNotLoggedIn?window.IS_LOGGED_IN=!1:(window.IS_LOGGED_IN=!0,window.PROFILE_VISITS_COUNT=e.profileVisitsCount,window.CV_DOWNLOADS_COUNT=e.CVdownloadsCount,window.LOGIN_NAME=e.loginName,window.HAS_COMPANY_PAGE=e.hasCompanyPage),document.getElementById("preLoaderHolder").remove(),manageSidebars(),loadHome()}function returnTopOfMiddleMainContent(){return document.getElementById("middleMainContent").getBoundingClientRect().top+5+"px"}function makeSidebarsSticky(){for(var e=document.getElementsByClassName("stickyLeftOrRight"),t=0;t<e.length;t++){var o=returnTopOfMiddleMainContent();e[t].style.top=o}}function manageSidebars(){document.getElementById("hdrLeftPart").innerHTML=handleHdrLeftPart(),document.getElementById("hdrRightPart").innerHTML=handleHdrRightPart(),document.getElementById("leftSidebar").innerHTML=createLeftSidebar(),document.getElementById("rightSidebar").innerHTML=createRightSidebar(),makeSidebarsSticky(),window.middleMainContent=document.getElementById("middleMainContent")}function handleHdrLeftPart(){return`
+function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json()).then(e=>{handleCheckLoginStatusData(e)})}function handleCheckLoginStatusData(e){e.isNotLoggedIn?window.IS_LOGGED_IN=!1:(window.IS_LOGGED_IN=!0,window.PROFILE_VISITS_COUNT=e.profileVisitsCount,window.CV_DOWNLOADS_COUNT=e.CVdownloadsCount,window.LOGIN_NAME=e.loginName,window.HAS_COMPANY_PAGE=e.hasCompanyPage),""!=getCookieValue("employerMode")?window.EMPLOYER_MODE=!0:window.EMPLOYER_MODE=!1,document.getElementById("preLoaderHolder").remove(),manageSidebars(),(EMPLOYER_MODE&&IS_LOGGED_IN?loadPostedJobs:EMPLOYER_MODE?loadPostJobForm:loadHome)()}function returnTopOfMiddleMainContent(){return document.getElementById("middleMainContent").getBoundingClientRect().top+5+"px"}function makeSidebarsSticky(){for(var e=document.getElementsByClassName("stickyLeftOrRight"),t=0;t<e.length;t++){var o=returnTopOfMiddleMainContent();e[t].style.top=o}}function manageSidebars(){document.getElementById("hdrLeftPart").innerHTML=handleHdrLeftPart(),document.getElementById("hdrRightPart").innerHTML=handleHdrRightPart(),document.getElementById("rightSidebar").innerHTML=createRightSidebar(),window.middleMainContent=document.getElementById("middleMainContent"),EMPLOYER_MODE?(document.getElementById("leftSidebar").remove(),document.getElementById("middleMainContent").classList.remove("col-md-6"),document.getElementById("middleMainContent").classList.add("col-md-9")):document.getElementById("leftSidebar").innerHTML=createLeftSidebar(),makeSidebarsSticky()}function handleHdrLeftPart(){return`
 		<div style="margin-left: 15px; ">
 			<span class="h4">MyDJ</span>
 			<br>
@@ -25,7 +25,7 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 	`}function createLeftSidebar(){return`
 		<div class="stickyLeftOrRight">
 
-			<div class="animateScaleUP leftSidebarOptionsHolder">
+			<div class="animateScaleUP ${EMPLOYER_MODE?"d-none":""} leftSidebarOptionsHolder">
 				
 				<div  class="text-center pt-2">
 					Good ${getPartOfDay()}, 
@@ -49,15 +49,18 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 					</div>
 				</div>
 			</div>
-			<div class="rso  text-center">
-				<a href=""> About us </a> 
-				<a href=""> Careers </a>  
-				<a href=""> Privacy Policy </a>
-				<a href=""> Give us Feedback </a>
-				<a href=""> Get our App </a>
+
+			<div class = "rightSidebarOptionsHolder  ${EMPLOYER_MODE?"d-none":""} ">
+				<h6 class="text-center">Jobs Categories</h6>
+				<a href="">Networking and Hardware</a>
+				<br>
+				<a href="">Human Resources</a>
+				<br>
+				<a href="">Software</a>
+
 			</div>
 		</div>
-	`}function createRightSidebar(){return`
+	`}function setEmployerMode(){""==getCookieValue("employerMode")?document.cookie="employerMode=true":document.cookie="employerMode=",document.getElementById("employerMode").classList.add("rotateAnimation"),setTimeout(()=>{location.href=siteName},1e3)}function createRightSidebar(){return`
 		<div class="stickyLeftOrRight">
 			<div id="menuItems" class="animateScaleUP rightSidebarOptionsHolder">
 				<li class = "option ${IS_LOGGED_IN?"d-none":""} " id="registerOption"  onclick="loadRegisterForm()">
@@ -76,36 +79,114 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 				 onclick=" ${IS_LOGGED_IN&&HAS_COMPANY_PAGE?"loadCompanyPage()":"loadCreateCompanyPage()"}
 				  		" 
 				>
-					${IS_LOGGED_IN&&HAS_COMPANY_PAGE?"<i class = 'fa fa-edit'></i>Your Company Page":"<i class = 'fa fa-plus'></i>Create Company Page"} 
+					${IS_LOGGED_IN&&HAS_COMPANY_PAGE?"<i class = 'fa fa-building'></i>Your Company Page":"<i class = 'fa fa-plus'></i>Create Company Page"} 
 				</li>
 				<li class="option" onclick="toggle()">
-					<i class="fa fa-moon"></i>Night Mode
+					<i class="fa fa-moon"></i>Day/Night Mode
 				</li>
-				<li class="option" onclick="alert('Next time you open this website, you will see your posted jobs instead of home feed.')">
-					<i class="fa fa-toggle-off"></i>Employer Mode
+				<li class="option" onclick="setEmployerMode()">
+					<i id ="employerMode" class="fa fa-toggle-off"></i>Employer/Employee Mode
 				</li>
 				<li class = " option ${IS_LOGGED_IN?"":"d-none"}" id="logOutOption" onclick="logOut()">
 					<i class="fa fa-sign-out"></i>Log Out
 				</li>
 			</div>
-			<div class = "rightSidebarOptionsHolder">
-				<h6>Jobs Categories</h6>
-				<a href="">Networking and Hardware</a>
-				<br>
-				<a href="">Human Resources</a>
-				<br>
-				<a href="">Software</a>
-				<br>
-				<a href="">Internships</a>
-				<br>
-				<a href="">Full Time</a>
-				<br>
-				<a href="">Part Time</a>
-				<br>
-				<a href="">Contract</a>
+
+
+
+			<div class="rso  text-center">
+				<a href=""> About us </a> 
+				<a href=""> Careers </a>  
+				<a href=""> Privacy Policy </a>
+				<a href=""> Give us Feedback </a>
+				<a href=""> Get our App </a>
+			</div>
+
+		</div>
+	`}const displayNoti=(e,t)=>{display(e,document.getElementById(t),callback=returnEachNoti)};function loadNoti(){var e=siteName+"/notifications",t=createHomeHdr(activeTab="noti");loadTab(e,apiFolder+"/notifications.php",displayNoti,t)}function returnEachNoti(e){var t=document.createElement("div");return t.className="jobMainInfo",t.innerText=e.notification,t}function loadMenu(){execFrontendOnlyFunction(siteName+"/menu",createHomeHdr(activeTab="menu"),displayMenu)}const displayMenu=()=>{var e=siteName+"/menu";document.getElementById(e).innerHTML=document.getElementById("menuItems").innerHTML};function loadSearchResults(){var e=getCookieValue("position").replace(/\s/g,"+"),t=getCookieValue("location").replace(/\s/g,"+"),e=siteName+"/search?j="+e+"&l="+t,t=createGeneralHdr(getCookieValue("position"));loadTab(e,"php/search/results.php",displaySearchResults,t)}function createSearchFilter(){return window.filterChanged=!1,`
+<div>
+	<table class= "w-100">
+		<tr>
+			<th>Type</th>
+			<th>Site</th>
+			<th></th>
+		</tr>
+		<tr id = "filterHolder">
+			<td>	
+				<div class = "mt-1">
+					<input  type = "checkbox" id = "jt_1" onchange = "handle(event, 'fu')">
+					<label class = "ml5" for = "jt_1">Full Time</label>
+				</div>
+				<div class = "mt-1">
+					<input onchange = "handle(event,'pa')"  type = "checkbox" id = "jt_2">
+					<label class = "ml5" for = "jt_2">Part Time</label>
+				</div>
+				<div  class ="mt-1" >
+					<input onchange = "handle(event, 'in')" type = "checkbox" id = "jt_3">
+					<label  class = "ml5" for = "jt_3">Internship</label>
+				</div>
+				<div class = "mt-1" >
+					<input onchange = "handle(event, 'co')" type = "checkbox" id = "jt_4">
+					<label class="ml5" for = "jt_4" >Contract</label>
+				</div>
+			</td>
+			<td>
+				<div>
+					<input  onchange = "handle(event, 'on')"  type = "checkbox" id = "js_1">
+					<label class="ml5" for = "js_1">On-Site</label>
+				</div>
+				<div class = "mt-1">
+					<input  onchange = "handle(event, 're')"  type = "checkbox" id = "js_2">
+					<label class="ml5" for = "js_2">Remote</label>
+				</div>
+				<div class = "mt-1">
+					<input  onchange = "handle(event, 'hy')"  type = "checkbox" id = "js_3">
+					<label class="ml5" for = "js_3">Hybrid</label>
+				</div>
+			</td>
+			<td class = "softLink" onclick = "resetFilters()">
+				Reset
+			</td>
+		</tr>
+	</table>
+</div>
+
+`}function handle(e,t){window.filterChanged=!0,e.target.checked?document.cookie=e.target.id+"="+t:document.cookie=e.target.id+"=;expires=Thu, 01 Jan 1970 00:00:00 UTC;"}function resetFilters(){for(var e=document.getElementById("filterHolder").querySelectorAll("input"),t=0;t<e.length;t++)document.cookie=e[t].id+"=;expires=Thu, 01 Jan 1970 00:00:00 UTC;";checkTheCheckboxStatus()}function checkTheCheckboxStatus(){for(var e=document.getElementById("filterHolder").querySelectorAll("input"),t=0;t<e.length;t++)""!=getCookieValue(e[t].id)?e[t].checked=!0:e[t].checked=!1}function displayFilterPrompt(){displayPrompt("Edit Filters",createSearchFilter(),"checkFilters()"),checkTheCheckboxStatus()}const displaySearchResults=(e,t)=>{var t=document.getElementById(t),o=(t.className="mt-3",createProfileSubHeader("Results",profileOwnershipRequired=!1,btnText="Add Filters",callback="displayFilterPrompt()")),i=document.createElement("div"),o=(i.innerHTML=o+"<hr>",t.appendChild(i),document.createElement("div"));t.appendChild(o),display(e,o,callback=returnEachJob)};function refreshFilters(){(document.location.toString().includes("search")?loadSearchResults:loadHome)()}function checkFilters(){filterChanged&&(refreshFilters(),hideOverlay())}function createBackButton(){var e=document.createElement("td"),t=(e.className="text-center",document.createElement("button"));return t.className="btn btn-primary",t.innerHTML="<i class = 'fas fa-arrow-left'></i>",e.appendChild(t),e.onclick=()=>history.back(),e}function createSearchBoxHdr(){var e=document.createElement("table"),t=(e.className="generalHdrTable",document.createElement("tr")),o=createBackButton(),i=document.createElement("td"),n=document.createElement("div"),a=(n.className="gridHolder",n.style.gap="5px",document.createElement("div")),r=document.createElement("input"),d=(r.placeholder="Search job",r.id="searchBoxPositionInput",r.className="form-control",r.onkeyup=e=>{loadJobSuggestions(e.target.value)},a.appendChild(r),document.createElement("div"));return(r=document.createElement("input")).id="searchBoxLocationInput",r.placeholder="Location",r.onkeyup=e=>{loadLocationSuggestions(e.target.value)},r.className="form-control",d.appendChild(r),n.appendChild(a),n.appendChild(d),i.appendChild(n),t.appendChild(o),t.appendChild(i),e.appendChild(t),e}const handleSuggestionClicksInSearchBox=()=>{var e=document.getElementById("searchBoxPositionInput").value.trim(),t=document.getElementById("searchBoxLocationInput").value.trim();""!=e&&(document.cookie="position="+e),""!=e&&""==t&&(document.getElementById("searchBoxLocationInput").focus(),displaySearchBox()),""!=t&&(document.cookie="location="+t),""!=t&&""==e&&(document.getElementById("searchBoxPositionInput").focus(),displaySearchBox()),2<e.length&&2<t.length&&loadSearchResults()};function createLoadingSign(e=""){return`
+			<div id = "${e}" class = "loadingSignHolder animationNone">
+				<i class = 'loadingSign fa fa-spinner fa-spin'></i>
+			</div>
+		`}function loadJobSuggestions(e){let t=siteName+"/searchBox";2<e.trim().length?(document.getElementById(t).innerHTML=createLoadingSign(),fetch(`php/search/autocomplete.php?query=${e}&task=position`).then(e=>e.json()).then(e=>{0==e.length?document.getElementById(t).innerHTML="<div class = 'h4 text-center'>No Suggestions</h4>":document.getElementById(t).innerHTML=`
+					<div class = "listHolder">
+				`+returnList("searchBoxPositionInput",e,handleSuggestionClicksInSearchBox)+"</div>"})):document.getElementById(t).innerHTML=defaultContentForSearchBox()}function loadLocationSuggestions(e){let t=siteName+"/searchBox";2<e.trim().length?(document.getElementById(t).innerHTML=`
+			<div class = "loadingSignHolder animationNone">
+				<i class = 'loadingSign fa fa-spinner fa-spin'></i>
+			</div>
+		`,fetch(`php/search/autocomplete.php?query=${e}&task=location`).then(e=>e.json()).then(e=>{0==e.length?document.getElementById(t).innerHTML="<div class = 'h4 text-center'>No Suggestions</h4>":document.getElementById(t).innerHTML=`
+					<div class = "listHolder">
+				`+returnList("searchBoxLocationInput",e,handleSuggestionClicksInSearchBox)+"</div>"})):document.getElementById(t).innerHTML=defaultContentForSearchBox()}function loadSearchBox(){execFrontendOnlyFunction(siteName+"/searchBox",createSearchBoxHdr(),displaySearchBox)}function notLoggedInDefaultContent(){return`
+		<div class = "text-center">
+			<img class = "emptyContentImage" src = "files/tired.jpg">
+		</div>
+		<div class = "text-center mt-3" >
+			<h4>Tired of Typing ? </h4>
+			<div> 
+				<span class = "softLink" onclick = "loadLoginForm()">Login</span> to access recent searches
 			</div>
 		</div>
-	`}const displayNoti=(e,t)=>{display(e,document.getElementById(t),callback=returnEachNoti)};function loadNoti(){var e=siteName+"/notifications",t=createHomeHdr(activeTab="noti");loadTab(e,apiFolder+"/notifications.php",displayNoti,t)}function returnEachNoti(e){var t=document.createElement("div");return t.className="jobMainInfo",t.innerText=e.notification,t}function loadMenu(){execFrontendOnlyFunction(siteName+"/menu",createHomeHdr(activeTab="menu"),displayMenu)}const displayMenu=()=>{var e=siteName+"/menu";document.getElementById(e).innerHTML=document.getElementById("menuItems").innerHTML};function createBackButton(){var e=document.createElement("td"),t=(e.className="text-center",document.createElement("button"));return t.className="btn btn-primary",t.innerHTML="<i class = 'fas fa-arrow-left'></i>",e.appendChild(t),e.onclick=()=>history.back(),e}function createSearchBoxHdr(){var e=document.createElement("table"),t=(e.className="generalHdrTable",document.createElement("tr")),o=createBackButton(),i=document.createElement("td"),n=document.createElement("div"),a=(n.className="gridHolder",n.style.gap="5px",manageGrid(n),document.createElement("div")),r=document.createElement("input"),l=(r.placeholder="Search job",r.className="form-control",a.appendChild(r),document.createElement("div"));return(r=document.createElement("input")).placeholder="Location",r.className="form-control",l.appendChild(r),n.appendChild(a),n.appendChild(l),i.appendChild(n),t.appendChild(o),t.appendChild(i),e.appendChild(t),e}function loadSearchBox(){execFrontendOnlyFunction(siteName+"/searchBox",createSearchBoxHdr(),displaySearchBox)}const displaySearchBox=()=>{siteName};function loadViewProfile(e){execFrontendOnlyFunction(siteName+"/viewProfile/"+e+"/personal",createHomeHdr(activeTab="sdfdsf"),displayProfile)}const displayProfile=()=>{window.VIEWING_PROFILE_OF=LOGIN_NAME;var e=siteName+"/viewProfile/"+LOGIN_NAME+"/personal";const t={name:"Arjun Poudel",summary:" Very talentd  Very talentd  Very talentd ",email:"arjunpoudel703@gmail.com",phone:"9840030080",portfolio:"https://mydj.great-site.net",address:"Dahachowk, Kathmandu, Nepal"},o=[{id:12,position:"PHP Developer",company:"Javra Software",task_description:"Handling all the website",from:"2020-12-15",to:"Present"},{id:14,position:"Network Administrator",company:"Sanskriti School",task_description:"Handling Network Devices",from:"2020-02-15",to:"2023-02-12"}],i=[{id:1,skill:"PHP"},{id:3,skill:"Javascript"},{id:6,skill:"SEO"},{id:43,skill:"Marketing"},{id:45,skill:"CSS"},{id:444,skill:"HTML"}],n=[{id:34,title:"Mimicly",description:"video sharingsharing sharing sharing sharing sharing sharing sharing sharing sharing sharing  website",link:"http://mimicly.rf.gd"},{id:35,title:"GodJob",description:"LinkedIn",link:"http://godjob.rf.gd"},{id:36,title:"itsVidTime",description:"video calling website",link:"http://abc.rf.gd"}],a=[{id:33,level:"Intermediate",institution:"Pulchowk Campus",from:"2020-03-03",to:"2020-03-04",grade:"91%"},{id:3,level:"Bachelor",field:"Electronics",institution:"Pulchowk Campus",from:"2020-03-03",to:"2020-03-04",grade:"81%"},{id:35,level:"Master",field:"VLSI",institution:"Pulchowk Campus",from:"2020-03-03",to:"2020-03-04",grade:"91%"}];var r="",r=(r=(r=(r=(r+=displayPersonal(t))+displayExperiences(o))+displaySkills(i))+displayProjects(n))+displayEducations(a);document.getElementById(e).innerHTML=r};function createTd(e,t){return`
+	`}function loggedInDefaultContent(){return`
+		<div>
+
+		</div>
+
+	`}function defaultContentForSearchBox(){return`
+
+		<div class = "animationNone">
+			
+			${(IS_LOGGED_IN?loggedInDefaultContent:notLoggedInDefaultContent)()}
+
+		</div>
+
+	`}const displaySearchBox=()=>{var e=siteName+"/searchBox";document.getElementById(e).innerHTML=defaultContentForSearchBox()};function loadViewProfile(e,t=""){var o=siteName+"/profile/"+e,i=createHomeHdr(activeTab="sdfdsf");loadTab(o,siteName+"/php/profile/view.php?of="+e+"&fromJobId="+t,displayProfile,i)}const displayProfile=(e,t)=>{var o=e.personal.login_name,o=displayProfileHeader(window.VIEWING_PROFILE_OF=o,e.jobId)+`<div id = "personal_${o}">`+displayPersonal(e.personal)+"</div>",i=displayExperiences(e.experiences),n=displaySkills(e.skills),a=displayProjects(e.projects),e=displayEducations(e.educations);document.getElementById(t).innerHTML=o+i+n+a+e};function createTd(e,t){return`
 		<td style = "text-align:right"  
 			onclick = '${e}' >
 			${createPrimaryButton(t)}
@@ -114,18 +195,34 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 		<div>
 			<table class = 'fixedTable'>
 				<tr>
-					<td class = "h4">
+					<td class = "h5">
 						${e}
 					</td>
-					${!t||VIEWING_PROFILE_OF==LOGIN_NAME?createTd(i,o):""}
+					${!t||IS_LOGGED_IN&&VIEWING_PROFILE_OF==LOGIN_NAME?createTd(i,o):""}
+
 				</tr>
 			</table>
 		</div>
-	`}function displayProfileHeader(e){return`
-		<div  class = "stickyMiddle p-2 mt-5 mb-5"
-				style = "background: var(--bgColorOfCards); top: ${returnTopOfMiddleMainContent()}"
+	`}function createSuccessButton(e){return`
+		<button class = "btn btn-success">
+			${e}
+		</button>
+	`}function displayProfileHeader(e,t=""){return`
+		
+		<div  class = "profileHader p-2 mt-4 mb-5"
+				style = " max-width:350px; background: var(--bgColorOfCards); top: ${returnTopOfMiddleMainContent()}"
 			> 
-				${createProfileSubHeader("@"+e+"'s Profile",profileOwnershipRequired=!1,"Dowwnload CV","downloadCV('"+e+"'')")}
+				<table class= "fixedTable">
+					<tr>
+						<td style="font-weight:bold;text-align:center">
+							@${e}
+						</td>
+
+
+						${createTd("dowloadCV('"+e+"', "+t+")","Download CV")}
+
+					</tr>
+				</table>
 
 		</div>
 		<hr>
@@ -146,8 +243,14 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 			${e}
 		</button>
 	`}function viewOwnProfile(){loadViewProfile(LOGIN_NAME)}function createAddSkillForm(){return`
-	<form>
-		<input class = "border-round" placeholder = "Add New Skill" class = "w-100" onkeyup = "alert(1)" type = "text" name = "profileNewSkill" id = "profileNewSkill">
+	<form method="POST" action = "" onsubmit = "return false">
+		<input style = "border-radius:15px;text-align:center"
+		  placeholder = "Add New Skill" 
+		  class = "w-100" 
+		  onkeyup = "handleSkillInput(event)" 
+		  type = "text" 
+		  name = "profileNewSkill"
+		   id = "profileNewSkill">
 	</form>
 `}function createDeleteSkillIcon(e){return`
 		<span  style = "padding-left:5px; padding-right:5px; cursor:pointer " onclick = "deleteSkill(${e})">
@@ -156,29 +259,29 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 	`}function displayEachSkill(e){return`
 		<div class = "flex-item">
 			<span> ${e.skill} </span>
-			${VIEWING_PROFILE_OF==LOGIN_NAME?createDeleteSkillIcon(e.id):""}
+			${IS_LOGGED_IN&&VIEWING_PROFILE_OF==LOGIN_NAME?createDeleteSkillIcon(e.id):""}
 		</div>
-	`}function displaySkills(e){var t="";if(0<e.length)for(var o=0;o<e.length;o++)t+=displayEachSkill(e[o]);else t+='<div class = "h6"> No skills to show </div> ';return`
+	`}function displaySkills(e){var t="";if(0<e.length)for(var o=0;o<e.length;o++)t+=`<div id ='skill_${e[o].id}'>  ${displayEachSkill(e[o])} </div>`;return`
 	<div>
 		<table class = "fixedTable">
 			<tr>
 				<td class = "h4"> Skills </td>
 				<td>
-					${VIEWING_PROFILE_OF==LOGIN_NAME?createAddSkillForm():""}
+					${IS_LOGGED_IN&&VIEWING_PROFILE_OF==LOGIN_NAME?createAddSkillForm():""}
 				</td>
 			</tr>
 		</table>
 	</div>
 
 
-	<div class = "mt-3 flex-container">
+	<div class = "mt-3 flex-container " id = 'skills_${VIEWING_PROFILE_OF}'>
 		${t}
 	</div>
 	
 
 	<hr>
 
-`}function createProjectOptions(e){return`
+`}function handleSkillInput(e){var t=e.target.value.trim();2<t.length&&13===event.keyCode&&(e.target.value="",fetch(siteName+"/php/profile/create/skill.php?skill="+t).then(e=>e.json()).then(e=>{var t;e.error?alert(e.error):((t=document.createElement("div")).id="skill_"+e.id,t.className="scaleUpAnimation",t.innerHTML=displayEachSkill(e),document.getElementById("skills_"+LOGIN_NAME).appendChild(t))}))}function createProjectOptions(e){return`
 	<div class = "spareDiv2">
 	</div>
 	<div class = "editDeleteOptions">
@@ -193,60 +296,59 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 			</tr>
 		</table>
 	</div>
-`}function displayEachProject(e){return`
+`}const displayEachProject=e=>(e.divId=`project_${e.login_name}_`+e.id,`
 
-	<div class = "jobMainInfoClone" >
-		<div class = "fontSize20"> ${e.title} </div>
+
+		<div class = "fontSize20"> ${e.project_name} </div>
 		<div class = "fontSize17"> ${e.description} </div>
 		<div> ${e.link} </div>
 		
-		${VIEWING_PROFILE_OF==LOGIN_NAME?createProjectOptions(e):""}
-
-	</div>
-`}function displayProjects(e){var t="";if(0<e.length)for(var o=0;o<e.length;o++)t+=displayEachProject(e[o]);else t+='<div class = "h6" > No projects to show. </div>';return`
+		${IS_LOGGED_IN&&VIEWING_PROFILE_OF==LOGIN_NAME?createProjectOptions(e):""}
+`);function displayProjects(e){var t="";if(0<e.length)for(var o=0;o<e.length;o++)t+=`<div class="jobMainInfoClone" id = '${`project_${e[o].login_name}_`+e[o].id}' >`+displayEachProject(e[o])+"</div>";return`
 	${createProfileSubHeader("Projects",profileOwnershipRequired=!0,"Add New","displayAddNewProjectForm()")}
-	<div class = "gridHolderModified ">
+	<div class = "gridHolderModified mt-3" id= "projects_${VIEWING_PROFILE_OF}">
 		${t}
 	</div>
 	<hr>
-`}function createPersonalHeader(e){e=JSON.stringify(e);return`
+`}function createPersonalHeader(e){e.divId="personal_"+e.login_name;e=JSON.stringify(e);return`
 		${createProfileSubHeader("Personal",profileOwnershipRequired=!0,"Edit","displayEditPersonalForm("+e+")")}
-	`}function displayPersonal(e){return`
+	`}const displayPersonal=e=>`
 		
-		${displayProfileHeader(VIEWING_PROFILE_OF)}
-
 		<div>
 
 			${createPersonalHeader(e)}
-			<div class = "mt-3">
-				<table class = "attractive-table w-100">
-					<tr>
-						<td> Name </td>
-						<td>${e.name}</td>
-					</tr>
-					<tr>
-						<td> Summary </td>
-						<td> ${e.Summary} </td>
-					</tr>
-					<tr>
-						<td> Email </td>
-						<td> ${e.email} </td>
-					</tr>
-					<tr>
-						<td> Phone </td>
-						<td> ${e.phone} </td>
-					</tr>
-					<tr>
-						<td> Portfolio </td>
-						<td> ${e.portfolio} </td>
-					</tr>
-				</table>
+			
+			<div class = "" id = "personal_${e.login_name}">
+				<div class = "mt-3">
+					<table class = "attractive-table w-100">
+						<tr>
+							<td> Name </td>
+							<td>${e.name}</td>
+						</tr>
+						<tr>
+							<td> Summary </td>
+							<td> ${e.summary} </td>
+						</tr>
+						<tr>
+							<td> Email </td>
+							<td> ${e.email} </td>
+						</tr>
+						<tr>
+							<td> Phone </td>
+							<td> ${e.phone} </td>
+						</tr>
+						<tr>
+							<td> Website </td>
+							<td> ${e.website} </td>
+						</tr>
+					</table>
+				</div>
 			</div>
 		</div>
 		<hr>
-	`}function createExperienceOptions(e){return`
+	`;function createExperienceOptions(e){return`
 <div class = "spareDiv2">
-	</div>
+</div>
 	<div class = "editDeleteOptions">
 		<table class = 'simpleTable'>
 			<tr>
@@ -259,20 +361,17 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 			</tr>
 		</table>
 	</div>
-`}function displayEachExperience(e){return`
-	<div class = "jobMainInfoClone" >
+`}const displayEachExperience=e=>(1==e.currently_working_here&&(e._to="Present"),e.divId=`experience_${e.login_name}_`+e.id,`
 		<div class = "fontSize20"> ${e.position}</div>
 		<div class = "fontSize17"> ${e.company}</div>
-		<div>${e.task_description}</div>
-		<div> ${e.from} to ${e.to} </div>
+		<div>${e.description}</div>
+		<div> ${e._from} to ${e._to} </div>
 		
-		${VIEWING_PROFILE_OF==LOGIN_NAME?createExperienceOptions(e):""}
-
-	</div>
-`}function displayExperiences(e){var t="";if(0<e.length)for(var o=0;o<e.length;o++)t+=displayEachExperience(e[o]);else t="<div> No experiences to show. </div>";return`
+		${IS_LOGGED_IN&&VIEWING_PROFILE_OF==LOGIN_NAME?createExperienceOptions(e):""}
+`);function displayExperiences(e){var t="";if(0<e.length)for(var o=0;o<e.length;o++)t+=`<div id = '${`experience_${e[o].login_name}_`+e[o].id}' class = "jobMainInfoClone" >`+displayEachExperience(e[o])+"</div>";return`
 	
 	${createProfileSubHeader("Experiences",profileOwnershipRequired=!0,"Add New","displayAddNewExperienceForm()")}
-	<div class = "gridHolderModified">
+	<div class = "gridHolderModified mt-3" id= "experiences_${VIEWING_PROFILE_OF}">
 		${t}
 	</div>
 	<hr>
@@ -292,22 +391,20 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 			</tr>
 		</table>
 	</div> 
-`}function displayEachEducation(e){return`
-    <div class="jobMainInfoClone">
-       <div style="font-weight:bold" class="fontSize17">${e.level}</div>
+`}const displayEachEducation=e=>(e.divId=`education_${e.login_name}_`+e.id,`
+       <div class="fontSize20">${e.level}</div>
 
-      <div class="fontSize20">
+      <div  style="font-weight:bold" class = "fontSize17">
       	${void 0!==e.field?e.field:"---------"}
       </div>
       <div class="fontSize17">${e.institution}</div>
-      <div>${e.from} to ${e.to}</div>
+      <div>${e._from} to ${e._to}</div>
       
-      ${VIEWING_PROFILE_OF==LOGIN_NAME?createEducationOptions(e):""}
-    </div>
-  `}function displayEducations(e){var t="";if(0<e.length)for(var o=0;o<e.length;o++)t+=displayEachEducation(e[o]);else t+='<div class = "h6" > No education info to show. </div>';return`
+      ${IS_LOGGED_IN&&VIEWING_PROFILE_OF==LOGIN_NAME?createEducationOptions(e):""}
+  `);function displayEducations(e){var t="";if(0<e.length)for(var o=0;o<e.length;o++)t+=`<div class =  "jobMainInfoClone" id = '${`education_${e[o].login_name}_`+e[o].id}' >`+displayEachEducation(e[o])+"</div>";return`
 	${createProfileSubHeader("Education",profileOwnershipRequired=!0,"Add New","displayAddNewEducationForm()")}
 	
-	<div class = "gridHolderModified">
+	<div class = "gridHolderModified mt-3" id= "educations_${VIEWING_PROFILE_OF}">
 		${t}
 	</div>
 	
@@ -323,14 +420,14 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 				${createTextarea("Project Description","descriptioon",o)}
 		</form>
 	</div>
-`}function createEditProjectForm(e){return createProjectForm(projectId=e.id,title=e.title,description=e.description,link=e.link)}function createAddNewProjectForm(){return createProjectForm()}function displayEditProjectForm(e){displayPrompt("Edit Project",createEditProjectForm(e),"handleEditProjectSubmit()")}function displayAddNewProjectForm(){displayPrompt("Add New Project",createAddNewProjectForm(),"handleAddNewProjectSubmit()")}function handleEditProjectSubmit(){}function createEditPersonalForm(e){return console.log(e),`
+`}function createEditProjectForm(e){return createProjectForm(projectId=e.id,title=e.project_name,description=e.description,link=e.link)}function createAddNewProjectForm(){return createProjectForm()}function displayEditProjectForm(e){displayPrompt("Edit Project",createEditProjectForm(e),`handleEditProjectSubmit('${e.divId}')`)}function displayAddNewProjectForm(){displayPrompt("Add New Project",createAddNewProjectForm(),"handleAddNewProjectSubmit()")}function handleAddNewProjectSubmit(){handleAddNew("projectForm","projects_"+LOGIN_NAME,displayEachProject,siteName+"/php/profile/create/project.php","project")}function handleEditProjectSubmit(e){handleEdits("projectForm",e,displayEachProject,siteName+"/php/profile/edit/project.php")}function createEditPersonalForm(e){return`
 	<div>
 		<form id = "editPersonalForm" method = "POST">
 			<div class = "gridHolderModified2">
 				${createTextInput("Name","editPersonalName",e.name)}
 				${createTextInput("Email","editPersonalEmail",e.email)}
 				${createTextInput("Phone","editPersonalPhone",e.phone)}
-				${createTextInput("PortFolio","editPersonalPortfolio",e.portfolio)}
+				${createTextInput("Website","editPersonalWebsite",e.website)}
 			</div>
 			<div class = "mt-2">
 				<label for = "editPersonalSummary">
@@ -341,7 +438,7 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 		</form>
 	</div>
 
-`}function displayEditPersonalForm(e){displayPrompt("Edit Personal Info",createEditPersonalForm(e),handleEditPersonalSubmit())}function handleEditPersonalSubmit(){}function createTextarea(e,t,o){return`
+`}function displayEditPersonalForm(e){displayPrompt("Edit Personal Info",createEditPersonalForm(e),`handleEditPersonalSubmit('${e.divId}')`)}function handleEditPersonalSubmit(e){handleEdits("editPersonalForm",e,displayPersonal,siteName+"/php/profile/edit/personal.php")}function createTextarea(e,t,o){return`
 		<div class = "mt-2">
 			<label>
 				${e}
@@ -361,11 +458,11 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 		<label for = "${t}">${e}</label>
 		<input style  ="font-size:20px" onchange = "${n}" type = "checkbox" id ="${t}" name = "${o}"  ${i?"checked":""}>
 	</div>
-`}function createDateInput(e,t,o,i=!1,n="",a=""){return createInput(type="date",e,t,o,i,n,a)}function createExperienceForm(e="",t="",o="",i="",n="",a="",r=!1){return`
+`}function createDateInput(e,t,o,i=!1,n="",a=""){o=isNaN(new Date(o).getTime())?"":o;return createInput(type="date",e,t,o,i,n,a)}function createExperienceForm(e="",t="",o="",i="",n="",a="",r=!1){return`
 	<div>
 		<form id = "experienceForm" method = "POST">
 
-			<input type = "hidden" name = "experienceId" value = "${e}">
+			<input type = "hidden" name = "id" value = "${e}">
 
 
 			<div class = "gridHolderModified2">
@@ -386,7 +483,7 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 
 		</form>
 	</div>
-`}function createEditExperienceForm(e){return createExperienceForm(experienceId=e.id,position=e.position,company=e.company,taskDescription=e.task_description,from=e.from,to="Present"==e.to?"":e.to,currentlyWorkingHere="Present"==e.to)}function createAddNewExperienceForm(){return createExperienceForm()}function displayEditExperienceForm(e){displayPrompt("Edit Experience",createEditExperienceForm(e),"handleEditExperienceSubmit()")}function displayAddNewExperienceForm(){displayPrompt("Add New Experience",createAddNewExperienceForm(),"handleAddNewExperienceSubmit()")}function handleEditExperienceSubmit(){}function handleExperienceFormCbChange(){document.getElementById("experienceFormCb").checked?document.getElementById("experienceFormTo_holder").style.display="none":(document.getElementById("experienceFormTo").disabled=!1,document.getElementById("experienceFormTo_holder").style.display="block")}function handleExperienceFormToChange(){document.getElementById("experienceFormCb_holder").style.display="none"}function createEducationForm(e="",t="",o="",i="",n="",a){return`
+`}function createEditExperienceForm(e){return createExperienceForm(experienceId=e.id,position=e.position,company=e.company,taskDescription=e.description,from=e._from,to=e._to,currentlyWorkingHere="Present"==e._to)}function createAddNewExperienceForm(){return createExperienceForm()}function displayEditExperienceForm(e){displayPrompt("Edit Experience",createEditExperienceForm(e),`handleEditExperienceSubmit('${e.divId}')`)}function displayAddNewExperienceForm(){displayPrompt("Add New Experience",createAddNewExperienceForm(),"handleAddNewExperienceSubmit()")}function handleEdits(e,t,o,i){var e=new FormData(document.getElementById(e)),n=new XMLHttpRequest,a=document.getElementById(t);a.classList.add("fadeOutAnimation"),n.onreadystatechange=function(){var e;4==this.readyState&&200==this.status&&(e=JSON.parse(this.responseText),a.classList.remove("fadeOutAnimation"),e.error?alert("Error - "+e.error):a.innerHTML=o(e))},n.open("POST",i),n.send(e),hideOverlay()}function handleAddNew(e,t,o,i,n){var e=new FormData(document.getElementById(e)),a=document.getElementById("overlayFooterAction"),r=(a.classList.add("fadeOutAnimation"),new XMLHttpRequest),d=document.getElementById(t);r.onreadystatechange=function(){if(4==this.readyState&&200==this.status){var t=JSON.parse(this.responseText);if(t.error)alert("Error - "+t.error),a.classList.remove("fadeOutAnimation");else{hideOverlay();let e=document.createElement("div");e.className="jobMainInfoClone",e.id=n+"_"+t.login_name+"_"+t.id,e.classList.add("scaleUpAnimation"),e.innerHTML=o(t),d.appendChild(e),setTimeout(()=>{e.classList.remove("scaleUpAnimation")},1e3)}}},r.open("POST",i),r.send(e)}function handleAddNewExperienceSubmit(){handleAddNew("experienceForm","experiences_"+LOGIN_NAME,displayEachExperience,siteName+"/php/profile/create/experience.php","experience")}function handleEditExperienceSubmit(e){handleEdits("experienceForm",e,displayEachExperience,siteName+"/php/profile/edit/experience.php")}function handleExperienceFormCbChange(){document.getElementById("experienceFormCb").checked?document.getElementById("experienceFormTo_holder").style.display="none":(document.getElementById("experienceFormTo").disabled=!1,document.getElementById("experienceFormTo_holder").style.display="block")}function handleExperienceFormToChange(){document.getElementById("experienceFormCb_holder").style.display="none"}function createEducationForm(e="",t="",o="",i="",n="",a){return`
 	<div>
 		<form id = "educationForm" method = "POST">
 
@@ -408,7 +505,7 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 				${createTextInput("Field","educationFormField",o)}
 				${createTextInput("Institution","educationFormInstitution",i)}
 				${createDateInput("From","educationFormFrom",n)}
-				${createDateInput("To","educationFormFrom",n)}
+				${createDateInput("To","educationFormTo",n)}
 
 			</div>
 			
@@ -417,140 +514,145 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 
 		</form>
 	</div>
-`}function createEditEducationForm(e){return createEducationForm(educationId=e.id,level=e.level,field=e.field,institution=e.institution,from=e.from,to=e.to)}function createAddNewEducationForm(){return createEducationForm()}function displayEditEducationForm(e){displayPrompt("Edit Education",createEditEducationForm(e),"handleEditEducationSubmit()")}function displayAddNewEducationForm(){displayPrompt("Add New education",createAddNewEducationForm(),"handleAddNewEducationSubmit()")}function handleEditEducationSubmit(){}function deleteSkill(e){}function deleteProject(e){displayPrompt("Delete Project?",`
+`}function createEditEducationForm(e){return createEducationForm(educationId=e.id,level=e.level,field=e.field,institution=e.institution,from=e._from,to=e._to)}function createAddNewEducationForm(){return createEducationForm()}function displayEditEducationForm(e){displayPrompt("Edit Education",createEditEducationForm(e),`handleEditEducationSubmit('${e.divId}')`)}function displayAddNewEducationForm(){displayPrompt("Add New education",createAddNewEducationForm(),"handleAddNewEducationSubmit()")}function handleEditEducationSubmit(e){handleEdits("educationForm",e,displayEachEducation,siteName+"/php/profile/edit/education.php")}function handleAddNewEducationSubmit(){handleAddNew("educationForm","educations_"+LOGIN_NAME,displayEachEducation,siteName+"/php/profile/create/education.php","education")}function deletee(e,t,o=""){hideOverlay();let i=document.getElementById(t);document.getElementById(t).classList.add("fadeOutAnimation");fetch(e).then(e=>e.json()).then(e=>{if(document.getElementById(t).classList.remove("fadeOutAnimation"),e.error)alert(e.error);else{if(""!=o){let e=document.getElementById(o);setTimeout(()=>{e.insertBefore(i,e.firstChild)},1500)}removeDiv(t)}})}function removeDiv(e){let t=document.getElementById(e);t.classList.add("scaleDownAnimation"),setTimeout(()=>{t.remove()},1e3)}function deleteSkill(e){deletee(siteName+"/php/profile/delete.php?table=skills&id="+e,"skill_"+e)}function deleteProject(e){displayPrompt("Delete Project?",`
 		
-		Are you sure to delete this project info? Please be
-		informed that this can't be
-		undone.
+		Are you sure to delete this project info? 
 	
-	`,"proceedProjectDeletion('"+e+"')",actionBtnDanger=!0)}function proceedProjectDeletion(e){alert(e)}function deleteExperience(e){displayPrompt("Delete Experience?",`
+	`,`proceedProjectDeletion(${e})`,actionBtnDanger=!0)}function proceedProjectDeletion(e){deletee(siteName+"/php/profile/delete.php?table=projects&id="+e,"project_"+LOGIN_NAME+"_"+e)}function deleteExperience(e){displayPrompt("Delete Experience?",`
 		
-		Are you sure to delete this experience info? Please be
-		informed that this can't be
-		undone.
+		Are you sure to delete this experience info? 
 	
-	`,"proceedExperienceDeletion('"+e+"')",actionBtnDanger=!0)}function proceedExperienceDeletion(e){}function deleteEducation(e){displayPrompt("Delete Education?",`
+	`,`proceedExperienceDeletion(${e})`,actionBtnDanger=!0)}function proceedExperienceDeletion(e){deletee(siteName+"/php/profile/delete.php?table=experiences&id="+e,"experience_"+LOGIN_NAME+"_"+e)}function deleteEducation(e){displayPrompt("Delete Education?",`
 		
-		Are you sure to delete this education info? Please be
-		informed that this can't be
-		undone.
+		Are you sure to delete this education info?
 	
-	`,"proceedEducationDeletion('"+e+"')",actionBtnDanger=!0)}function proceedEducationDeletion(e){}function loadEachJob(e){execFrontendOnlyFunction(siteName+"/job/"+e.id,createGeneralHdr(e.position),displayJob,data=e)}const displayJob=e=>{var t=siteName+"/job/"+e.id,e=`
-		<div>
-			<div class = "h5 mt-3 text-center"> Job Overview </div>
-			
-			<div class = "fontSize20"> ${e.position}</div>
-			
+	`,`proceedEducationDeletion(${e})`,actionBtnDanger=!0)}function proceedEducationDeletion(e){deletee(siteName+"/php/profile/delete.php?table=educations&id="+e,"education_"+LOGIN_NAME+"_"+e)}function loadEachJob(e){execFrontendOnlyFunction(siteName+"/job/"+e.id,createGeneralHdr(e.position),displayJob,data=e)}function isJobPoster(e){return e.job_poster==LOGIN_NAME}function closeJob(e){displayPrompt("Close job?",`
+		Job seekers won't see this job post any more. Are you sure to close the job?
+	`,`proceedJobClosing(${e})`,!0)}function proceedJobClosing(e){loadPostedJobs();var t=siteName+"/php/jobs/close.php?jobId="+e,o="job_"+e,e=(document.getElementById(o),document.getElementById("applyTo_"+e)),e=(e.classList.add("disabled"),e.innerHTML="Closed",e.onclick=()=>{},siteName+"/jobs/saved/closed"),e="grid_"+e;document.getElementById(e)?deletee(t,o,e):deletee(t,o)}function activateJob(e){VerifyYourEmail(),document.getElementById("applyTo_"+e).style.display="none"}const displayJob=e=>{var t=siteName+"/job/"+e.id,e=`
+		<DIV class="jobMainInfoClone">
+			<div>
+				 
+				<div class = "h5">Job Overview </div>
 
-			<div class = "fontSize17 cursorPointer" onclick = "loadCompanyPage(${e.company_id})" > ${e.for_company}</div>
-			<div class = "flex-container">
-				<div class = "simpleFlexItem position-relative">${e.job_type}<span class = "smallCircle position-absolute"></span></div>
+				<div class = "fontSize20"> ${e.position}</div>
+				
 
-				<div class = "simpleFlexItem position-relative  ">${e.job_site}<span class = "smallCircle position-absolute"></span></div>
-				<div class = "simpleFlexItem position-relative">${e.location}<span class = "smallCircle position-absolute"></span></div>
-				<div class = "simpleFlexItem position-relative">${e.education_level}<span class = "smallCircle position-absolute"></span></div>
+				<div class = "fontSize17 cursorPointer" onclick = "loadCompanyPage(${e.company_id})" > ${e.company_name}</div>
+				<div class = "flex-container">
+					<div class = "simpleFlexItem position-relative">${jobTypeFull(e.job_type)}<span class = "smallCircle position-absolute"></span></div>
 
-				<div class = "simpleFlexItem">${e.num_applicants} Applicants</div>
+					<div class = "simpleFlexItem position-relative  ">${jobSiteFull(e.job_site)}<span class = "smallCircle position-absolute"></span></div>
+					<div class = "simpleFlexItem position-relative">${e.location}<span class = "smallCircle position-absolute"></span></div>
 
-			</div>
+					<div class = "simpleFlexItem">${e.num_applicants} Applicants</div>
 
-		</div>	
+				</div>
 
-		<hr>		
+			</div>	
 
-
-			<div class = "text-center">
+			<div class = " mt-2 mb-2 text-center">
 
 				<table class = "simpleTable">
 					<tr>
-						<td class = "btnHighlighted btnPrimaryMyOwn">
-							Apply
+						<td id = "applyTo_${e.id}" 
+
+							class = "btnHighlighted ${IS_LOGGED_IN&&isJobPoster(e)?"btnDangerMyOwn":"btnPrimaryMyOwn"}
+									${IS_LOGGED_IN?isJobPoster(e)?"0"!=e.active_status||"0"==e.verified?"":"disabled":hasApplied(e)?"disabled":"":""}
+								  "
+							onclick = '${IS_LOGGED_IN?isJobPoster(e)?"0"==e.active_status?"0"==e.verified?"activateJob("+e.id+")":"":"closeJob("+e.id+")":hasApplied(e)?"":"applyToJob("+e.id+")":"displayLoginOverlay('Apply to Jobs', 'Apply to Jobs')"}'
+						>
+							${IS_LOGGED_IN?isJobPoster(e)?"0"==e.active_status?"0"==e.verified?"Activate Job":"Closed":"Close Job":hasApplied(e)?"Applied":"Apply":"Apply"}
+
 						</td>
-						<td class = "btnBordered">
+						<td class = "btnBordered" 
+						 onclick = "${viewApplicantOnclick(e.job_poster,e.id,e.num_applicants)}"
+						 >
 							View all Applicants
 						</td>
 					</tr>
 				</table>
 			</div>
 
-			<hr>
+		</div>
 		
-		<div>
-			<div class = "h5 text-center">Job Description</div>
+		<div class = "mt-3 jobMainInfoClone">
+			<div class = "h5">Job Description</div>
 
 			<div>${e.description}</div>
 		</div>
 
-	`;document.getElementById(t).innerHTML=e};function createSubHeaderForSavedJobs(e){return`
+	`;document.getElementById(t).innerHTML=e};function applyToJob(e){let t=document.getElementById("applyTo_"+e);t.classList.add("fadeOutAnimation"),t.classList.add("disabled"),fetch(siteName+"/php/jobs/apply.php?id="+e).then(e=>e.json()).then(e=>{e.error?(alert("Error - "+e.error),t.classList.remove("fadeOutAnimation"),t.classList.remove("disabled")):(t.innerHTML="Applied",t.onclick="",t.classList.remove("fadeOutAnimation"))}).catch(e=>alert(e))}function createSubHeaderForSavedJobs(e){return`
 	
-	<div  class = "stickyLeftOrRight mt-5  center-div text-center" style = "top: ${returnTopOfMiddleMainContent()}; max-width:400px; width:100%; margin: 0 auto ">
+	<div  class = "stickyLeftOrRight mt-4 mb-4  center-div text-center" style = "top: ${returnTopOfMiddleMainContent()}; z-index:2; max-width:400px; width:100%; margin: 0 auto; ">
 		<div  class = "savedJobsSubHdrHolder">
 			<table class = "savedJobsSubHdr">
 				<tr>
-					<td onclick = "loadSavedJobs()" class = ${"applied"===e?"activeSavedJobsSubHdr":""} >
+					<td  onclick = "loadAppliedJobs()" class = " ${"applied"===e?"activeSavedJobsSubHdr":""} ${EMPLOYER_MODE?"d-none":""} " >
 						Applied
 					</td>
 					<td onclick = "loadPostedJobs()" class = ${"posted"===e?"activeSavedJobsSubHdr":""} >
 						Posted
 					</td>
+					<td onclick = "loadClosedJobs()" class = ${"closed"===e?"activeSavedJobsSubHdr":""} >
+						Closed
+					</td>
 				</tr>
 			</table>
 		</div>
+	`}function loadSaved(e,t,o=!1){var i=siteName+"/jobs/saved/"+e,n=createHomeHdr(activeTab="applied");loadTab(i,siteName+`/php/jobs/saved/${e}.php`,t,n,o)}function loadAppliedJobs(){loadSaved("applied",displayApplied)}const displaySaved=(e,t,o)=>{var i=document.getElementById(e);i.innerHTML=createSubHeaderForSavedJobs(t),display(o,i,callback=returnEachJob,e)},displayApplied=(e,t)=>{displaySaved(t,"applied",e)};function loadPostedJobs(e=!1){loadSaved("posted",displayPosted,e)}const displayPosted=(e,t)=>{displaySaved(t,"posted",e)};function loadClosedJobs(){loadSaved("closed",displayClosed)}const displayClosed=(e,t)=>{displaySaved(t,"closed",e)},displayHome=(e,t="")=>{var o=document.getElementById(t),i=createProfileSubHeader("Jobs Based On Your Preferences",profileOwnershipRequired=!1,btnText="Edit Filters",callback="displayFilterPrompt()"),n=document.createElement("div");n.innerHTML=i+"<hr>",o.appendChild(n);display(e.filter(e=>"re"!=e.job_site),o,callback=returnEachJob,t);i=document.createElement("div");i.innerHTML=`
+	
+		<h5 class = "mt-4"> Remote Jobs based on your Location </h4>
+		<hr>
+	`,o.appendChild(i),display(e.filter(e=>"re"==e.job_site),o,callback=returnEachJob,t)};function loadHome(){var e=siteName+"/",t=createHomeHdr(activeTab="home");loadTab(e,apiFolder+"/home.php",displayHome,t)}function displayAppliedBadge(e){return e.hasOwnProperty("has_applied")&&"true"==e.has_applied?`
+
+				<div class  = "simpleFlexItem position-relative">
+					<span class="myOwnBadge">Applied</span>
+				</div>
+			`:""}function displayPendingBadge(e){return IS_LOGGED_IN&&isJobPoster(e)&&"0"==e.active_status&&"0"==e.verified?`
+							<div class  = "simpleFlexItem position-relative">
+								<span class="myOwnBadge">Pending</span>
+							</div>
+						`:""}function hasApplied(e){return"true"==e.has_applied}function jobTypeFull(e){return"fu"==e?"Full-Time":"pa"==e?"Part-Time":"Internship"}function jobSiteFull(e){return"on"==e?"On-Site":"re"==e?"Remote":"Hybrid"}function createJobContent(e){return`
+		<div class = "fontSize20"> ${e.position}</div>
+		<div class = "fontSize17"> ${e.company_name}</div>
+		<div class = "flex-container">
+			<div class = "simpleFlexItem position-relative">${jobTypeFull(e.job_type)}<span class = "smallCircle position-absolute"></span></div>
+
+			<div class = "simpleFlexItem position-relative  ">${jobSiteFull(e.job_site)}<span class = "smallCircle position-absolute"></span></div>
+			
+			<div class = "simpleFlexItem position-relative">${e.location}<span class = "smallCircle position-absolute"></span></div>
+
+			<div class = "simpleFlexItem position-relative">${e.num_applicants} Applicants</div>
+
+			${displayAppliedBadge(e)}
+			${displayPendingBadge(e)}
+
+		</div>
+		<div class = "spareDiv"></div>
+		<div class = "text-center viewApplicantHolder">
+			<div class = "simpleButton"
+			onclick = "${viewApplicantOnclick(e.job_poster,e.id,e.num_applicants)}"
+
+			>View All Applicants</div>
 		</div>
 
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-		<h1> hello world </h1>
-	`}function loadSavedJobs(){var e=siteName+"/savedJobs/applied",t=createHomeHdr(activeTab="savedJobs");clearHdrAndPut(t),locationToHdrMapper[e]=t,apiFolder;execFrontendOnlyFunction(e,displayApplied,pushOrReplace="push")}const displayApplied=()=>{document.getElementById(siteName+"/savedJobs/applied").innerHTML=createSubHeaderForSavedJobs("applied")};function loadPostedJobs(){var e=siteName+"/savedJobs/posted",t=createHomeHdr(activeTab="savedJobs");clearHdrAndPut(t),locationToHdrMapper[e]=t,apiFolder;execFrontendOnlyFunction(e,displayPostedJobs,pushOrReplace="push")}const displayPostedJobs=()=>{document.getElementById(siteName+"/savedJobs/posted").innerHTML=createSubHeaderForSavedJobs("posted")},displayHome=(e,t=0)=>{display(e,document.getElementById(siteName+"/"),callback=returnEachJob)};function loadHome(){var e=siteName+"/",t=createHomeHdr(activeTab="home");loadTab(e,apiFolder+"/home.php",displayHome,t)}const returnEachJob=e=>{var t=`
-			<div class = "fontSize20"> ${e.position}</div>
-			<div class = "fontSize17"> ${e.for_company}</div>
-			<div class = "flex-container">
-				<div class = "simpleFlexItem position-relative">${e.job_type}<span class = "smallCircle position-absolute"></span></div>
-
-				<div class = "simpleFlexItem position-relative  ">${e.job_site}<span class = "smallCircle position-absolute"></span></div>
-				<div class = "simpleFlexItem position-relative">${e.location}<span class = "smallCircle position-absolute"></span></div>
-
-				<div class = "simpleFlexItem">${e.num_applicants} Applicants</div>
-
-			</div>
-			<div class = "spareDiv"></div>
-			<div class = "text-center viewApplicantHolder">
-				<div class = "simpleButton">View All Applicants</div>
-			</div>
-	`,o=document.createElement("div");return o.onclick=()=>{loadEachJob(e)},o.className="jobMainInfo",o.innerHTML=t,o};function loadPostJobForm(){execFrontendOnlyFunction(siteName+"/postJobForm",createHomeHdr(activeTab="jobPostForm"),displayPostJobForm)}const displayPostJobForm=()=>{var e=siteName+"/postJobForm";document.getElementById(e).innerHTML=`
+	`}const returnEachJob=e=>{var t=createJobContent(e),o=document.createElement("div");return o.onclick=()=>{loadEachJob(e)},o.className="jobMainInfo",o.id="job_"+e.id,o.innerHTML=t,o};function viewApplicantOnclick(e,t,o){return IS_LOGGED_IN&&LOGIN_NAME==e?`loadScaffold(event, ${t}, ${o})`:"limitedApplicantsScaffold(event, "+t+", "+o+")"}function loadPostJobForm(){execFrontendOnlyFunction(siteName+"/postJobForm",createHomeHdr(activeTab="jobPostForm"),displayPostJobForm)}const displayPostJobForm=()=>{var e=siteName+"/postJobForm",t=`
+<div class = "formHolder" style = "background: var(--bgColorOfCards)">
 <h4 class = "text-center" >Post a Job </h4>
 
 <hr>
 
+<p class = "text-warning text-center" style ="font-weight:bold">
+	${IS_LOGGED_IN&&HAS_COMPANY_PAGE?"":'You need to <span class = "softLink" onclick="loadCreateCompanyPage()">create a company page</span> before you can post jobs.<HR>'}
+</p>
+
+<p class = "text-center">
+	${EMPLOYER_MODE?"":'<small>You can switch to </small> <span class="softLink" onclick = "setEmployerMode()">Employer Mode</span><small> for more clean user interface (UI)</small> <HR> '}
+</p>
+
 <form id = "postJobForm" method = "POST">
 
-	<div id = "postJobForm_step_1" >
+	<div id = "postJobForm_step_1" class = "animationSlideRight">
 
 		<div class = "gridHolderModified2" >
 			
@@ -597,45 +699,37 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 			<div>
 				<label for="jobPostJobType">Select Job Type</label>
 				<select name = "jobPostJobType" required id="jobPostJobType">
-				    <option value="f">Full Time</option>
-				    <option value="p">Part Time</option>
-				    <option value="i">Internship</option>
+				    <option value="fu">Full Time</option>
+				    <option value="pa">Part Time</option>
+				    <option value="in">Internship</option>
 				</select>
 			</div>
 
-			<div>
-				<label for="jobPostJobIndustry">Select Job Industry</label>
-				<select required name = "jobPostJobIndustry" id="jobPostJobIndustry">
-				    <option value="sw">Software</option>
-				    <option value="nh">Networking and Hardware</option>
-				    <option value="hr">Human Resources</option>
-				    <option value="te">Teacher / Instructer</option>
-				</select>
-			</div>
+
 
 		</div>
 
 	</div>
 
-	<div id = 'postJobForm_step_2'>
+	<div id = 'postJobForm_step_2' class = "animationSlideRight">
 		<div class = "gridHolderModified2">
 			<div>
 				<label for="jobPostJobSite">Select Job Site</label>
 				<select required  id="jobPostJobSite" name = 'jobPostJobSite'>
-				    <option value="os">On-Site</option>
-				    <option value="r">Remote/option>
-				    <option value="h">Hybrid</option>
+				    <option value="on">On-Site</option>
+				    <option value="re">Remote</option>
+				    <option value="hy">Hybrid</option>
 				</select>
 			</div>
 
 
 			<div>
-				<label for="jobPostEducationLevel">Minimum Education Level</label>
-				<select id = 'jobPostEducationLevel' name = "jobPostEducationLevel" required>
-				    <option value="12">Intermediate (Plus 2)</option>		    
-				    <option value="16">Bachelor's Degree</option>
-				    <option value="18">Master's Degree</option>
-				   	<option value="23">PhD. Degree</option>
+				<label for="jobPostJobIndustry">Select Job Industry</label>
+				<select required name = "jobPostJobIndustry" id="jobPostJobIndustry">
+				    <option value="so">Software</option>
+				    <option value="ne">Networking and Hardware</option>
+				    <option value="hu">Human Resources</option>
+				    <option value="te">Teacher / Instructer</option>
 				</select>
 			</div>
 		</div>	
@@ -650,7 +744,7 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 	</div>
 
 
-	<div id = "postJobForm_step_3">
+	<div id = "postJobForm_step_3" class = "animationSlideRight">
 		<div>
 			<label for = "postJobFormEmployeeEmail"> Enter your email provided by this
 			company to you
@@ -671,7 +765,8 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 			</button>
 		</div>
 	</div>
-`,loadSubTab(1)};function VerifyYourEmail(e=!1){""!=document.getElementById("hiddenCompanyWebsite").value&&displayPrompt("Enter Verification Code",`
+</div>
+`;document.getElementById(e).innerHTML=t,loadSubTab(1)};function VerifyYourEmail(e=!1){displayPrompt("Enter Verification Code",`
 
 		${e?'<div class = "text-center text-danger h5"> Invalid code. Enter it again </div> ':'<div class = "text-danger text-center" style = "font-weight:bold"> The job was posted successfully, but it remains inactive unless you verify your email.</div> Verification code has been sent to the email you provided before. It may take up to 5 minutes to receive an email. <br>Don\'t forget to give a look at the spam folder.'}
 		
@@ -688,11 +783,11 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 				<br>
 		</div>
 
-	`),fetch("php/jobs/verify.php?token="+e).then(e=>e.json()).then(e=>{hideOverlay(),e.error?VerifyYourEmail(error=!0):displayPromptWithoutFooterOptions("Success!",`
+	`),fetch(siteName+"/php/jobs/verify.php?token="+e).then(e=>e.json()).then(e=>{hideOverlay(),e.error?VerifyYourEmail(error=!0):displayPromptWithoutFooterOptions("Success!",`
 				<div class = "h5">Job Posted Successfully!</div>
-				<br>
-				<span class = "softLink" onclick = "loadPostedJobs()">Click Here</span>  to view the posted 
-				jobs.
+				<span class ="softLink" onclick = "hideOverlay(); loadPostedJobs(true)" >
+					Click Here
+				</span> to view the posted jobs
 				<br><br>
 			`)}))}function handleJobUpload(){displayPrompt(title="Verify Job Data",`Are you sure that the data is valid? Click 
 					on cancel if you are unsure, otherwise click continue
@@ -716,7 +811,68 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 			</tr>
 		</table>
 
-	`;document.getElementById("controlHolder").innerHTML=e}async function handleLocationInputInPostJobForm(){handleLocationInput("locationNameInputPostJobForm","locatioNameAutoComplete",`https://api.geoapify.com/v1/geocode/autocomplete?text=${document.getElementById("locationNameInputPostJobForm").value.trim()}&apiKey=8a4e247166574725a8de05e06f3c9d74`)}function updateCompanyNameInputField(e){document.getElementById("companyNameInputInJobPost").value=e.company_name,document.getElementById("hiddenCompanyWebsite").value=e.company_website}function companyNameSuggestions(e){var t="";if(0<e.length){for(var o=0;o<e.length;o++)t+=`<li onclick = 'updateCompanyNameInputField( ${JSON.stringify(e[o])} )' title = "${e[o].company_name}"  class = "option p-2"> ${e[o].company_name}  </li>`;return t}return'<p class = "text-center">No suggestions</p>'}async function handleCompanyInputInPostJobForm(){var e=document.getElementById("companyNameInputInJobPost").value;2<=e.trim().length?(document.getElementById("companyNameAutocomplete").innerHTML='<p class="text-center">Loading</p>',fetch("php/companyPage/suggestions.php?incompleteName="+e).then(e=>e.json()).then(e=>{document.getElementById("companyNameAutocomplete").innerHTML=companyNameSuggestions(e)})):document.getElementById("companyNameAutocomplete").innerHTML='<p class ="text-center">Enter Company Name</p>'}function manageGrid(e){switch(noOfElementPerRow()){case 1:e.style.gridTemplateColumns="1fr";break;case 2:e.style.gridTemplateColumns="1fr 1fr";break;case 3:e.style.gridTemplateColumns="repeat(3, 1fr)"}}function putTextInInputField(e,t){document.getElementById(e).value=t}function escapeSingleQuotes(e){return e.replace(/'/g,"\\'")}function returnList(e,t){var o="";if(0<t.length){for(var i=0;i<t.length;i++)o+=`<li onclick = 'putTextInInputField("${e}", "${escapeSingleQuotes(t[i])}")' title = "${t[i]}"  class = "option p-2"> ${t[i]}  </li>`;return o}return'<p class = "text-center">No suggestions</p>'}async function handleLocationInput(e,t,o){t=document.getElementById(t);2<document.getElementById(e).value.trim().length?(t.innerHTML='<p class="text-center">Loading</p>',o=(await(await fetch(o)).json()).features.map(e=>e.properties.formatted),t.innerHTML=returnList(e,o)):t.innerHTML='<p class = "text-center">Enter Location</p>'}var menuShown=!0;function toggleMenuInDesktop(){document.getElementById("menuItems").style.display=1==menuShown?"none":"block",menuShown=!menuShown}function logOut(){location.href=siteName+"/php/auth/logOut.php"}function createOverlayHeader(e){return`
+	`;document.getElementById("controlHolder").innerHTML=e}async function handleLocationInputInPostJobForm(){handleLocationInput("locationNameInputPostJobForm","locatioNameAutoComplete",`https://api.geoapify.com/v1/geocode/autocomplete?text=${document.getElementById("locationNameInputPostJobForm").value.trim()}&apiKey=8a4e247166574725a8de05e06f3c9d74`)}function updateCompanyNameInputField(e){document.getElementById("companyNameInputInJobPost").value=e.company_name,document.getElementById("hiddenCompanyWebsite").value=e.company_website}function companyNameSuggestions(e){var t="";if(0<e.length){for(var o=0;o<e.length;o++)t+=`<li onclick = 'updateCompanyNameInputField( ${JSON.stringify(e[o])} )' title = "${e[o].company_name}"  class = "option p-2"> ${e[o].company_name}  </li>`;return t}return'<p class = "text-center">No suggestions</p>'}async function handleCompanyInputInPostJobForm(){var e=document.getElementById("companyNameInputInJobPost").value;2<=e.trim().length?(document.getElementById("companyNameAutocomplete").innerHTML='<p class="text-center">Loading</p>',fetch("php/companyPage/suggestions.php?incompleteName="+e).then(e=>e.json()).then(e=>{document.getElementById("companyNameAutocomplete").innerHTML=companyNameSuggestions(e)})):document.getElementById("companyNameAutocomplete").innerHTML='<p class ="text-center">Enter Company Name</p>'}function createEachLink(e,t,o){return`
+		<div   onclick = "${e!=o?t+e+")":""}" class = "nav-flex-item ${e==o?"activeNavLink":""} ">
+			${e}
+		</div>
+	`}function createNavLinks(e,t,o){for(var i=Math.ceil(10),n=document.createElement("div"),a="",r=1;r<=i;r++)a+=createEachLink(r,t,o);return n.innerHTML=`
+		<div  class  = "mt-4 justify-content-center flex-container navLinksHolder">
+			${a}
+		</div>
+	`,n}function loadScaffold(e,t,o,i=1){e.stopPropagation();var e=siteName+"/applicants/scaffold?jobId="+t+"&page="+i+"&numApplicants="+o,n=createHomeHdr(activeTab="sdfsdf");loadTab(e,siteName+"/php/jobs/applicants/scaffold.php?jobId="+t+"&page="+i+"&numApplicants="+o,displayScaffold,n)}function loadShortListed(e,t,o=1){var i=siteName+"/applicants/shortlisted?jobId="+e+"&page="+o+"&numApplicants="+t,n=createHomeHdr(activeTab="sdfsdf");loadTab(i,siteName+"/php/jobs/applicants/shortlisted.php?jobId="+e+"&page="+o+"&numApplicants="+t,displayShortListed,n)}function loadRejected(e,t,o=1){var i=siteName+"/applicants/rejected?jobId="+e+"&page="+o+"&numApplicants="+t,n=createHomeHdr(activeTab="sdfsdf");loadTab(i,siteName+"/php/jobs/applicants/shortlisted.php?jobId="+e+"&page="+o+"&numApplicants="+t,displayRejected,n)}function createSubHeaderForScaffold(e,t,o){return`
+	
+	<div  class = "stickyLeftOrRight mt-4 mb-4  center-div text-center" style = "top: ${returnTopOfMiddleMainContent()}; z-index:2; max-width:400px; width:100%; margin: 0 auto; ">
+		<div  class = "savedJobsSubHdrHolder">
+			<table class = "savedJobsSubHdr">
+				<tr>
+					<td  onclick = "loadScaffold(event, ${t}, ${o} )" class = "${"all"===e?"activeSavedJobsSubHdr":""}  " >
+						Applicants
+					</td>
+					<td onclick = "loadShortListed(${t}, ${o})" class = ${"shortlisted"===e?"activeSavedJobsSubHdr":""} >
+						Shortlisted
+					</td>
+					<td onclick = "loadRejected(${t}, ${o})" class = ${"rejected"===e?"activeSavedJobsSubHdr":""} >
+						Rejected
+					</td>
+				</tr>
+			</table>
+		</div>
+	`}function eachApplicantWithOptions(e,t,o,i){return`
+		<div id = "applicant_${e}" onclick = "${t}" class = "jobMainInfo p-3">
+			<div class = "flex-container align-items-center">
+				<div>
+					<i class = "fa fa-user-circle fa-2x"></i>
+				</div>
+				<div style="margin-left:10px">
+					${e}
+				</div>
+				<div class = "flex-container  applicantOptions justfy-content-end">
+					<div title="ShortList" onclick= "${o}" class = "successIcon">
+						<i class = "fa fa-check"></i>
+					</div>
+					<div title="Reject" class="dangerIcon" onclick="${i}">
+						<i class = "fa fa-trash"></i>
+					</div>
+				</div>
+			</div>	
+
+			<div>
+				3 years of experience as Jr. R&D Engineer
+			</div>
+
+		</div>
+	`}function shortList(e,t,o){e.stopPropagation(),alert(t+", "+o)}function reject(e,t,o){e.stopPropagation(),alert(t+", "+o)}const displayApplicants=(e,t,o)=>{var i=e.applicants,n="",a=document.createElement("div");a.className="gridHolderModified",a.id="grid_all_"+t;for(var r=0;r<i.length;r++)n+=eachApplicantWithOptions("@"+i[r].login_name,`loadViewProfile( '${i[r].login_name}', jobId = ${e.jobId})`,`shortList(event, '${i[r].login_name}', ${e.jobId})`,`reject(event, '${i[r].login_name}', ${e.jobId})`);a.innerHTML=n,document.getElementById(t).innerHTML=createSubHeaderForScaffold(o,e.jobId,e.numApplicants),document.getElementById(t).appendChild(a),0<parseInt(e.numApplicants)&&(o=createNavLinks(parseInt(e.numApplicants),`loadScaffold(event, ${parseInt(e.jobId)}, ${parseInt(e.numApplicants)},`,activeLink=parseInt(e.page)+1),document.getElementById(t).appendChild(o))},displayScaffold=(e,t)=>{displayApplicants(e,t,"all")},displayShortListed=(e,t)=>{displayApplicants(e,t)},displayRejected=(e,t)=>{displayApplicants(e,t)};function loadLimitedContentOfApplicants(e,t,o){var i=siteName+`/jobs/${o}/limited/`+e,e=createGeneralHdr("Applicant #"+e);loadTab(i,siteName+"/php/profile/limitedView.php?jobId="+o+"&preLimit="+t,displayLimitedView,e)}const displayLimitedView=(e,t)=>{window.VIEWING_PROFILE_OF="DSFSDFAFAFDASFAFDSFFSDFSF";var o="";o+=displayExperiences(e.experiences)+displaySkills(e.skills)+displayProjects(e.projects)+displayEducations(e.educations),document.getElementById(t).innerHTML=o};function limitedApplicantsScaffold(e,t,o){e.stopPropagation(),execFrontendOnlyFunction(siteName+"/job/"+t+"/applicants/scaffold",createGeneralHdr("View Applicants"),displayLimitedApplicantScaffold,data=[t,o])}function eachApplicant(e,t){return`
+		<div onclick = "${t}" class = "jobMainInfo p-3">
+			<div class = "flex-container align-items-center">
+				<div>
+					<i class = "fa fa-user-circle fa-2x"></i>
+				</div>
+				<div style="margin-left:10px">
+					${e}
+				</div>
+			</div>
+		</div>
+	`}const displayLimitedApplicantScaffold=([e,t])=>{for(var o=siteName+"/job/"+e+"/applicants/scaffold",i='<div class = "gridHolderModified2">',n=0,a=t;t-10<a&&0<a;a--)i+=eachApplicant("Applicant #"+a,`loadLimitedContentOfApplicants(${a}, ${n}, ${e})`),n++;document.getElementById(o).innerHTML=i};var menuShown=!0;function toggleMenuInDesktop(){document.getElementById("menuItems").style.display=1==menuShown?"none":"block",menuShown=!menuShown}function logOut(){location.href=siteName+"/php/auth/logOut.php"}function createOverlayHeader(e){return`
 		<div class = "overlayHeader">
 			<table class = "fixedTable mt-2 mb-2">
 				<tr>
@@ -752,20 +908,20 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 			</table>
 		</div>
 	
-`}function performOperationsOnBody(){document.body.style.overflowY="hidden"}function deperformOperationsOnBody(){document.body.style.overflowY="scroll"}function createOverlayAndInsert(e){var t=document.createElement("div");t.innerHTML=`
+`}function performOperationsOnBody(){document.body.style.overflowY="hidden"}function createOverlayAndInsert(e){var t=document.createElement("div");t.innerHTML=`
 	<div id = "outerOverlay" class  = "outerOverlay">
-		<div class = "overlay">
+		<div class = "overlay" id = "overlay">
 			${e}
 		</div>
 	</div>
-`,document.body.appendChild(t)}function displayLoginOverlay(e,t){performOperationsOnBody(),createOverlayAndInsert(createLoginAlertForm(e,t))}function hideOverlay(){deperformOperationsOnBody(),document.getElementById("outerOverlay").remove()}function deactivateButton(e,t){document.getElementById(e).disabled=!0,document.getElementById(e).innerText=t}function activateButton(e,t){document.getElementById(e).disabled=!1,document.getElementById(e).innerText=t}function createOverlayFooterOptions(e,t){return`
+`,document.body.appendChild(t)}function displayLoginOverlay(e,t){performOperationsOnBody(),createOverlayAndInsert(createLoginAlertForm(e,t))}function createOverlayFooterOptions(e,t){return`
 		<div class = "mt-2 mb-2">
 			<table class = "simpleTable">
 				<tr>
 					<td class = "btnBordered" onclick = "hideOverlay()">
 						Cancel
 					</td>
-					<td class = "btnHighlighted ${t?"btnDangerMyOwn":"btnSuccessMyOwn"} " 
+					<td id = 'overlayFooterAction' class = "btnHighlighted ${t?"btnDangerMyOwn":"btnSuccessMyOwn"} " 
 						onclick = "${e}" >
 						Continue
 					</td>
@@ -791,7 +947,7 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 		${t}			
 	</div>
 
-`}function displayPromptWithoutFooterOptions(e,t){performOperationsOnBody(),createOverlayAndInsert(createPromptWithoutFooterOptions(e,t))}function deleteThisDiv(e){var t=document.getElementById(e),t=(t&&t.remove(),document.createElement("div"));t.id=e,middleMainContent.appendChild(t)}function hideAllDivsExceptDivWithThis(e){for(var t=middleMainContent.children,o=t.length-1;0<=o;o--)t[o].style.display="none";document.getElementById(e).style.display="block"}function refresh(e,t,o){let i=e;deleteThisDiv(e),hideAllDivsExceptDivWithThis(e),currentlyBeingLoadedURLs.push(e),fetch(t).then(function(e){return e.json()}).then(function(e){currentlyBeingLoadedURLs=currentlyBeingLoadedURLs.filter(e=>e!=i),o(e,i)})}function beforeLoadTab(e,t,o,i){clearHdrAndPut(t),locationToHdrMapper[e]=t,loadTab(e,o,i)}function loadTab(e,t,o,i=""){clearHdrAndPut(i),locationToHdrMapper[e]=i,currentlyBeingLoadedURLs.includes(e)||(document.location!=e&&(push(e),document.getElementById(e))?hideAllDivsExceptDivWithThis(e):refresh(e,t,o))}function display(e,t,o){if(0<e.length){var i=document.createElement("div");i.className="gridHolderModified2",t.appendChild(i);for(var n=0;n<e.length;n++)i.appendChild(o(e[n]))}}function noOfElementPerRow(){var e=middleMainContent.clientWidth;return e<=470?1:e<=700?2:3}function push(e){history.pushState({},"",e)}function execFrontendOnlyFunction(e,t,o,i=""){clearHdrAndPut(t),locationToHdrMapper[e]=t,window.location!=e&&push(e),document.getElementById(e)?hideAllDivsExceptDivWithThis(e):(deleteThisDiv(e),hideAllDivsExceptDivWithThis(e),o(i))}window.onpopstate=e=>{clearHdrAndPut(locationToHdrMapper[document.location]),hideAllDivsExceptDivWithThis(document.location)};const createHomeHdr=e=>{var t=document.createElement("table"),o=(t.className="hdrTable homeHdr ",document.createElement("tr")),i=document.createElement("td"),n=("home"==e&&(i.className="activeTab"),i.onclick=()=>loadHome(),i.innerHTML="<i class = 'fa fa-home'> </i> <br> <small>Home</small> ",document.createElement("td")),a=(n.className="requiresLogin","noti"==e&&(n.className="activeTab"),n.onclick=()=>IS_LOGGED_IN?loadNoti():displayLoginOverlay("Notifications","view notifications."),n.innerHTML="<i class = 'fa fa-bell'> </i> <br> <small>Notifications</small> ",document.createElement("td")),r=(a.className="requiresLogin","savedJobs"==e&&(a.className="activeTab"),a.onclick=()=>IS_LOGGED_IN?loadSavedJobs():displayLoginOverlay("Saved Jobs","view applied and posted jobs"),a.innerHTML="<i class = 'fa fa-bookmark'> </i> <br> <small>Saved Jobs</small> ",document.createElement("td")),l=(r.onclick=()=>loadSearchBox(),r.innerHTML="<i class ='fa fa-search'> </i> <br> <small>Search</small>  ",document.createElement("td")),d=(l.className="d-none d-md-block","jobPostForm"==e&&(l.className="activeTab"),l.onclick=()=>loadPostJobForm(),l.innerHTML="<i class ='fa fa-suitcase'> </i> <br> <small>Post Job</small>  ",document.createElement("td"));return d.className="d-xs-block d-sm-block d-md-none",d.onclick=()=>loadMenu(),d.innerHTML="<i class ='fa fa-bars'> </i> <br> <small>Menu</small>  ","menu"==e&&(d.className="activeTab"),o.appendChild(i),o.appendChild(a),o.appendChild(n),o.appendChild(l),o.appendChild(r),o.appendChild(d),t.appendChild(o),t};function createGeneralHdr(e){var t=document.createElement("table"),o=(t.className="generalHdrTable",document.createElement("tr")),i=createBackButton(),n=document.createElement("th");return n.innerText=e,o.appendChild(i),o.appendChild(n),t.appendChild(o),t}function clearHdrAndPut(e){var t=document.getElementById("middlePartOfHdr");t.innerHTML="",t.appendChild(e)}const siteName="http://localhost/myprojects/mydj",apiFolder="php";var loadedURLs=[],currentlyBeingLoadedURLs=[],middleMainContent=document.getElementById("middleMainContent"),locationToHdrMapper={},dark=0;const root=document.documentElement;function toggle(){0==dark?(dark=1,root.style.setProperty("--border","1px solid rgba(255, 255, 255, 0.7"),root.style.setProperty("--bgColorOfCards","black"),root.style.setProperty("--bgColorOfBody","rgba(0, 0, 0, 0.85)"),root.style.setProperty("--colorOfBody","white"),root.style.setProperty("--fontSize17Color","lightgreen"),root.style.setProperty("--fontSize20Color","yellow"),root.style.setProperty("--divBackground","rgba(255, 255, 255, 0.2"),root.style.setProperty("--boxShadow","0px 10px 20px rgba(255, 255, 255, 0.3)")):(dark=0,root.style.setProperty("--border","1px solid rgba(0, 0, 0, 0.2"),root.style.setProperty("--bgColorOfCards","white"),root.style.setProperty("--bgColorOfBody","#f2f2f2"),root.style.setProperty("--colorOfBody","black"),root.style.setProperty("--fontSize17Color","green"),root.style.setProperty("--fontSize20Color","green"),root.style.setProperty("--divBackground","rgba(0, 0, 0, 0.05"),root.style.setProperty("--boxShadow","0px 10px 20px rgba(0, 0, 0, 0.3)"))}function promptToActivate(){return`
+`}function displayPromptWithoutFooterOptions(e,t){performOperationsOnBody(),createOverlayAndInsert(createPromptWithoutFooterOptions(e,t))}function putTextInInputField(e,t,o=""){document.getElementById(e).value=t,""!=o&&o()}function escapeSingleQuotes(e){return e.replace(/'/g,"\\'")}function returnList(e,t,o=""){var i="";if(0<t.length){for(var n=0;n<t.length;n++)i+=`<li onclick = 'putTextInInputField("${e}", "${escapeSingleQuotes(t[n])}", ${o})' title = "${t[n]}"  class = "option p-2"> ${t[n]}  </li>`;return i}return'<p class = "text-center">No suggestions</p>'}async function handleLocationInput(e,t,o){t=document.getElementById(t);2<document.getElementById(e).value.trim().length?(t.innerHTML='<p class="text-center">Loading</p>',o=(await(await fetch(o)).json()).features.map(e=>e.properties.formatted),t.innerHTML=returnList(e,o)):t.innerHTML='<p class = "text-center">Enter Location</p>'}function deperformOperationsOnBody(){document.body.style.overflowY="scroll",document.getElementById("outerOverlay")&&document.getElementById("outerOverlay").remove()}function hideOverlay(){deperformOperationsOnBody()}function deactivateButton(e,t){document.getElementById(e).disabled=!0,document.getElementById(e).innerText=t}function activateButton(e,t){document.getElementById(e).disabled=!1,document.getElementById(e).innerText=t}function getCookieValue(e){for(var t=e+"=",o=decodeURIComponent(document.cookie).split(";"),i=0;i<o.length;i++){for(var n=o[i];" "===n.charAt(0);)n=n.substring(1);if(0===n.indexOf(t))return n.substring(t.length,n.length)}return""}function deleteThisDiv(e){var t=document.getElementById(e),t=(t&&t.remove(),document.createElement("div"));t.id=e,middleMainContent.appendChild(t)}function hideAllDivsExceptDivWithThis(e){for(var t=middleMainContent.children,o=t.length-1;0<=o;o--)t[o].style.display="none";document.getElementById(e).style.display="block"}function refresh(e,t,o){let i=e;deleteThisDiv(e);var n=document.createElement("div");n.id=i+"_loadingSign",n.innerHTML=createLoadingSign(""),document.getElementById(i).appendChild(n),hideAllDivsExceptDivWithThis(e),currentlyBeingLoadedURLs.push(e),fetch(t).then(function(e){return e.json()}).then(function(e){document.getElementById(i+"_loadingSign").remove(),currentlyBeingLoadedURLs=currentlyBeingLoadedURLs.filter(e=>e!=i),o(e,i)})}function beforeLoadTab(e,t,o,i){clearHdrAndPut(t),locationToHdrMapper[e]=t,loadTab(e,o,i)}function loadTab(e,t,o,i="",n=!1){clearHdrAndPut(i),locationToHdrMapper[e]=i,currentlyBeingLoadedURLs.includes(e)||(document.location==e||(push(e),!document.getElementById(e))||n?refresh(e,t,o):hideAllDivsExceptDivWithThis(e))}function display(e,t,o,i=""){if(0<e.length){var n=document.createElement("div");n.className="gridHolderModified2",n.id="grid_"+i,t.appendChild(n);for(var a=0;a<e.length;a++)n.appendChild(o(e[a]))}}function noOfElementPerRow(){var e=middleMainContent.clientWidth;return e<=470?1:e<=700?2:3}function push(e){history.pushState({},"",e)}function execFrontendOnlyFunction(e,t,o,i=""){clearHdrAndPut(t),locationToHdrMapper[e]=t,window.location!=e&&push(e),document.getElementById(e)?hideAllDivsExceptDivWithThis(e):(deleteThisDiv(e),hideAllDivsExceptDivWithThis(e),o(i))}window.onpopstate=e=>{clearHdrAndPut(locationToHdrMapper[document.location]),hideAllDivsExceptDivWithThis(document.location)};const createHomeHdr=e=>{var t=document.createElement("table"),o=(t.className="hdrTable homeHdr ",document.createElement("tr")),i=document.createElement("td"),n=("home"==e&&(i.className="activeTab "),i.onclick=()=>loadHome(),i.innerHTML="<i class = 'fa fa-home'> </i> <br> <small>Home</small> ",EMPLOYER_MODE&&i.classList.add("d-none"),document.createElement("td")),a=(n.className="requiresLogin","noti"==e&&(n.className="activeTab"),n.onclick=()=>IS_LOGGED_IN?loadNoti():displayLoginOverlay("Notifications","view notifications."),n.innerHTML="<i class = 'fa fa-bell'> </i> <br> <small>Notifications</small> ",document.createElement("td")),r=(a.className="requiresLogin","applied"==e&&(a.className="activeTab"),a.onclick=()=>IS_LOGGED_IN?(EMPLOYER_MODE?loadPostedJobs:loadAppliedJobs)():displayLoginOverlay("Saved Jobs","view applied and posted jobs"),a.innerHTML="<i class = 'fa fa-bookmark'> </i> <br> <small>Saved Jobs</small> ",document.createElement("td")),d=(r.onclick=()=>loadSearchBox(),r.innerHTML="<i class ='fa fa-search'> </i> <br> <small>Search</small>  ",EMPLOYER_MODE&&r.classList.add("d-none"),document.createElement("td")),l=(d.className="d-none d-md-block","jobPostForm"==e&&(d.className="activeTab"),d.onclick=()=>loadPostJobForm(),d.innerHTML="<i class ='fa fa-suitcase'> </i> <br> <small>Post Job</small>  ",document.createElement("td"));return l.className="d-xs-block d-sm-block d-md-none",l.onclick=()=>loadMenu(),l.innerHTML="<i class ='fa fa-bars'> </i> <br> <small>Menu</small>  ","menu"==e&&(l.className="activeTab"),o.appendChild(i),o.appendChild(a),o.appendChild(d),o.appendChild(n),o.appendChild(r),o.appendChild(l),t.appendChild(o),t};function createGeneralHdr(e){var t=document.createElement("table"),o=(t.className="generalHdrTable",document.createElement("tr")),i=createBackButton(),n=document.createElement("th");return n.innerText=e,o.appendChild(i),o.appendChild(n),t.appendChild(o),t}function clearHdrAndPut(e){var t=document.getElementById("middlePartOfHdr");t.innerHTML="",t.appendChild(e)}const siteName="http://localhost/myprojects/mydj",apiFolder="php";var loadedURLs=[],currentlyBeingLoadedURLs=[],middleMainContent=document.getElementById("middleMainContent"),locationToHdrMapper={},dark=0;const root=document.documentElement;function toggle(){0==dark?(dark=1,root.style.setProperty("--border","1px solid rgba(255, 255, 255, 0.7"),root.style.setProperty("--bgColorOfCards","black"),root.style.setProperty("--bgColorOfBody","rgba(0, 0, 0, 0.85)"),root.style.setProperty("--colorOfBody","white"),root.style.setProperty("--fontSize17Color","lightgreen"),root.style.setProperty("--fontSize20Color","yellow"),root.style.setProperty("--divBackground","rgba(255, 255, 255, 0.2"),root.style.setProperty("--boxShadow","0px 10px 20px rgba(255, 255, 255, 0.3)")):(dark=0,root.style.setProperty("--border","1px solid rgba(0, 0, 0, 0.2"),root.style.setProperty("--bgColorOfCards","white"),root.style.setProperty("--bgColorOfBody","#f2f2f2"),root.style.setProperty("--colorOfBody","black"),root.style.setProperty("--fontSize17Color","green"),root.style.setProperty("--fontSize20Color","green"),root.style.setProperty("--divBackground","rgba(0, 0, 0, 0.05"),root.style.setProperty("--boxShadow","0px 10px 20px rgba(0, 0, 0, 0.3)"))}function promptToActivate(){return`
 
 <div class = "text-danger text-center" style = 'font-weight:bold' >
 
@@ -848,7 +1004,7 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 
 	<form id = "companyPageForm" method = "POST" >
 
-	<div class = "gridHolder" id="formHolderForCreateCompanyPage">
+	<div class = "gridHolderModified2" id="formHolderForCreateCompanyPage">
 		
 		<div>
 			<label for = "companyPageCompanyName"> Company Name </label>
@@ -914,7 +1070,7 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 		Create Company Page
 	</button>
 </div>
-`,manageGrid(document.getElementById("formHolderForCreateCompanyPage"))};function loadCreateCompanyPage(){execFrontendOnlyFunction(siteName+"/createCompanyPage",createHomeHdr(activeTab="null"),displayCreateCompanyPage)}async function handleLocationInputInCreateCompanyPage(){handleLocationInput("locationNameInputCCA","locatioNameAutoCompleteInCreateCompanyPage",`https://api.geoapify.com/v1/geocode/autocomplete?text=${document.getElementById("locationNameInputCCA").value.trim()}&apiKey=8a4e247166574725a8de05e06f3c9d74`)}function handleCompanyCreation(){displayPrompt(title="Verify Company Data",`Are you sure that the data is valid? Click 
+`,document.getElementById("formHolderForCreateCompanyPage")};function loadCreateCompanyPage(){execFrontendOnlyFunction(siteName+"/createCompanyPage",createHomeHdr(activeTab="null"),displayCreateCompanyPage)}async function handleLocationInputInCreateCompanyPage(){handleLocationInput("locationNameInputCCA","locatioNameAutoCompleteInCreateCompanyPage",`https://api.geoapify.com/v1/geocode/autocomplete?text=${document.getElementById("locationNameInputCCA").value.trim()}&apiKey=8a4e247166574725a8de05e06f3c9d74`)}function handleCompanyCreation(){displayPrompt(title="Verify Company Data",`Are you sure that the data is valid? Click 
 					on cancel if you are unsure, otherwise click continue
 				to confirm and create the company page.`,callback="createCompanyPage()")}function createCompanyPage(){hideOverlay(),displayPromptWithoutFooterOptions("Please wait...","Please wait while we process your data.");var e=document.getElementById("companyPageForm"),e=new FormData(e),t=(deactivateButton("createCompanyPageButton","Please Wait..."),new XMLHttpRequest);t.onreadystatechange=function(){var e;4==this.readyState&&200==this.status&&((e=JSON.parse(this.responseText)).error?(alert(e.error),activateButton("createCompanyPageButton","Create Company Page"),hideOverlay()):e.companyPageCreated&&(verifyOfficialCompanyEmail(),document.getElementById("createCompanyPageButton").style.display="none"))},t.open("POST",siteName+"/php/companyPage/create.php"),t.send(e)}function verifyOfficialCompanyEmail(e=!1){hideOverlay(),displayPrompt("Enter Verification Code",`
 
@@ -998,7 +1154,7 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 	</div>
 
 	</div>
-	`}const displayRegisterForm=()=>{var e=siteName+"/register";document.getElementById(e).innerHTML=createRegisterForm()};function handleRegister(){var e=document.getElementById("registerLoginName").value,t=(document.getElementById("registerButton").disabled=!0,document.getElementById("registerButton").innerHTML="Please Wait...",document.getElementById("registerPassword").value),o=document.getElementById("registerName").value;fetch(siteName+"/php/auth/register.php?registerLoginName="+e+"&registerPassword="+t+"&registerName="+o).then(e=>e.json()).then(e=>{e.error?(alert("error"),document.getElementById("registerButton").disabled=!1,document.getElementById("registerButton").innerHTML="Create New Account"):location.href=siteName}).catch(e=>{document.getElementById("registerButton").disabled=!1,document.getElementById("registerButton").innerHTML="Create New Account",console.log(e)})}function loadLoginForm(){execFrontendOnlyFunction(siteName+"/login",createHomeHdr(activeTab="ddd"),displayLoginForm)}function createLoginForm(){return`
+	`}const displayRegisterForm=()=>{var e=siteName+"/register";document.getElementById(e).innerHTML=createRegisterForm()};function handleRegister(){var e=document.getElementById("registerLoginName").value,t=(document.getElementById("registerButton").disabled=!0,document.getElementById("registerButton").innerHTML="Please Wait...",document.getElementById("registerButton").classList.add("fadeOutAnimation"),document.getElementById("registerPassword").value),o=document.getElementById("registerName").value;fetch(siteName+"/php/auth/register.php?registerLoginName="+e+"&registerPassword="+t+"&registerName="+o).then(e=>e.json()).then(e=>{document.getElementById("registerButton").classList.remove("fadeOutAnimation"),e.error?(alert("error"),document.getElementById("registerButton").disabled=!1,document.getElementById("registerButton").innerHTML="Create New Account"):location.href=siteName}).catch(e=>{document.getElementById("registerButton").disabled=!1,document.getElementById("registerButton").innerHTML="Create New Account",console.log(e)})}function loadLoginForm(){execFrontendOnlyFunction(siteName+"/login",createHomeHdr(activeTab="ddd"),displayLoginForm)}function createLoginForm(){return`
 	<div class = "formHolder" style = "background: var(--bgColorOfCards)">
 	<h5 class = "text-center">Login to our Website</h5>
 	<hr>
@@ -1031,4 +1187,4 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 		</div>
 
 	</div>
-	`}const displayLoginForm=()=>{var e=siteName+"/login";document.getElementById(e).innerHTML=createLoginForm()};function handleLogin(){var e=document.getElementById("loginLoginName").value,t=document.getElementById("loginPassword").value;document.getElementById("loginButton").disabled=!0,document.getElementById("loginButton").innerText="Please Wait...",fetch(siteName+"/php/auth/login.php?loginLoginName="+e+"&loginPassword="+t).then(e=>e.json()).then(e=>{e.error?(alert("Incorrect username or password!"),document.getElementById("loginButton").disabled=!1,document.getElementById("loginButton").innerText="Log In"):location.href=siteName}).catch(e=>alert(e))}
+	`}const displayLoginForm=()=>{var e=siteName+"/login";document.getElementById(e).innerHTML=createLoginForm()};function handleLogin(){var e=document.getElementById("loginLoginName").value,t=document.getElementById("loginPassword").value;document.getElementById("loginButton").disabled=!0,document.getElementById("loginButton").innerText="Please Wait...",document.getElementById("loginButton").classList.add("fadeOutAnimation"),fetch(siteName+"/php/auth/login.php?loginLoginName="+e+"&loginPassword="+t).then(e=>e.json()).then(e=>{document.getElementById("loginButton").classList.remove("fadeOutAnimation"),e.error?(alert("Incorrect username or password!"),document.getElementById("loginButton").disabled=!1,document.getElementById("loginButton").innerText="Log In"):location.href=siteName}).catch(e=>alert(e))}

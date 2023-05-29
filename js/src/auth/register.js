@@ -67,11 +67,15 @@ function handleRegister(){
 	var loginName = document.getElementById('registerLoginName').value;
 	document.getElementById('registerButton').disabled = true;
 	document.getElementById('registerButton').innerHTML = "Please Wait...";
+	document.getElementById('registerButton').classList.add('fadeOutAnimation');
+
 	var password = document.getElementById('registerPassword').value;
 	var name = document.getElementById('registerName').value;
 	fetch(siteName + '/php/auth/register.php?registerLoginName='+loginName+'&registerPassword='+password+'&registerName='+name)
 	.then(response => response.json())
 	.then(data => {
+	document.getElementById('registerButton').classList.remove('fadeOutAnimation');
+
 		if(data.error){
 			alert('error');
 			document.getElementById('registerButton').disabled = false;

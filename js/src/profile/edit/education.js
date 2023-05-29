@@ -22,7 +22,7 @@ return `
 				${createTextInput('Field', 'educationFormField' , field) }
 				${createTextInput('Institution', 'educationFormInstitution', institution)}
 				${createDateInput('From', 'educationFormFrom', from)}
-				${createDateInput('To', 'educationFormFrom', from)}
+				${createDateInput('To', 'educationFormTo', from)}
 
 			</div>
 			
@@ -43,8 +43,8 @@ return createEducationForm(
 		level = education.level,
 		field = education.field,
 		institution = education.institution,
-		from = education.from,
-		to = education.to
+		from = education._from,
+		to = education._to
 	)
 }
 
@@ -57,8 +57,7 @@ function createAddNewEducationForm(){
 
 function displayEditEducationForm(education){
 
-	displayPrompt('Edit Education', createEditEducationForm(education), 'handleEditEducationSubmit()');
-
+	displayPrompt('Edit Education', createEditEducationForm(education), `handleEditEducationSubmit('${education.divId}')`);
 }
 
 function displayAddNewEducationForm(){
@@ -67,7 +66,22 @@ function displayAddNewEducationForm(){
 
 
 
-function handleEditEducationSubmit(){
+function handleEditEducationSubmit(divId){
+
+	handleEdits('educationForm', 
+					divId, 
+					displayEachEducation,
+					siteName+'/php/profile/edit/education.php'
+	)
+
+}
 
 
+function handleAddNewEducationSubmit(){
+	handleAddNew('educationForm', 
+					'educations_'+LOGIN_NAME, 
+					displayEachEducation,
+					siteName+'/php/profile/create/education.php',
+					'education'
+	)
 }

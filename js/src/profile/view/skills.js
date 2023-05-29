@@ -1,8 +1,14 @@
 
 function createAddSkillForm(){
 return`
-	<form>
-		<input class = "border-round" placeholder = "Add New Skill" class = "w-100" onkeyup = "alert(1)" type = "text" name = "profileNewSkill" id = "profileNewSkill">
+	<form method="POST" action = "" onsubmit = "return false">
+		<input style = "border-radius:15px;text-align:center"
+		  placeholder = "Add New Skill" 
+		  class = "w-100" 
+		  onkeyup = "handleSkillInput(event)" 
+		  type = "text" 
+		  name = "profileNewSkill"
+		   id = "profileNewSkill">
 	</form>
 `
 
@@ -21,8 +27,10 @@ function displayEachSkill(skill){
 	return `
 		<div class = "flex-item">
 			<span> ${skill.skill} </span>
-			${ (VIEWING_PROFILE_OF == LOGIN_NAME) 
-				? createDeleteSkillIcon(skill.id) 
+			${ IS_LOGGED_IN
+				? (VIEWING_PROFILE_OF == LOGIN_NAME) 
+					? createDeleteSkillIcon(skill.id) 
+					: ''
 				: ''
 			}
 		</div>
@@ -37,12 +45,8 @@ var skillsHolder = ``;
 
 if(skills.length > 0){
 	for (var i =0; i <skills.length; i++){
-		skillsHolder += displayEachSkill(skills[i]);
-
+		skillsHolder += `<div id ='skill_${skills[i].id}'>  ${displayEachSkill(skills[i])} </div>`;
 	}
-}
-else{
-	skillsHolder += '<div class = "h6"> No skills to show </div> ';
 }
 
 return `
@@ -51,8 +55,10 @@ return `
 			<tr>
 				<td class = "h4"> Skills </td>
 				<td>
-					${ ( VIEWING_PROFILE_OF == LOGIN_NAME ) 
-						? createAddSkillForm() 
+					${ IS_LOGGED_IN
+						?   ( VIEWING_PROFILE_OF == LOGIN_NAME ) 
+							? createAddSkillForm() 
+							: ''
 						: ''
 					}
 				</td>
@@ -61,7 +67,7 @@ return `
 	</div>
 
 
-	<div class = "mt-3 flex-container">
+	<div class = "mt-3 flex-container " id = 'skills_${VIEWING_PROFILE_OF}'>
 		${skillsHolder}
 	</div>
 	
@@ -70,4 +76,28 @@ return `
 
 `
 
+}
+
+
+
+
+function handleSkillInput(e){
+	var skill = e.target.value.trim();
+	if(skill.length>2&&event.keyCode === 13){
+		e.target.value = '';
+		fetch(siteName+'/php/profile/create/skill.php?skill='+skill)
+		.then(response => response.json())
+		.then(data => {
+			if(data.error){
+				alert(data.error);
+			}
+			else{
+				var newDiv = document.createElement('div');
+				newDiv.id = 'skill_'+data.id;
+				newDiv.className = "scaleUpAnimation";
+				newDiv.innerHTML = displayEachSkill(data);
+				document.getElementById('skills_'+LOGIN_NAME).appendChild(newDiv);
+			}
+		})
+	}
 }

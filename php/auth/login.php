@@ -1,5 +1,6 @@
-<?php 
+<?php
 
+sleep(1.5);
 session_start();
 
 
