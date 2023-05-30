@@ -1,4 +1,4 @@
-function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json()).then(e=>{handleCheckLoginStatusData(e)})}function handleCheckLoginStatusData(e){e.isNotLoggedIn?window.IS_LOGGED_IN=!1:(window.IS_LOGGED_IN=!0,window.PROFILE_VISITS_COUNT=e.profileVisitsCount,window.CV_DOWNLOADS_COUNT=e.CVdownloadsCount,window.LOGIN_NAME=e.loginName,window.HAS_COMPANY_PAGE=e.hasCompanyPage),""!=getCookieValue("employerMode")?window.EMPLOYER_MODE=!0:window.EMPLOYER_MODE=!1,document.getElementById("preLoaderHolder").remove(),manageSidebars(),(EMPLOYER_MODE&&IS_LOGGED_IN?loadPostedJobs:EMPLOYER_MODE?loadPostJobForm:loadHome)()}function returnTopOfMiddleMainContent(){return document.getElementById("middleMainContent").getBoundingClientRect().top+5+"px"}function makeSidebarsSticky(){for(var e=document.getElementsByClassName("stickyLeftOrRight"),t=0;t<e.length;t++){var o=returnTopOfMiddleMainContent();e[t].style.top=o}}function manageSidebars(){document.getElementById("hdrLeftPart").innerHTML=handleHdrLeftPart(),document.getElementById("hdrRightPart").innerHTML=handleHdrRightPart(),document.getElementById("rightSidebar").innerHTML=createRightSidebar(),window.middleMainContent=document.getElementById("middleMainContent"),EMPLOYER_MODE?(document.getElementById("leftSidebar").remove(),document.getElementById("middleMainContent").classList.remove("col-md-6"),document.getElementById("middleMainContent").classList.add("col-md-9")):document.getElementById("leftSidebar").innerHTML=createLeftSidebar(),makeSidebarsSticky()}function handleHdrLeftPart(){return`
+function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json()).then(e=>{handleCheckLoginStatusData(e)})}function handleCheckLoginStatusData(e){e.isNotLoggedIn?window.IS_LOGGED_IN=!1:(window.IS_LOGGED_IN=!0,window.PROFILE_VISITS_COUNT=e.profileVisitsCount,window.CV_DOWNLOADS_COUNT=e.CVdownloadsCount,window.LOGIN_NAME=e.loginName,window.HAS_COMPANY_PAGE=e.hasCompanyPage,window.HAS_COMPANY_PAGE&&(window.COMPANY_ID=e.companyId)),""!=getCookieValue("employerMode")?window.EMPLOYER_MODE=!0:window.EMPLOYER_MODE=!1,document.getElementById("preLoaderHolder").remove(),manageSidebars(),(EMPLOYER_MODE&&IS_LOGGED_IN?loadPostedJobs:EMPLOYER_MODE?loadPostJobForm:loadHome)()}function returnTopOfMiddleMainContent(){return document.getElementById("middleMainContent").getBoundingClientRect().top+5+"px"}function makeSidebarsSticky(){for(var e=document.getElementsByClassName("stickyLeftOrRight"),t=0;t<e.length;t++){var o=returnTopOfMiddleMainContent();e[t].style.top=o}}function manageSidebars(){document.getElementById("hdrLeftPart").innerHTML=handleHdrLeftPart(),document.getElementById("hdrRightPart").innerHTML=handleHdrRightPart(),document.getElementById("rightSidebar").innerHTML=createRightSidebar(),window.middleMainContent=document.getElementById("middleMainContent"),EMPLOYER_MODE?(document.getElementById("leftSidebar").remove(),document.getElementById("middleMainContent").classList.remove("col-md-6"),document.getElementById("middleMainContent").classList.add("col-md-9")):document.getElementById("leftSidebar").innerHTML=createLeftSidebar(),makeSidebarsSticky()}function handleHdrLeftPart(){return`
 		<div style="margin-left: 15px; ">
 			<span class="h4">MyDJ</span>
 			<br>
@@ -57,7 +57,6 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 				<a href="">Human Resources</a>
 				<br>
 				<a href="">Software</a>
-
 			</div>
 		</div>
 	`}function setEmployerMode(){""==getCookieValue("employerMode")?document.cookie="employerMode=true":document.cookie="employerMode=",document.getElementById("employerMode").classList.add("rotateAnimation"),setTimeout(()=>{location.href=siteName},1e3)}function createRightSidebar(){return`
@@ -76,7 +75,7 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 				</li>
 				
 				<li class="option"
-				 onclick=" ${IS_LOGGED_IN&&HAS_COMPANY_PAGE?"loadCompanyPage()":"loadCreateCompanyPage()"}
+				 onclick=" ${IS_LOGGED_IN&&HAS_COMPANY_PAGE?"loadCompanyPage("+COMPANY_ID+")":"loadCreateCompanyPage()"}
 				  		" 
 				>
 					${IS_LOGGED_IN&&HAS_COMPANY_PAGE?"<i class = 'fa fa-building'></i>Your Company Page":"<i class = 'fa fa-plus'></i>Create Company Page"} 
@@ -151,7 +150,7 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 	</table>
 </div>
 
-`}function handle(e,t){window.filterChanged=!0,e.target.checked?document.cookie=e.target.id+"="+t:document.cookie=e.target.id+"=;expires=Thu, 01 Jan 1970 00:00:00 UTC;"}function resetFilters(){for(var e=document.getElementById("filterHolder").querySelectorAll("input"),t=0;t<e.length;t++)document.cookie=e[t].id+"=;expires=Thu, 01 Jan 1970 00:00:00 UTC;";checkTheCheckboxStatus()}function checkTheCheckboxStatus(){for(var e=document.getElementById("filterHolder").querySelectorAll("input"),t=0;t<e.length;t++)""!=getCookieValue(e[t].id)?e[t].checked=!0:e[t].checked=!1}function displayFilterPrompt(){displayPrompt("Edit Filters",createSearchFilter(),"checkFilters()"),checkTheCheckboxStatus()}const displaySearchResults=(e,t)=>{var t=document.getElementById(t),o=(t.className="mt-3",createProfileSubHeader("Results",profileOwnershipRequired=!1,btnText="Add Filters",callback="displayFilterPrompt()")),i=document.createElement("div"),o=(i.innerHTML=o+"<hr>",t.appendChild(i),document.createElement("div"));t.appendChild(o),display(e,o,callback=returnEachJob)};function refreshFilters(){(document.location.toString().includes("search")?loadSearchResults:loadHome)()}function checkFilters(){filterChanged&&(refreshFilters(),hideOverlay())}function createBackButton(){var e=document.createElement("td"),t=(e.className="text-center",document.createElement("button"));return t.className="btn btn-primary",t.innerHTML="<i class = 'fas fa-arrow-left'></i>",e.appendChild(t),e.onclick=()=>history.back(),e}function createSearchBoxHdr(){var e=document.createElement("table"),t=(e.className="generalHdrTable",document.createElement("tr")),o=createBackButton(),i=document.createElement("td"),n=document.createElement("div"),a=(n.className="gridHolder",n.style.gap="5px",document.createElement("div")),r=document.createElement("input"),d=(r.placeholder="Search job",r.id="searchBoxPositionInput",r.className="form-control",r.onkeyup=e=>{loadJobSuggestions(e.target.value)},a.appendChild(r),document.createElement("div"));return(r=document.createElement("input")).id="searchBoxLocationInput",r.placeholder="Location",r.onkeyup=e=>{loadLocationSuggestions(e.target.value)},r.className="form-control",d.appendChild(r),n.appendChild(a),n.appendChild(d),i.appendChild(n),t.appendChild(o),t.appendChild(i),e.appendChild(t),e}const handleSuggestionClicksInSearchBox=()=>{var e=document.getElementById("searchBoxPositionInput").value.trim(),t=document.getElementById("searchBoxLocationInput").value.trim();""!=e&&(document.cookie="position="+e),""!=e&&""==t&&(document.getElementById("searchBoxLocationInput").focus(),displaySearchBox()),""!=t&&(document.cookie="location="+t),""!=t&&""==e&&(document.getElementById("searchBoxPositionInput").focus(),displaySearchBox()),2<e.length&&2<t.length&&loadSearchResults()};function createLoadingSign(e=""){return`
+`}function handle(e,t){window.filterChanged=!0,e.target.checked?document.cookie=e.target.id+"="+t:document.cookie=e.target.id+"=;expires=Thu, 01 Jan 1970 00:00:00 UTC;"}function resetFilters(){for(var e=document.getElementById("filterHolder").querySelectorAll("input"),t=0;t<e.length;t++)document.cookie=e[t].id+"=;expires=Thu, 01 Jan 1970 00:00:00 UTC;";checkTheCheckboxStatus()}function checkTheCheckboxStatus(){for(var e=document.getElementById("filterHolder").querySelectorAll("input"),t=0;t<e.length;t++)""!=getCookieValue(e[t].id)?e[t].checked=!0:e[t].checked=!1}function displayFilterPrompt(){displayPrompt("Edit Filters",createSearchFilter(),"checkFilters()"),checkTheCheckboxStatus()}const displaySearchResults=(e,t)=>{var t=document.getElementById(t),o=(t.className="mt-3",createProfileSubHeader("Results",profileOwnershipRequired=!1,btnText="Add Filters",callback="displayFilterPrompt()")),n=document.createElement("div"),o=(n.innerHTML=o+"<hr>",t.appendChild(n),document.createElement("div"));t.appendChild(o),display(e,o,callback=returnEachJob)};function refreshFilters(){(document.location.toString().includes("search")?loadSearchResults:loadHome)()}function checkFilters(){filterChanged&&(refreshFilters(),hideOverlay())}function createBackButton(){var e=document.createElement("td"),t=(e.className="text-center",document.createElement("button"));return t.className="btn btn-primary",t.innerHTML="<i class = 'fas fa-arrow-left'></i>",e.appendChild(t),e.onclick=()=>history.back(),e}function createSearchBoxHdr(){var e=document.createElement("table"),t=(e.className="generalHdrTable",document.createElement("tr")),o=createBackButton(),n=document.createElement("td"),i=document.createElement("div"),a=(i.className="gridHolder",i.style.gap="5px",document.createElement("div")),r=document.createElement("input"),d=(r.placeholder="Search job",r.id="searchBoxPositionInput",r.className="form-control",r.onkeyup=e=>{loadJobSuggestions(e.target.value)},a.appendChild(r),document.createElement("div"));return(r=document.createElement("input")).id="searchBoxLocationInput",r.placeholder="Location",r.onkeyup=e=>{loadLocationSuggestions(e.target.value)},r.className="form-control",d.appendChild(r),i.appendChild(a),i.appendChild(d),n.appendChild(i),t.appendChild(o),t.appendChild(n),e.appendChild(t),e}const handleSuggestionClicksInSearchBox=()=>{var e=document.getElementById("searchBoxPositionInput").value.trim(),t=document.getElementById("searchBoxLocationInput").value.trim();""!=e&&(document.cookie="position="+e),""!=e&&""==t&&(document.getElementById("searchBoxLocationInput").focus(),displaySearchBox()),""!=t&&(document.cookie="location="+t),""!=t&&""==e&&(document.getElementById("searchBoxPositionInput").focus(),displaySearchBox()),2<e.length&&2<t.length&&loadSearchResults()};function createLoadingSign(e=""){return`
 			<div id = "${e}" class = "loadingSignHolder animationNone">
 				<i class = 'loadingSign fa fa-spinner fa-spin'></i>
 			</div>
@@ -186,19 +185,19 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 
 		</div>
 
-	`}const displaySearchBox=()=>{var e=siteName+"/searchBox";document.getElementById(e).innerHTML=defaultContentForSearchBox()};function loadViewProfile(e,t=""){var o=siteName+"/profile/"+e,i=createHomeHdr(activeTab="sdfdsf");loadTab(o,siteName+"/php/profile/view.php?of="+e+"&fromJobId="+t,displayProfile,i)}const displayProfile=(e,t)=>{var o=e.personal.login_name,o=displayProfileHeader(window.VIEWING_PROFILE_OF=o,e.jobId)+`<div id = "personal_${o}">`+displayPersonal(e.personal)+"</div>",i=displayExperiences(e.experiences),n=displaySkills(e.skills),a=displayProjects(e.projects),e=displayEducations(e.educations);document.getElementById(t).innerHTML=o+i+n+a+e};function createTd(e,t){return`
+	`}const displaySearchBox=()=>{var e=siteName+"/searchBox";document.getElementById(e).innerHTML=defaultContentForSearchBox()};function loadViewProfile(e,t=""){var o=siteName+"/profile/"+e,n=createHomeHdr(activeTab="sdfdsf");loadTab(o,siteName+"/php/profile/view.php?of="+e+"&fromJobId="+t,displayProfile,n)}const displayProfile=(e,t)=>{var o=e.personal.login_name,o=displayProfileHeader(window.VIEWING_PROFILE_OF=o,e.jobId)+`<div id = "personal_${o}">`+displayPersonal(e.personal)+"</div>",n=displayExperiences(e.experiences),i=displaySkills(e.skills),a=displayProjects(e.projects),e=displayEducations(e.educations);document.getElementById(t).innerHTML=o+n+i+a+e};function createTd(e,t){return`
 		<td style = "text-align:right"  
 			onclick = '${e}' >
 			${createPrimaryButton(t)}
 		</td>
-	`}function createProfileSubHeader(e,t,o="",i=""){return`
+	`}function createProfileSubHeader(e,t,o="",n=""){return`
 		<div>
 			<table class = 'fixedTable'>
 				<tr>
 					<td class = "h5">
 						${e}
 					</td>
-					${!t||IS_LOGGED_IN&&VIEWING_PROFILE_OF==LOGIN_NAME?createTd(i,o):""}
+					${!t||IS_LOGGED_IN&&VIEWING_PROFILE_OF==LOGIN_NAME?createTd(n,o):""}
 
 				</tr>
 			</table>
@@ -408,14 +407,14 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 		${t}
 	</div>
 	
-`}function createProjectForm(e="",t="",o="",i=""){return`
+`}function createProjectForm(e="",t="",o="",n=""){return`
 	<div>
 		<form id = "projectForm" method = "POST">
 
 			<input type = "hidden" name = "projectId" value = "${e}">
 			<div class = "gridHolderModified2">
 				${createTextInput("Title","projectFormTitle",t)}
-				${createTextInput("Link","projectFormLink",i)}
+				${createTextInput("Link","projectFormLink",n)}
 			</div>
 				${createTextarea("Project Description","descriptioon",o)}
 		</form>
@@ -445,20 +444,20 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 			</label>
 			<textarea class = 'w-100' name = "${t}">${o}</textarea>
 		</div>
-	`}function createInput(e,t,o,i,n=!1,a="",r=""){return`
+	`}function createInput(e,t,o,n,i=!1,a="",r=""){return`
 		<div id = "${a}_holder" >
 			<label>
 				${t}
 			</label>
-			<input type="${e}"  name="${o}" value="${i}" 
-				 id = "${a}" ${n?"disabled":""} onchange = "${r}">
+			<input type="${e}"  name="${o}" value="${n}" 
+				 id = "${a}" ${i?"disabled":""} onchange = "${r}">
 		</div>
-	`}function createTextInput(e,t,o){return createInput(type="text",e,t,o)}function createCheckbox(e,t,o,i=!1,n=""){return`
+	`}function createTextInput(e,t,o){return createInput(type="text",e,t,o)}function createCheckbox(e,t,o,n=!1,i=""){return`
 	<div id = "${t}_holder">
 		<label for = "${t}">${e}</label>
-		<input style  ="font-size:20px" onchange = "${n}" type = "checkbox" id ="${t}" name = "${o}"  ${i?"checked":""}>
+		<input style  ="font-size:20px" onchange = "${i}" type = "checkbox" id ="${t}" name = "${o}"  ${n?"checked":""}>
 	</div>
-`}function createDateInput(e,t,o,i=!1,n="",a=""){o=isNaN(new Date(o).getTime())?"":o;return createInput(type="date",e,t,o,i,n,a)}function createExperienceForm(e="",t="",o="",i="",n="",a="",r=!1){return`
+`}function createDateInput(e,t,o,n=!1,i="",a=""){o=isNaN(new Date(o).getTime())?"":o;return createInput(type="date",e,t,o,n,i,a)}function createExperienceForm(e="",t="",o="",n="",i="",a="",r=!1){return`
 	<div>
 		<form id = "experienceForm" method = "POST">
 
@@ -470,10 +469,10 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 				${createTextInput("Company","experienceFormCompany",o)}
 			</div>
 			
-			${createTextarea("Task Description (optional) ","experienceFormTaskDescription",i)}
+			${createTextarea("Task Description (optional) ","experienceFormTaskDescription",n)}
 			
 			<div class = "gridHolderModified2">
-				${createDateInput("From","experienceFormFrom",n)}
+				${createDateInput("From","experienceFormFrom",i)}
 				
 				${createCheckbox("Currently Working Here","experienceFormCb","experienceFormCb",checkedStatus=r,onchangeCallback="handleExperienceFormCbChange()")}
 				
@@ -483,7 +482,7 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 
 		</form>
 	</div>
-`}function createEditExperienceForm(e){return createExperienceForm(experienceId=e.id,position=e.position,company=e.company,taskDescription=e.description,from=e._from,to=e._to,currentlyWorkingHere="Present"==e._to)}function createAddNewExperienceForm(){return createExperienceForm()}function displayEditExperienceForm(e){displayPrompt("Edit Experience",createEditExperienceForm(e),`handleEditExperienceSubmit('${e.divId}')`)}function displayAddNewExperienceForm(){displayPrompt("Add New Experience",createAddNewExperienceForm(),"handleAddNewExperienceSubmit()")}function handleEdits(e,t,o,i){var e=new FormData(document.getElementById(e)),n=new XMLHttpRequest,a=document.getElementById(t);a.classList.add("fadeOutAnimation"),n.onreadystatechange=function(){var e;4==this.readyState&&200==this.status&&(e=JSON.parse(this.responseText),a.classList.remove("fadeOutAnimation"),e.error?alert("Error - "+e.error):a.innerHTML=o(e))},n.open("POST",i),n.send(e),hideOverlay()}function handleAddNew(e,t,o,i,n){var e=new FormData(document.getElementById(e)),a=document.getElementById("overlayFooterAction"),r=(a.classList.add("fadeOutAnimation"),new XMLHttpRequest),d=document.getElementById(t);r.onreadystatechange=function(){if(4==this.readyState&&200==this.status){var t=JSON.parse(this.responseText);if(t.error)alert("Error - "+t.error),a.classList.remove("fadeOutAnimation");else{hideOverlay();let e=document.createElement("div");e.className="jobMainInfoClone",e.id=n+"_"+t.login_name+"_"+t.id,e.classList.add("scaleUpAnimation"),e.innerHTML=o(t),d.appendChild(e),setTimeout(()=>{e.classList.remove("scaleUpAnimation")},1e3)}}},r.open("POST",i),r.send(e)}function handleAddNewExperienceSubmit(){handleAddNew("experienceForm","experiences_"+LOGIN_NAME,displayEachExperience,siteName+"/php/profile/create/experience.php","experience")}function handleEditExperienceSubmit(e){handleEdits("experienceForm",e,displayEachExperience,siteName+"/php/profile/edit/experience.php")}function handleExperienceFormCbChange(){document.getElementById("experienceFormCb").checked?document.getElementById("experienceFormTo_holder").style.display="none":(document.getElementById("experienceFormTo").disabled=!1,document.getElementById("experienceFormTo_holder").style.display="block")}function handleExperienceFormToChange(){document.getElementById("experienceFormCb_holder").style.display="none"}function createEducationForm(e="",t="",o="",i="",n="",a){return`
+`}function createEditExperienceForm(e){return createExperienceForm(experienceId=e.id,position=e.position,company=e.company,taskDescription=e.description,from=e._from,to=e._to,currentlyWorkingHere="Present"==e._to)}function createAddNewExperienceForm(){return createExperienceForm()}function displayEditExperienceForm(e){displayPrompt("Edit Experience",createEditExperienceForm(e),`handleEditExperienceSubmit('${e.divId}')`)}function displayAddNewExperienceForm(){displayPrompt("Add New Experience",createAddNewExperienceForm(),"handleAddNewExperienceSubmit()")}function handleEdits(e,t,o,n){var e=new FormData(document.getElementById(e)),i=new XMLHttpRequest,a=document.getElementById(t);a.classList.add("fadeOutAnimation"),i.onreadystatechange=function(){var e;4==this.readyState&&200==this.status&&(e=JSON.parse(this.responseText),a.classList.remove("fadeOutAnimation"),e.error?alert("Error - "+e.error):a.innerHTML=o(e))},i.open("POST",n),i.send(e),hideOverlay()}function handleAddNew(e,t,o,n,i){var e=new FormData(document.getElementById(e)),a=document.getElementById("overlayFooterAction"),r=(a.classList.add("fadeOutAnimation"),new XMLHttpRequest),d=document.getElementById(t);r.onreadystatechange=function(){if(4==this.readyState&&200==this.status){var t=JSON.parse(this.responseText);if(t.error)alert("Error - "+t.error),a.classList.remove("fadeOutAnimation");else{hideOverlay();let e=document.createElement("div");e.className="jobMainInfoClone",e.id=i+"_"+t.login_name+"_"+t.id,e.classList.add("scaleUpAnimation"),e.innerHTML=o(t),d.appendChild(e),setTimeout(()=>{e.classList.remove("scaleUpAnimation")},1e3)}}},r.open("POST",n),r.send(e)}function handleAddNewExperienceSubmit(){handleAddNew("experienceForm","experiences_"+LOGIN_NAME,displayEachExperience,siteName+"/php/profile/create/experience.php","experience")}function handleEditExperienceSubmit(e){handleEdits("experienceForm",e,displayEachExperience,siteName+"/php/profile/edit/experience.php")}function handleExperienceFormCbChange(){document.getElementById("experienceFormCb").checked?document.getElementById("experienceFormTo_holder").style.display="none":(document.getElementById("experienceFormTo").disabled=!1,document.getElementById("experienceFormTo_holder").style.display="block")}function handleExperienceFormToChange(){document.getElementById("experienceFormCb_holder").style.display="none"}function createEducationForm(e="",t="",o="",n="",i="",a){return`
 	<div>
 		<form id = "educationForm" method = "POST">
 
@@ -503,9 +502,9 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 				</div>
 
 				${createTextInput("Field","educationFormField",o)}
-				${createTextInput("Institution","educationFormInstitution",i)}
-				${createDateInput("From","educationFormFrom",n)}
-				${createDateInput("To","educationFormTo",n)}
+				${createTextInput("Institution","educationFormInstitution",n)}
+				${createDateInput("From","educationFormFrom",i)}
+				${createDateInput("To","educationFormTo",i)}
 
 			</div>
 			
@@ -514,7 +513,7 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 
 		</form>
 	</div>
-`}function createEditEducationForm(e){return createEducationForm(educationId=e.id,level=e.level,field=e.field,institution=e.institution,from=e._from,to=e._to)}function createAddNewEducationForm(){return createEducationForm()}function displayEditEducationForm(e){displayPrompt("Edit Education",createEditEducationForm(e),`handleEditEducationSubmit('${e.divId}')`)}function displayAddNewEducationForm(){displayPrompt("Add New education",createAddNewEducationForm(),"handleAddNewEducationSubmit()")}function handleEditEducationSubmit(e){handleEdits("educationForm",e,displayEachEducation,siteName+"/php/profile/edit/education.php")}function handleAddNewEducationSubmit(){handleAddNew("educationForm","educations_"+LOGIN_NAME,displayEachEducation,siteName+"/php/profile/create/education.php","education")}function deletee(e,t,o=""){hideOverlay();let i=document.getElementById(t);document.getElementById(t).classList.add("fadeOutAnimation");fetch(e).then(e=>e.json()).then(e=>{if(document.getElementById(t).classList.remove("fadeOutAnimation"),e.error)alert(e.error);else{if(""!=o){let e=document.getElementById(o);setTimeout(()=>{e.insertBefore(i,e.firstChild)},1500)}removeDiv(t)}})}function removeDiv(e){let t=document.getElementById(e);t.classList.add("scaleDownAnimation"),setTimeout(()=>{t.remove()},1e3)}function deleteSkill(e){deletee(siteName+"/php/profile/delete.php?table=skills&id="+e,"skill_"+e)}function deleteProject(e){displayPrompt("Delete Project?",`
+`}function createEditEducationForm(e){return createEducationForm(educationId=e.id,level=e.level,field=e.field,institution=e.institution,from=e._from,to=e._to)}function createAddNewEducationForm(){return createEducationForm()}function displayEditEducationForm(e){displayPrompt("Edit Education",createEditEducationForm(e),`handleEditEducationSubmit('${e.divId}')`)}function displayAddNewEducationForm(){displayPrompt("Add New education",createAddNewEducationForm(),"handleAddNewEducationSubmit()")}function handleEditEducationSubmit(e){handleEdits("educationForm",e,displayEachEducation,siteName+"/php/profile/edit/education.php")}function handleAddNewEducationSubmit(){handleAddNew("educationForm","educations_"+LOGIN_NAME,displayEachEducation,siteName+"/php/profile/create/education.php","education")}function deletee(e,t,o=""){hideOverlay();let n=document.getElementById(t);document.getElementById(t).classList.add("fadeOutAnimation");fetch(e).then(e=>e.json()).then(e=>{if(document.getElementById(t).classList.remove("fadeOutAnimation"),e.error)alert(e.error);else{if(""!=o){let e=document.getElementById(o);setTimeout(()=>{e.insertBefore(n,e.firstChild)},1500)}removeDiv(t)}})}function removeDiv(e){let t=document.getElementById(e);t.classList.add("scaleDownAnimation"),setTimeout(()=>{t.remove()},1e3)}function deleteSkill(e){deletee(siteName+"/php/profile/delete.php?table=skills&id="+e,"skill_"+e)}function deleteProject(e){displayPrompt("Delete Project?",`
 		
 		Are you sure to delete this project info? 
 	
@@ -559,7 +558,7 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 							class = "btnHighlighted ${IS_LOGGED_IN&&isJobPoster(e)?"btnDangerMyOwn":"btnPrimaryMyOwn"}
 									${IS_LOGGED_IN?isJobPoster(e)?"0"!=e.active_status||"0"==e.verified?"":"disabled":hasApplied(e)?"disabled":"":""}
 								  "
-							onclick = '${IS_LOGGED_IN?isJobPoster(e)?"0"==e.active_status?"0"==e.verified?"activateJob("+e.id+")":"":"closeJob("+e.id+")":hasApplied(e)?"":"applyToJob("+e.id+")":"displayLoginOverlay('Apply to Jobs', 'Apply to Jobs')"}'
+							onclick = "${IS_LOGGED_IN?isJobPoster(e)?"0"==e.active_status?"0"==e.verified?"activateJob("+e.id+")":"":"closeJob("+e.id+")":hasApplied(e)?"":"applyToJob("+e.id+")":"displayLoginOverlay('Apply', 'apply to jobs')"}"
 						>
 							${IS_LOGGED_IN?isJobPoster(e)?"0"==e.active_status?"0"==e.verified?"Activate Job":"Closed":"Close Job":hasApplied(e)?"Applied":"Apply":"Apply"}
 
@@ -599,11 +598,11 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 				</tr>
 			</table>
 		</div>
-	`}function loadSaved(e,t,o=!1){var i=siteName+"/jobs/saved/"+e,n=createHomeHdr(activeTab="applied");loadTab(i,siteName+`/php/jobs/saved/${e}.php`,t,n,o)}function loadAppliedJobs(){loadSaved("applied",displayApplied)}const displaySaved=(e,t,o)=>{var i=document.getElementById(e);i.innerHTML=createSubHeaderForSavedJobs(t),display(o,i,callback=returnEachJob,e)},displayApplied=(e,t)=>{displaySaved(t,"applied",e)};function loadPostedJobs(e=!1){loadSaved("posted",displayPosted,e)}const displayPosted=(e,t)=>{displaySaved(t,"posted",e)};function loadClosedJobs(){loadSaved("closed",displayClosed)}const displayClosed=(e,t)=>{displaySaved(t,"closed",e)},displayHome=(e,t="")=>{var o=document.getElementById(t),i=createProfileSubHeader("Jobs Based On Your Preferences",profileOwnershipRequired=!1,btnText="Edit Filters",callback="displayFilterPrompt()"),n=document.createElement("div");n.innerHTML=i+"<hr>",o.appendChild(n);display(e.filter(e=>"re"!=e.job_site),o,callback=returnEachJob,t);i=document.createElement("div");i.innerHTML=`
+	`}function loadSaved(e,t,o=!1){var n=siteName+"/jobs/saved/"+e,i=createHomeHdr(activeTab="applied");loadTab(n,siteName+`/php/jobs/saved/${e}.php`,t,i,o)}function loadAppliedJobs(){loadSaved("applied",displayApplied)}const displaySaved=(e,t,o)=>{var n=document.getElementById(e);n.innerHTML=createSubHeaderForSavedJobs(t),display(o,n,callback=returnEachJob,e)},displayApplied=(e,t)=>{displaySaved(t,"applied",e)};function loadPostedJobs(e=!1){loadSaved("posted",displayPosted,e)}const displayPosted=(e,t)=>{displaySaved(t,"posted",e)};function loadClosedJobs(){loadSaved("closed",displayClosed)}const displayClosed=(e,t)=>{displaySaved(t,"closed",e)},displayHome=(e,t="")=>{var o=document.getElementById(t),n=createProfileSubHeader("Jobs Based On Your Preferences",profileOwnershipRequired=!1,btnText="Edit Filters",callback="displayFilterPrompt()"),i=document.createElement("div");i.innerHTML=n+"<hr>",o.appendChild(i);display(e.filter(e=>"re"!=e.job_site),o,callback=returnEachJob,t);n=document.createElement("div");n.innerHTML=`
 	
 		<h5 class = "mt-4"> Remote Jobs based on your Location </h4>
 		<hr>
-	`,o.appendChild(i),display(e.filter(e=>"re"==e.job_site),o,callback=returnEachJob,t)};function loadHome(){var e=siteName+"/",t=createHomeHdr(activeTab="home");loadTab(e,apiFolder+"/home.php",displayHome,t)}function displayAppliedBadge(e){return e.hasOwnProperty("has_applied")&&"true"==e.has_applied?`
+	`,o.appendChild(n),display(e.filter(e=>"re"==e.job_site),o,callback=returnEachJob,t)};function loadHome(){var e=siteName+"/",t=createHomeHdr(activeTab="home");loadTab(e,apiFolder+"/home.php",displayHome,t)}function displayAppliedBadge(e){return e.hasOwnProperty("has_applied")&&"true"==e.has_applied?`
 
 				<div class  = "simpleFlexItem position-relative">
 					<span class="myOwnBadge">Applied</span>
@@ -636,14 +635,14 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 			>View All Applicants</div>
 		</div>
 
-	`}const returnEachJob=e=>{var t=createJobContent(e),o=document.createElement("div");return o.onclick=()=>{loadEachJob(e)},o.className="jobMainInfo",o.id="job_"+e.id,o.innerHTML=t,o};function viewApplicantOnclick(e,t,o){return IS_LOGGED_IN&&LOGIN_NAME==e?`loadScaffold(event, ${t}, ${o})`:"limitedApplicantsScaffold(event, "+t+", "+o+")"}function loadPostJobForm(){execFrontendOnlyFunction(siteName+"/postJobForm",createHomeHdr(activeTab="jobPostForm"),displayPostJobForm)}const displayPostJobForm=()=>{var e=siteName+"/postJobForm",t=`
+	`}const returnEachJob=e=>{var t=createJobContent(e),o=document.createElement("div");return o.onclick=()=>{loadEachJob(e)},o.className="jobMainInfo",o.id="job_"+e.id,o.innerHTML=t,o};function viewApplicantOnclick(e,t,o){return IS_LOGGED_IN&&LOGIN_NAME==e?`loadScaffold(event, ${t})`:"limitedApplicantsScaffold(event, "+t+", "+o+")"}function loadPostJobForm(){execFrontendOnlyFunction(siteName+"/postJobForm",createHomeHdr(activeTab="jobPostForm"),displayPostJobForm)}const displayPostJobForm=()=>{var e=siteName+"/postJobForm",t=`
 <div class = "formHolder" style = "background: var(--bgColorOfCards)">
 <h4 class = "text-center" >Post a Job </h4>
 
 <hr>
 
-<p class = "text-warning text-center" style ="font-weight:bold">
-	${IS_LOGGED_IN&&HAS_COMPANY_PAGE?"":'You need to <span class = "softLink" onclick="loadCreateCompanyPage()">create a company page</span> before you can post jobs.<HR>'}
+<p class = "text-warning text-center">
+	${IS_LOGGED_IN?HAS_COMPANY_PAGE?"":'<small>You need to </small><span class = "softLink" onclick="loadCreateCompanyPage()">create a company page</span> <small>before you can post jobs</small><HR>':'<small>You need to</small> <span class = "softLink" onclick="loadCreateCompanyPage()">create a company page</span> <small>before you can post jobs</small><HR>'}
 </p>
 
 <p class = "text-center">
@@ -654,7 +653,7 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 
 	<div id = "postJobForm_step_1" class = "animationSlideRight">
 
-		<div class = "gridHolderModified2" >
+		<div class = "gridHolder" >
 			
 			<div>
 				<label for = "position"> Position </label>
@@ -811,34 +810,26 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 			</tr>
 		</table>
 
-	`;document.getElementById("controlHolder").innerHTML=e}async function handleLocationInputInPostJobForm(){handleLocationInput("locationNameInputPostJobForm","locatioNameAutoComplete",`https://api.geoapify.com/v1/geocode/autocomplete?text=${document.getElementById("locationNameInputPostJobForm").value.trim()}&apiKey=8a4e247166574725a8de05e06f3c9d74`)}function updateCompanyNameInputField(e){document.getElementById("companyNameInputInJobPost").value=e.company_name,document.getElementById("hiddenCompanyWebsite").value=e.company_website}function companyNameSuggestions(e){var t="";if(0<e.length){for(var o=0;o<e.length;o++)t+=`<li onclick = 'updateCompanyNameInputField( ${JSON.stringify(e[o])} )' title = "${e[o].company_name}"  class = "option p-2"> ${e[o].company_name}  </li>`;return t}return'<p class = "text-center">No suggestions</p>'}async function handleCompanyInputInPostJobForm(){var e=document.getElementById("companyNameInputInJobPost").value;2<=e.trim().length?(document.getElementById("companyNameAutocomplete").innerHTML='<p class="text-center">Loading</p>',fetch("php/companyPage/suggestions.php?incompleteName="+e).then(e=>e.json()).then(e=>{document.getElementById("companyNameAutocomplete").innerHTML=companyNameSuggestions(e)})):document.getElementById("companyNameAutocomplete").innerHTML='<p class ="text-center">Enter Company Name</p>'}function createEachLink(e,t,o){return`
-		<div   onclick = "${e!=o?t+e+")":""}" class = "nav-flex-item ${e==o?"activeNavLink":""} ">
-			${e}
-		</div>
-	`}function createNavLinks(e,t,o){for(var i=Math.ceil(10),n=document.createElement("div"),a="",r=1;r<=i;r++)a+=createEachLink(r,t,o);return n.innerHTML=`
-		<div  class  = "mt-4 justify-content-center flex-container navLinksHolder">
-			${a}
-		</div>
-	`,n}function loadScaffold(e,t,o,i=1){e.stopPropagation();var e=siteName+"/applicants/scaffold?jobId="+t+"&page="+i+"&numApplicants="+o,n=createHomeHdr(activeTab="sdfsdf");loadTab(e,siteName+"/php/jobs/applicants/scaffold.php?jobId="+t+"&page="+i+"&numApplicants="+o,displayScaffold,n)}function loadShortListed(e,t,o=1){var i=siteName+"/applicants/shortlisted?jobId="+e+"&page="+o+"&numApplicants="+t,n=createHomeHdr(activeTab="sdfsdf");loadTab(i,siteName+"/php/jobs/applicants/shortlisted.php?jobId="+e+"&page="+o+"&numApplicants="+t,displayShortListed,n)}function loadRejected(e,t,o=1){var i=siteName+"/applicants/rejected?jobId="+e+"&page="+o+"&numApplicants="+t,n=createHomeHdr(activeTab="sdfsdf");loadTab(i,siteName+"/php/jobs/applicants/shortlisted.php?jobId="+e+"&page="+o+"&numApplicants="+t,displayRejected,n)}function createSubHeaderForScaffold(e,t,o){return`
+	`;document.getElementById("controlHolder").innerHTML=e}async function handleLocationInputInPostJobForm(){handleLocationInput("locationNameInputPostJobForm","locatioNameAutoComplete",`https://api.geoapify.com/v1/geocode/autocomplete?text=${document.getElementById("locationNameInputPostJobForm").value.trim()}&apiKey=8a4e247166574725a8de05e06f3c9d74`)}function updateCompanyNameInputField(e){document.getElementById("companyNameInputInJobPost").value=e.company_name,document.getElementById("hiddenCompanyWebsite").value=e.company_website}function companyNameSuggestions(e){var t="";if(0<e.length){for(var o=0;o<e.length;o++)t+=`<li onclick = 'updateCompanyNameInputField( ${JSON.stringify(e[o])} )' title = "${e[o].company_name}"  class = "option p-2"> ${e[o].company_name}  </li>`;return t}return'<p class = "text-center">No suggestions</p>'}async function handleCompanyInputInPostJobForm(){var e=document.getElementById("companyNameInputInJobPost").value;2<=e.trim().length?(document.getElementById("companyNameAutocomplete").innerHTML='<p class="text-center">Loading</p>',fetch("php/companyPage/suggestions.php?incompleteName="+e).then(e=>e.json()).then(e=>{document.getElementById("companyNameAutocomplete").innerHTML=companyNameSuggestions(e)})):document.getElementById("companyNameAutocomplete").innerHTML='<p class ="text-center">Enter Company Name</p>'}function loadScaffold(e,t,o=1,n="push"){e.stopPropagation();var e=siteName+"/applicants/scaffold?jobId="+t+"&page="+o,i=createGeneralHdr("Viewing unfiltered Applicants ");loadTab(e,siteName+"/php/jobs/applicants/scaffold.php?jobId="+t+"&page="+o,displayScaffold,i,hardRefresh=!1,n)}function loadShortListed(e,t=1,o="push"){var n=siteName+"/applicants/shortlisted?jobId="+e+"&page="+t,i=createGeneralHdr("Viewing Shortlisted Applicants");loadTab(n,siteName+"/php/jobs/applicants/shortlisted.php?jobId="+e+"&page="+t,displayShortListed,i,hardRefresh=!1,o)}function loadRejected(e,t=1,o="push"){var n=siteName+"/applicants/rejected?jobId="+e+"&page="+t,i=createGeneralHdr("Viewing Rejected Applicants");loadTab(n,siteName+"/php/jobs/applicants/rejected.php?jobId="+e+"&page="+t,displayRejected,i,hardRefresh=!1,o)}function createSubHeaderForScaffold(e,t){return`
 	
 	<div  class = "stickyLeftOrRight mt-4 mb-4  center-div text-center" style = "top: ${returnTopOfMiddleMainContent()}; z-index:2; max-width:400px; width:100%; margin: 0 auto; ">
 		<div  class = "savedJobsSubHdrHolder">
 			<table class = "savedJobsSubHdr">
 				<tr>
-					<td  onclick = "loadScaffold(event, ${t}, ${o} )" class = "${"all"===e?"activeSavedJobsSubHdr":""}  " >
-						Applicants
+					<td  onclick = "loadScaffold(event, ${t}, 1, 'replace' )" class = "${"all"===e?"activeSavedJobsSubHdr":""}  " >
+						Unfiltered
 					</td>
-					<td onclick = "loadShortListed(${t}, ${o})" class = ${"shortlisted"===e?"activeSavedJobsSubHdr":""} >
+					<td onclick = "loadShortListed(${t}, 1, 'replace')" class = ${"shortlisted"===e?"activeSavedJobsSubHdr":""} >
 						Shortlisted
 					</td>
-					<td onclick = "loadRejected(${t}, ${o})" class = ${"rejected"===e?"activeSavedJobsSubHdr":""} >
+					<td onclick = "loadRejected(${t}, 1, 'replace')" class = ${"rejected"===e?"activeSavedJobsSubHdr":""} >
 						Rejected
 					</td>
 				</tr>
 			</table>
 		</div>
-	`}function eachApplicantWithOptions(e,t,o,i){return`
-		<div id = "applicant_${e}" onclick = "${t}" class = "jobMainInfo p-3">
+	`}function eachApplicantWithOptions(e,t,o,n,i){return`
+		<div id = "applicant_${i}" onclick = "${t}" class = "jobMainInfo p-3">
 			<div class = "flex-container align-items-center">
 				<div>
 					<i class = "fa fa-user-circle fa-2x"></i>
@@ -850,18 +841,22 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 					<div title="ShortList" onclick= "${o}" class = "successIcon">
 						<i class = "fa fa-check"></i>
 					</div>
-					<div title="Reject" class="dangerIcon" onclick="${i}">
+					<div title="Reject" class="dangerIcon" onclick="${n}">
 						<i class = "fa fa-trash"></i>
 					</div>
 				</div>
 			</div>	
 
-			<div>
-				3 years of experience as Jr. R&D Engineer
-			</div>
-
 		</div>
-	`}function shortList(e,t,o){e.stopPropagation(),alert(t+", "+o)}function reject(e,t,o){e.stopPropagation(),alert(t+", "+o)}const displayApplicants=(e,t,o)=>{var i=e.applicants,n="",a=document.createElement("div");a.className="gridHolderModified",a.id="grid_all_"+t;for(var r=0;r<i.length;r++)n+=eachApplicantWithOptions("@"+i[r].login_name,`loadViewProfile( '${i[r].login_name}', jobId = ${e.jobId})`,`shortList(event, '${i[r].login_name}', ${e.jobId})`,`reject(event, '${i[r].login_name}', ${e.jobId})`);a.innerHTML=n,document.getElementById(t).innerHTML=createSubHeaderForScaffold(o,e.jobId,e.numApplicants),document.getElementById(t).appendChild(a),0<parseInt(e.numApplicants)&&(o=createNavLinks(parseInt(e.numApplicants),`loadScaffold(event, ${parseInt(e.jobId)}, ${parseInt(e.numApplicants)},`,activeLink=parseInt(e.page)+1),document.getElementById(t).appendChild(o))},displayScaffold=(e,t)=>{displayApplicants(e,t,"all")},displayShortListed=(e,t)=>{displayApplicants(e,t)},displayRejected=(e,t)=>{displayApplicants(e,t)};function loadLimitedContentOfApplicants(e,t,o){var i=siteName+`/jobs/${o}/limited/`+e,e=createGeneralHdr("Applicant #"+e);loadTab(i,siteName+"/php/profile/limitedView.php?jobId="+o+"&preLimit="+t,displayLimitedView,e)}const displayLimitedView=(e,t)=>{window.VIEWING_PROFILE_OF="DSFSDFAFAFDASFAFDSFFSDFSF";var o="";o+=displayExperiences(e.experiences)+displaySkills(e.skills)+displayProjects(e.projects)+displayEducations(e.educations),document.getElementById(t).innerHTML=o};function limitedApplicantsScaffold(e,t,o){e.stopPropagation(),execFrontendOnlyFunction(siteName+"/job/"+t+"/applicants/scaffold",createGeneralHdr("View Applicants"),displayLimitedApplicantScaffold,data=[t,o])}function eachApplicant(e,t){return`
+	`}function shortList(e,t,o,n){e.stopPropagation(),deletee(siteName+"/php/jobs/applicants/action/shortlist.php?loginName="+t+"&jobId="+o,divId="applicant_"+n)}function reject(e,t,o,n){e.stopPropagation(),deletee(siteName+"/php/jobs/applicants/action/reject.php?loginName="+t+"&jobId="+o,divId="applicant_"+n)}function createEachLink(e,t,o){return`
+		<div   onclick = "${e!=o?t+e+", 'refresh')":""}" class = "nav-flex-item ${e==o?"activeNavLink":""} ">
+			${e}
+		</div>
+	`}function createNavLinks(e,t,o){for(var n=Math.ceil(10),i=document.createElement("div"),a="",r=1;r<=n;r++)a+=createEachLink(r,t,o);return i.innerHTML=`
+		<div  class  = "mt-4 justify-content-center flex-container navLinksHolder">
+			${a}
+		</div>
+	`,i}const displayApplicants=(e,t,o)=>{var n=e.applicants,i="",a=document.createElement("div");a.className="gridHolderModified",a.id="grid_all_"+t;for(var r=0;r<n.length;r++)i+=eachApplicantWithOptions("@"+n[r].login_name,`loadViewProfile( '${n[r].login_name}', jobId = ${e.jobId})`,`shortList(event, '${n[r].login_name}', ${e.jobId}, ${n[r].id})`,`reject(event, '${n[r].login_name}', ${e.jobId}, ${n[r].id})`,n[r].id);if(a.innerHTML=i,document.getElementById(t).innerHTML=createSubHeaderForScaffold(o,e.jobId),document.getElementById(t).appendChild(a),0<parseInt(e.numApplicants)){switch(o){case"all":var d=`loadScaffold(event, ${parseInt(e.jobId)},`;break;case"shortlisted":d=`loadShortListed(${parseInt(e.jobId)},`;break;case"rejected":d=`loadRejected(${parseInt(e.jobId)},`}a=createNavLinks(parseInt(e.numApplicants),d,activeLink=parseInt(e.page)+1);document.getElementById(t).appendChild(a)}},displayScaffold=(e,t)=>{displayApplicants(e,t,"all")},displayShortListed=(e,t)=>{displayApplicants(e,t,"shortlisted")},displayRejected=(e,t)=>{displayApplicants(e,t,"rejected")};function loadLimitedContentOfApplicants(e,t,o){var n=siteName+`/jobs/${o}/limited/`+e,e=createGeneralHdr("Applicant #"+e);loadTab(n,siteName+"/php/profile/limitedView.php?jobId="+o+"&preLimit="+t,displayLimitedView,e)}const displayLimitedView=(e,t)=>{window.VIEWING_PROFILE_OF="DSFSDFAFAFDASFAFDSFFSDFSF";var o="";o+=displayExperiences(e.experiences)+displaySkills(e.skills)+displayProjects(e.projects)+displayEducations(e.educations),document.getElementById(t).innerHTML=o};function limitedApplicantsScaffold(e,t,o){e.stopPropagation(),execFrontendOnlyFunction(siteName+"/job/"+t+"/applicants/scaffold",createGeneralHdr("View Applicants"),displayLimitedApplicantScaffold,data=[t,o])}function eachApplicant(e,t){return`
 		<div onclick = "${t}" class = "jobMainInfo p-3">
 			<div class = "flex-container align-items-center">
 				<div>
@@ -872,7 +867,7 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 				</div>
 			</div>
 		</div>
-	`}const displayLimitedApplicantScaffold=([e,t])=>{for(var o=siteName+"/job/"+e+"/applicants/scaffold",i='<div class = "gridHolderModified2">',n=0,a=t;t-10<a&&0<a;a--)i+=eachApplicant("Applicant #"+a,`loadLimitedContentOfApplicants(${a}, ${n}, ${e})`),n++;document.getElementById(o).innerHTML=i};var menuShown=!0;function toggleMenuInDesktop(){document.getElementById("menuItems").style.display=1==menuShown?"none":"block",menuShown=!menuShown}function logOut(){location.href=siteName+"/php/auth/logOut.php"}function createOverlayHeader(e){return`
+	`}const displayLimitedApplicantScaffold=([e,t])=>{for(var o=siteName+"/job/"+e+"/applicants/scaffold",n='<div class = "gridHolderModified2">',i=0,a=t;t-10<a&&0<a;a--)n+=eachApplicant("Applicant #"+a,`loadLimitedContentOfApplicants(${a}, ${i}, ${e})`),i++;document.getElementById(o).innerHTML=n};var menuShown=!0;function toggleMenuInDesktop(){document.getElementById("menuItems").style.display=1==menuShown?"none":"block",menuShown=!menuShown}function logOut(){location.href=siteName+"/php/auth/logOut.php"}function createOverlayHeader(e){return`
 		<div class = "overlayHeader">
 			<table class = "fixedTable mt-2 mb-2">
 				<tr>
@@ -928,7 +923,7 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 				</tr>
 			</table>
 		</div>
-	`}function createPrompt(e,t,o,i){return`
+	`}function createPrompt(e,t,o,n){return`
 	${createOverlayHeader(e)}
 
 	<hr>
@@ -937,8 +932,8 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 		${t}			
 	</div>
 
-	${createOverlayFooterOptions(o,i)}
-`}function displayPrompt(e,t,o,i=!1){performOperationsOnBody(),createOverlayAndInsert(createPrompt(e,t,o,i))}function getPartOfDay(){var e=(new Date).getHours();return 5<=e&&e<12?"Morning":12<=e&&e<18?"Afternoon":"Evening"}function createPromptWithoutFooterOptions(e,t){return`
+	${createOverlayFooterOptions(o,n)}
+`}function displayPrompt(e,t,o,n=!1){performOperationsOnBody(),createOverlayAndInsert(createPrompt(e,t,o,n))}function getPartOfDay(){var e=(new Date).getHours();return 5<=e&&e<12?"Morning":12<=e&&e<18?"Afternoon":"Evening"}function createPromptWithoutFooterOptions(e,t){return`
 	${createOverlayHeader(e)}
 
 	<hr>
@@ -947,7 +942,7 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 		${t}			
 	</div>
 
-`}function displayPromptWithoutFooterOptions(e,t){performOperationsOnBody(),createOverlayAndInsert(createPromptWithoutFooterOptions(e,t))}function putTextInInputField(e,t,o=""){document.getElementById(e).value=t,""!=o&&o()}function escapeSingleQuotes(e){return e.replace(/'/g,"\\'")}function returnList(e,t,o=""){var i="";if(0<t.length){for(var n=0;n<t.length;n++)i+=`<li onclick = 'putTextInInputField("${e}", "${escapeSingleQuotes(t[n])}", ${o})' title = "${t[n]}"  class = "option p-2"> ${t[n]}  </li>`;return i}return'<p class = "text-center">No suggestions</p>'}async function handleLocationInput(e,t,o){t=document.getElementById(t);2<document.getElementById(e).value.trim().length?(t.innerHTML='<p class="text-center">Loading</p>',o=(await(await fetch(o)).json()).features.map(e=>e.properties.formatted),t.innerHTML=returnList(e,o)):t.innerHTML='<p class = "text-center">Enter Location</p>'}function deperformOperationsOnBody(){document.body.style.overflowY="scroll",document.getElementById("outerOverlay")&&document.getElementById("outerOverlay").remove()}function hideOverlay(){deperformOperationsOnBody()}function deactivateButton(e,t){document.getElementById(e).disabled=!0,document.getElementById(e).innerText=t}function activateButton(e,t){document.getElementById(e).disabled=!1,document.getElementById(e).innerText=t}function getCookieValue(e){for(var t=e+"=",o=decodeURIComponent(document.cookie).split(";"),i=0;i<o.length;i++){for(var n=o[i];" "===n.charAt(0);)n=n.substring(1);if(0===n.indexOf(t))return n.substring(t.length,n.length)}return""}function deleteThisDiv(e){var t=document.getElementById(e),t=(t&&t.remove(),document.createElement("div"));t.id=e,middleMainContent.appendChild(t)}function hideAllDivsExceptDivWithThis(e){for(var t=middleMainContent.children,o=t.length-1;0<=o;o--)t[o].style.display="none";document.getElementById(e).style.display="block"}function refresh(e,t,o){let i=e;deleteThisDiv(e);var n=document.createElement("div");n.id=i+"_loadingSign",n.innerHTML=createLoadingSign(""),document.getElementById(i).appendChild(n),hideAllDivsExceptDivWithThis(e),currentlyBeingLoadedURLs.push(e),fetch(t).then(function(e){return e.json()}).then(function(e){document.getElementById(i+"_loadingSign").remove(),currentlyBeingLoadedURLs=currentlyBeingLoadedURLs.filter(e=>e!=i),o(e,i)})}function beforeLoadTab(e,t,o,i){clearHdrAndPut(t),locationToHdrMapper[e]=t,loadTab(e,o,i)}function loadTab(e,t,o,i="",n=!1){clearHdrAndPut(i),locationToHdrMapper[e]=i,currentlyBeingLoadedURLs.includes(e)||(document.location==e||(push(e),!document.getElementById(e))||n?refresh(e,t,o):hideAllDivsExceptDivWithThis(e))}function display(e,t,o,i=""){if(0<e.length){var n=document.createElement("div");n.className="gridHolderModified2",n.id="grid_"+i,t.appendChild(n);for(var a=0;a<e.length;a++)n.appendChild(o(e[a]))}}function noOfElementPerRow(){var e=middleMainContent.clientWidth;return e<=470?1:e<=700?2:3}function push(e){history.pushState({},"",e)}function execFrontendOnlyFunction(e,t,o,i=""){clearHdrAndPut(t),locationToHdrMapper[e]=t,window.location!=e&&push(e),document.getElementById(e)?hideAllDivsExceptDivWithThis(e):(deleteThisDiv(e),hideAllDivsExceptDivWithThis(e),o(i))}window.onpopstate=e=>{clearHdrAndPut(locationToHdrMapper[document.location]),hideAllDivsExceptDivWithThis(document.location)};const createHomeHdr=e=>{var t=document.createElement("table"),o=(t.className="hdrTable homeHdr ",document.createElement("tr")),i=document.createElement("td"),n=("home"==e&&(i.className="activeTab "),i.onclick=()=>loadHome(),i.innerHTML="<i class = 'fa fa-home'> </i> <br> <small>Home</small> ",EMPLOYER_MODE&&i.classList.add("d-none"),document.createElement("td")),a=(n.className="requiresLogin","noti"==e&&(n.className="activeTab"),n.onclick=()=>IS_LOGGED_IN?loadNoti():displayLoginOverlay("Notifications","view notifications."),n.innerHTML="<i class = 'fa fa-bell'> </i> <br> <small>Notifications</small> ",document.createElement("td")),r=(a.className="requiresLogin","applied"==e&&(a.className="activeTab"),a.onclick=()=>IS_LOGGED_IN?(EMPLOYER_MODE?loadPostedJobs:loadAppliedJobs)():displayLoginOverlay("Saved Jobs","view applied and posted jobs"),a.innerHTML="<i class = 'fa fa-bookmark'> </i> <br> <small>Saved Jobs</small> ",document.createElement("td")),d=(r.onclick=()=>loadSearchBox(),r.innerHTML="<i class ='fa fa-search'> </i> <br> <small>Search</small>  ",EMPLOYER_MODE&&r.classList.add("d-none"),document.createElement("td")),l=(d.className="d-none d-md-block","jobPostForm"==e&&(d.className="activeTab"),d.onclick=()=>loadPostJobForm(),d.innerHTML="<i class ='fa fa-suitcase'> </i> <br> <small>Post Job</small>  ",document.createElement("td"));return l.className="d-xs-block d-sm-block d-md-none",l.onclick=()=>loadMenu(),l.innerHTML="<i class ='fa fa-bars'> </i> <br> <small>Menu</small>  ","menu"==e&&(l.className="activeTab"),o.appendChild(i),o.appendChild(a),o.appendChild(d),o.appendChild(n),o.appendChild(r),o.appendChild(l),t.appendChild(o),t};function createGeneralHdr(e){var t=document.createElement("table"),o=(t.className="generalHdrTable",document.createElement("tr")),i=createBackButton(),n=document.createElement("th");return n.innerText=e,o.appendChild(i),o.appendChild(n),t.appendChild(o),t}function clearHdrAndPut(e){var t=document.getElementById("middlePartOfHdr");t.innerHTML="",t.appendChild(e)}const siteName="http://localhost/myprojects/mydj",apiFolder="php";var loadedURLs=[],currentlyBeingLoadedURLs=[],middleMainContent=document.getElementById("middleMainContent"),locationToHdrMapper={},dark=0;const root=document.documentElement;function toggle(){0==dark?(dark=1,root.style.setProperty("--border","1px solid rgba(255, 255, 255, 0.7"),root.style.setProperty("--bgColorOfCards","black"),root.style.setProperty("--bgColorOfBody","rgba(0, 0, 0, 0.85)"),root.style.setProperty("--colorOfBody","white"),root.style.setProperty("--fontSize17Color","lightgreen"),root.style.setProperty("--fontSize20Color","yellow"),root.style.setProperty("--divBackground","rgba(255, 255, 255, 0.2"),root.style.setProperty("--boxShadow","0px 10px 20px rgba(255, 255, 255, 0.3)")):(dark=0,root.style.setProperty("--border","1px solid rgba(0, 0, 0, 0.2"),root.style.setProperty("--bgColorOfCards","white"),root.style.setProperty("--bgColorOfBody","#f2f2f2"),root.style.setProperty("--colorOfBody","black"),root.style.setProperty("--fontSize17Color","green"),root.style.setProperty("--fontSize20Color","green"),root.style.setProperty("--divBackground","rgba(0, 0, 0, 0.05"),root.style.setProperty("--boxShadow","0px 10px 20px rgba(0, 0, 0, 0.3)"))}function promptToActivate(){return`
+`}function displayPromptWithoutFooterOptions(e,t){performOperationsOnBody(),createOverlayAndInsert(createPromptWithoutFooterOptions(e,t))}function putTextInInputField(e,t,o=""){document.getElementById(e).value=t,""!=o&&o()}function escapeSingleQuotes(e){return e.replace(/'/g,"\\'")}function returnList(e,t,o=""){var n="";if(0<t.length){for(var i=0;i<t.length;i++)n+=`<li onclick = 'putTextInInputField("${e}", "${escapeSingleQuotes(t[i])}", ${o})' title = "${t[i]}"  class = "option p-2"> ${t[i]}  </li>`;return n}return'<p class = "text-center">No suggestions</p>'}async function handleLocationInput(e,t,o){t=document.getElementById(t);2<document.getElementById(e).value.trim().length?(t.innerHTML='<p class="text-center">Loading</p>',o=(await(await fetch(o)).json()).features.map(e=>e.properties.formatted),t.innerHTML=returnList(e,o)):t.innerHTML='<p class = "text-center">Enter Location</p>'}function deperformOperationsOnBody(){document.body.style.overflowY="scroll",document.getElementById("outerOverlay")&&document.getElementById("outerOverlay").remove()}function hideOverlay(){deperformOperationsOnBody()}function deactivateButton(e,t){document.getElementById(e).disabled=!0,document.getElementById(e).innerText=t}function activateButton(e,t){document.getElementById(e).disabled=!1,document.getElementById(e).innerText=t}function getCookieValue(e){for(var t=e+"=",o=decodeURIComponent(document.cookie).split(";"),n=0;n<o.length;n++){for(var i=o[n];" "===i.charAt(0);)i=i.substring(1);if(0===i.indexOf(t))return i.substring(t.length,i.length)}return""}function deleteThisDiv(e){var t=document.getElementById(e),t=(t&&t.remove(),document.createElement("div"));t.id=e,middleMainContent.appendChild(t)}function hideAllDivsExceptDivWithThis(e){for(var t=middleMainContent.children,o=t.length-1;0<=o;o--)t[o].style.display="none";document.getElementById(e).style.display="block"}function refresh(e,t,o){let n=e;deleteThisDiv(e);var i=document.createElement("div");i.id=n+"_loadingSign",i.innerHTML=createLoadingSign(""),document.getElementById(n).appendChild(i),hideAllDivsExceptDivWithThis(e),currentlyBeingLoadedURLs.push(e),fetch(t).then(function(e){return e.json()}).then(function(e){document.getElementById(n+"_loadingSign").remove(),currentlyBeingLoadedURLs=currentlyBeingLoadedURLs.filter(e=>e!=n),o(e,n)})}function beforeLoadTab(e,t,o,n){clearHdrAndPut(t),locationToHdrMapper[e]=t,loadTab(e,o,n)}function loadTab(e,t,o,n="",i=!1,a="push"){clearHdrAndPut(n),locationToHdrMapper[e]=n,currentlyBeingLoadedURLs.includes(e)||(document.location==e||(pushOrReplace(e,a),!document.getElementById(e))||i?refresh(e,t,o):hideAllDivsExceptDivWithThis(e))}function display(e,t,o,n=""){if(0<e.length){var i=document.createElement("div");i.className="gridHolderModified2",i.id="grid_"+n,t.appendChild(i);for(var a=0;a<e.length;a++)i.appendChild(o(e[a]))}}function noOfElementPerRow(){var e=middleMainContent.clientWidth;return e<=470?1:e<=700?2:3}function pushOrReplace(e,t="push"){"push"==t?history.pushState({},"",e):history.replaceState({},"",e)}function execFrontendOnlyFunction(e,t,o,n="",i="push"){clearHdrAndPut(t),locationToHdrMapper[e]=t,window.location!=e&&pushOrReplace(e,i),document.getElementById(e)?hideAllDivsExceptDivWithThis(e):(deleteThisDiv(e),hideAllDivsExceptDivWithThis(e),o(n))}window.onpopstate=e=>{clearHdrAndPut(locationToHdrMapper[document.location]),hideAllDivsExceptDivWithThis(document.location)};const createHomeHdr=e=>{var t=document.createElement("table"),o=(t.className="hdrTable homeHdr ",document.createElement("tr")),n=document.createElement("td"),i=("home"==e&&(n.className="activeTab "),n.onclick=()=>loadHome(),n.innerHTML="<i class = 'fa fa-home'> </i> <br> <small>Home</small> ",EMPLOYER_MODE&&n.classList.add("d-none"),document.createElement("td")),a=(i.className="requiresLogin","noti"==e&&(i.className="activeTab"),i.onclick=()=>IS_LOGGED_IN?loadNoti():displayLoginOverlay("Notifications","view notifications."),i.innerHTML="<i class = 'fa fa-bell'> </i> <br> <small>Notifications</small> ",document.createElement("td")),r=(a.className="requiresLogin","applied"==e&&(a.className="activeTab"),a.onclick=()=>IS_LOGGED_IN?(EMPLOYER_MODE?loadPostedJobs:loadAppliedJobs)():displayLoginOverlay("Saved Jobs","view applied and posted jobs"),a.innerHTML="<i class = 'fa fa-bookmark'> </i> <br> <small>Saved Jobs</small> ",document.createElement("td")),d=(r.onclick=()=>loadSearchBox(),r.innerHTML="<i class ='fa fa-search'> </i> <br> <small>Search</small>  ",EMPLOYER_MODE&&r.classList.add("d-none"),document.createElement("td")),l=(d.className="d-none d-md-block","jobPostForm"==e&&(d.className="activeTab"),d.onclick=()=>loadPostJobForm(),d.innerHTML="<i class ='fa fa-suitcase'> </i> <br> <small>Post Job</small>  ",document.createElement("td"));return l.className="d-xs-block d-sm-block d-md-none",l.onclick=()=>loadMenu(),l.innerHTML="<i class ='fa fa-bars'> </i> <br> <small>Menu</small>  ","menu"==e&&(l.className="activeTab"),o.appendChild(n),o.appendChild(a),o.appendChild(d),o.appendChild(i),o.appendChild(r),o.appendChild(l),t.appendChild(o),t};function createGeneralHdr(e){var t=document.createElement("table"),o=(t.className="generalHdrTable",document.createElement("tr")),n=createBackButton(),i=document.createElement("th");return i.innerText=e,o.appendChild(n),o.appendChild(i),t.appendChild(o),t}function clearHdrAndPut(e){var t=document.getElementById("middlePartOfHdr");t.innerHTML="",t.appendChild(e)}const siteName="http://localhost/myprojects/mydj",apiFolder="php";var loadedURLs=[],currentlyBeingLoadedURLs=[],middleMainContent=document.getElementById("middleMainContent"),locationToHdrMapper={},dark=0;const root=document.documentElement;function toggle(){0==dark?(dark=1,root.style.setProperty("--border","1px solid rgba(255, 255, 255, 0.7"),root.style.setProperty("--bgColorOfCards","black"),root.style.setProperty("--bgColorOfBody","rgba(0, 0, 0, 0.85)"),root.style.setProperty("--colorOfBody","white"),root.style.setProperty("--fontSize17Color","lightgreen"),root.style.setProperty("--fontSize20Color","yellow"),root.style.setProperty("--divBackground","rgba(255, 255, 255, 0.2"),root.style.setProperty("--boxShadow","0px 10px 20px rgba(255, 255, 255, 0.3)")):(dark=0,root.style.setProperty("--border","1px solid rgba(0, 0, 0, 0.2"),root.style.setProperty("--bgColorOfCards","white"),root.style.setProperty("--bgColorOfBody","#f2f2f2"),root.style.setProperty("--colorOfBody","black"),root.style.setProperty("--fontSize17Color","green"),root.style.setProperty("--fontSize20Color","green"),root.style.setProperty("--divBackground","rgba(0, 0, 0, 0.05"),root.style.setProperty("--boxShadow","0px 10px 20px rgba(0, 0, 0, 0.3)"))}function promptToActivate(){return`
 
 <div class = "text-danger text-center" style = 'font-weight:bold' >
 
@@ -961,42 +956,65 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 </div>
 
 
-`}function createCompanyView(e){return console.log(e),`
-
-	<div class = 'mt-3 text-center'>
-		<h4> ${e.company_name}</h4>
+`}function createCompanySubHeader(e,t,o){return`
+	<div  class = "stickyLeftOrRight mt-4 mb-4  center-div text-center" style = "top: ${returnTopOfMiddleMainContent()}; z-index:2; max-width:400px; width:100%; margin: 0 auto; ">
+		<div  class = "savedJobsSubHdrHolder">
+			<table class = "savedJobsSubHdr">
+				<tr>
+					<td  onclick = "${t}" class = "${"about"===e?"activeSavedJobsSubHdr":""}  " >
+						About Company
+					</td>
+					<td onclick = "${o}" class = ${"jobs"===e?"activeSavedJobsSubHdr":""} >
+						Jobs Posted
+					</td>
+				</tr>
+			</table>
+		</div>
 	</div>
+
+	`}function editCompanyPageForm(e){displayPrompt("Edit Company Info",`
+
+	<div>
+		<form id = "editCompanyForm" method = "POST">
+			<div class = "gridHolder">
+				${createTextInput("Name","companyName",e.company_name)}
+				${createTextInput("Location","companyLocation",e.company_location)}
+				${createTextInput("Phone","companyPhone",e.contact_number)}
+			</div>
+			<div class = "mt-2">
+				${createTextarea("About ","companyAbout",e.company_about)}
+			</div>
+		</form>
+	</div>
+	
+`,`handleEditCompanySubmit(${e.id})`)}function handleEditCompanySubmit(t){var e=new FormData(document.getElementById("editCompanyForm")),o=new XMLHttpRequest,n=document.getElementById("editCompanyForm"),i=(n.classList.add("fadeOutAnimation"),siteName+"/php/companyPage/edit.php");o.onreadystatechange=function(){var e;4==this.readyState&&200==this.status&&(e=JSON.parse(this.responseText),console.log(e),n.classList.remove("fadeOutAnimation"),e.error?alert("Error - "+e.error):(hideOverlay(),loadCompanyPage(t)))},o.open("POST",i),o.send(e)}function companyPageHeader(e,t="about"){return`
+	
+
+	${createCompanySubHeader(t,"loadCompanyPage("+e.id+")","loadCompanyJobs("+e.id+")")}
 
 	<hr>
 
-	${LOGIN_NAME==e.creator&&0==e.active_status?promptToActivate():""}
+	${IS_LOGGED_IN&&LOGIN_NAME==e.creator&&0==e.active_status?promptToActivate():""}
+
+ `}function createCompanyView(e){return`
+
+	${companyPageHeader(e)}
+
+
+	${IS_LOGGED_IN&&e.creator==LOGIN_NAME?createProfileSubHeader(e.company_name,profileOwnershipRequired=!1,btnText="Edit",callback="editCompanyPageForm("+JSON.stringify(e)+")"):'<div class = "mt-3"><h4>'+e.company_name+"</h4></div>"}
 
 	<div>
-		<table class = "mt-3 attractive-table w-100">
-			<tr>
-				<td> Email </td>
-				<td>${e.company_email}</td>
-			</tr>
-			<tr>
-				<td> Contact Number </td>
-				<td> ${e.contact_number} </td>
-			</tr>
-			<tr>
-				<td> Location </td>
-				<td> ${e.company_location} </td>
-			</tr>
-			<tr>
-				<td> Category </td>
-				<td> ${e.category} </td>
-			</tr>
-			<tr>
-				<td> About </td>
-				<td> ${e.company_about} </td>
-			</tr>
-		</table>
+		
+		<div> <strong> Location: </strong> ${e.company_location} </div>
+		<div> <strong> Website: </strong> ${e.company_website} </div>		
+		<div> <strong> Email: </strong> ${e.company_email} </div>
+		<div> <strong> Phone: </strong> ${e.contact_number} </div>
+		<div> <strong> Category: </strong> ${e.category} </div>
+		<div class = "mt-3"> <strong> Description</strong> <div> ${e.company_about} </div> </div>
+	
 	</div>
 
-`}const displayCompanyPage=(e,t="")=>{(t=document.getElementById(t)).innerHTML=createCompanyView(e)};function loadCompanyPage(e){var t=siteName+"/companyPage/"+e,o=createHomeHdr(activeTab="ddd");loadTab(t,apiFolder+"/companyPage/view.php?id="+e,displayCompanyPage,o)}const displayCreateCompanyPage=()=>{var e=siteName+"/createCompanyPage";document.getElementById(e).innerHTML=`
+`}const displayCompanyPage=(e,t="")=>{(t=document.getElementById(t)).innerHTML=createCompanyView(e)};function loadCompanyPage(e){var t=siteName+"/companyPage/"+e,o=createHomeHdr(activeTab="ddd");loadTab(t,siteName+"/php/companyPage/view.php?id="+e,displayCompanyPage,o)}function loadCompanyJobs(e){var t=siteName+"/companyPage/"+e+"/jobs",o=createHomeHdr(activeTab="ddd");loadTab(t,siteName+"/php/companyPage/jobs.php?id="+e,displayCompanyJobs,o)}const displayCompanyJobs=(e,t)=>{var o=document.getElementById(t);o.innerHTML=companyPageHeader(e,"jobs"),display(e.jobs,o,callback=returnEachJob,t)},displayCreateCompanyPage=()=>{var e=siteName+"/createCompanyPage";document.getElementById(e).innerHTML=`
 	
 	<div class = "h5 text-center"> Create Company Page </div>
 
@@ -1004,7 +1022,7 @@ function setup(){fetch(siteName+"/php/auth/checkLoginStatus.php").then(e=>e.json
 
 	<form id = "companyPageForm" method = "POST" >
 
-	<div class = "gridHolderModified2" id="formHolderForCreateCompanyPage">
+	<div class = "gridHolder" id="formHolderForCreateCompanyPage">
 		
 		<div>
 			<label for = "companyPageCompanyName"> Company Name </label>

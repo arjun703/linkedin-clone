@@ -17,13 +17,13 @@ const form = `
 
 <hr>
 
-<p class = "text-warning text-center" style ="font-weight:bold">
+<p class = "text-warning text-center">
 	${
 		IS_LOGGED_IN 
 			? HAS_COMPANY_PAGE
 				? ''
-				: 'You need to <span class = "softLink" onclick="loadCreateCompanyPage()">create a company page</span> before you can post jobs.<HR>'
-			: 'You need to <span class = "softLink" onclick="loadCreateCompanyPage()">create a company page</span> before you can post jobs.<HR>'
+				: '<small>You need to </small><span class = "softLink" onclick="loadCreateCompanyPage()">create a company page</span> <small>before you can post jobs</small><HR>'
+			: '<small>You need to</small> <span class = "softLink" onclick="loadCreateCompanyPage()">create a company page</span> <small>before you can post jobs</small><HR>'
 	}
 </p>
 
@@ -39,7 +39,7 @@ const form = `
 
 	<div id = "postJobForm_step_1" class = "animationSlideRight">
 
-		<div class = "gridHolderModified2" >
+		<div class = "gridHolder" >
 			
 			<div>
 				<label for = "position"> Position </label>

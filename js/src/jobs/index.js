@@ -146,7 +146,7 @@ function viewApplicantOnclick(jobPoster, jobId, numApplicants){
 	
 	if(IS_LOGGED_IN){
 		if(LOGIN_NAME == jobPoster){
-			return `loadScaffold(event, ${jobId}, ${numApplicants})`
+			return `loadScaffold(event, ${jobId})`
 		}
 		else{
 			return 'limitedApplicantsScaffold(event, '+jobId+', '+numApplicants+')';

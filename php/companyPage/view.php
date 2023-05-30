@@ -1,19 +1,15 @@
 <?php 
 
-session_start();
+$id = $_GET['id'];
 
-if(isset($_SESSION['loginName'])){
 	
-	$loginName  =$_SESSION['loginName'];
-
-	$query = "SELECT `creator`,  `company_name`, `company_location`, `company_website`, `category`, `company_about`, `company_email`, `contact_number`, `active_status` FROM `companies` WHERE creator = '".$loginName."' ";
+	$query = "SELECT `creator`, `id`, `company_name`, `company_location`, `company_website`, `category`, `company_about`, `company_email`, `contact_number`, `active_status` FROM `companies` WHERE id = $id ";
 	
 	require '../db.php';
 
 	die(json_encode(mysqli_fetch_assoc(connectToDatabase($query))));
 
 
-}
 
 
 

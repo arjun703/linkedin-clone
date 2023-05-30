@@ -1,5 +1,4 @@
 <?php
-sleep(2); 
 session_start();
 if(isset($_SESSION['loginName']) && isset($_GET['id']) && is_numeric($_GET['id'])){
 	$id = $_GET['id'];

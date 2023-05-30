@@ -1,5 +1,4 @@
 <?php 
-sleep(2);
 
 session_start();
 

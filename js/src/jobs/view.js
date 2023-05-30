@@ -108,7 +108,7 @@ const displayJob = (job) => {
 											:'' 
 										 }
 								  "
-							onclick = '${ IS_LOGGED_IN
+							onclick = "${ IS_LOGGED_IN
 											? isJobPoster(job)
 												? (job.active_status == '0' )
 													? job.verified == '0'
@@ -118,8 +118,8 @@ const displayJob = (job) => {
 												: hasApplied(job)
 													? '' 
 													: 'applyToJob('+job.id+')'
-											:'displayLoginOverlay(\'Apply to Jobs\', \'Apply to Jobs\')' 
-										}'
+											:'displayLoginOverlay(\'Apply\', \'apply to jobs\')' 
+										}"
 						>
 							${ IS_LOGGED_IN
 								? isJobPoster(job)

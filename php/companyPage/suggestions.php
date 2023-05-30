@@ -4,7 +4,7 @@ if(isset($_GET['incompleteName'])){
 
 include ('../db.php');
 
-$query = "SELECT id, company_name, company_website FROM companies WHERE company_name LIKE 
+$query = "SELECT id, company_name, company_website FROM companies WHERE active_status = 1 AND company_name LIKE 
 			'%".$_GET['incompleteName']."%'	 LIMIT 5";
 
 

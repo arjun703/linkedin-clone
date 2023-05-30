@@ -569,6 +569,7 @@ cursor: pointer;
 	height: 100%;
 	position: fixed;
 	overflow: hidden;
+	z-index: 2;
 }
 
 .line-animation{
@@ -839,11 +840,11 @@ button{
 }
 
 .successIcon, .dangerIcon{
-	padding: 10px;
+    padding: 5px;
     border-radius: 50%;
-    font-size: 20px;
-    width: 50px;
-    height: 50px;
+    font-size: 15px;
+    width: 35px;
+    height: 35px;
     text-align: center;
     cursor: pointer;
 }
@@ -878,6 +879,6 @@ button{
 
 .applicantOptions{
 	justify-content: flex-end;
-		  flex: 1 1 auto;
+	 flex: 1 1 auto;
 
 }

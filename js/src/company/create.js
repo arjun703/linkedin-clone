@@ -10,7 +10,7 @@ const form = `
 
 	<form id = "companyPageForm" method = "POST" >
 
-	<div class = "gridHolderModified2" id="formHolderForCreateCompanyPage">
+	<div class = "gridHolder" id="formHolderForCreateCompanyPage">
 		
 		<div>
 			<label for = "companyPageCompanyName"> Company Name </label>

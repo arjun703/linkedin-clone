@@ -17,6 +17,9 @@ function handleCheckLoginStatusData(data){
 		window.CV_DOWNLOADS_COUNT = data.CVdownloadsCount;
 		window.LOGIN_NAME = data.loginName;
 		window.HAS_COMPANY_PAGE = data.hasCompanyPage;
+		if(window.HAS_COMPANY_PAGE){
+			window.COMPANY_ID = data.companyId;
+		}
 	}
 
 	if(getCookieValue('employerMode') != '' )	window.EMPLOYER_MODE = true
@@ -150,7 +153,6 @@ function createLeftSidebar(){
 				<a href="">Human Resources</a>
 				<br>
 				<a href="">Software</a>
-
 			</div>
 		</div>
 	`	
@@ -186,7 +188,7 @@ function createRightSidebar(){
 				 onclick=" ${ 
 						 		IS_LOGGED_IN
 						 		? HAS_COMPANY_PAGE
-						 			? 'loadCompanyPage()'
+						 			? 'loadCompanyPage('+COMPANY_ID+')'
 						 		   	: 'loadCreateCompanyPage()'
 						 		: 'loadCreateCompanyPage()'
 				  			}

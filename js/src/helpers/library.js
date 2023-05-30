@@ -72,7 +72,7 @@ function beforeLoadTab(divId, hdrTable, serverURL, callback){
 
 
 
-function loadTab(divId, serverURL, callback, hdrTable = '', hardRefresh = false){
+function loadTab(divId, serverURL, callback, hdrTable = '', hardRefresh = false, pOrR = 'push'){
 
 	/*
 	 *
@@ -90,7 +90,7 @@ function loadTab(divId, serverURL, callback, hdrTable = '', hardRefresh = false)
 		}
 		else{
 
-			push(divId);
+			pushOrReplace(divId, pOrR);
 			
 			// check if the tab already exists 
 			if(document.getElementById(divId)){
@@ -141,19 +141,21 @@ function noOfElementPerRow(){
 }
 
 
-function push(divId){
-	history.pushState({}, '', divId)
+function pushOrReplace(divId, pOrR = 'push'){
+
+	if(pOrR == 'push') history.pushState({}, '', divId)
+	else history.replaceState({}, '', divId);
 }
 
 
-function execFrontendOnlyFunction(divId, hdrTable,  callback, data = ''){
+function execFrontendOnlyFunction(divId, hdrTable,  callback, data = '', pOrR = 'push'){
 	
 	clearHdrAndPut(hdrTable);
 
 	locationToHdrMapper[divId] = hdrTable; 
 
 	if(window.location != divId){
-		push(divId);
+		pushOrReplace(divId, pOrR);
 	}
 
 	if(document.getElementById(divId)){

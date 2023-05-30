@@ -20,19 +20,25 @@ if(isset($_SESSION['loginName'])){
 
 	$CVdownloadsCount = $row['CVdownloadsCount'];
 
-	$queryForHasCompanyPage = "SELECT active_status FROM companies WHERE 
+	$queryForHasCompanyPage = "SELECT active_status, id FROM companies WHERE 
 								creator = '".$loginName."' ";
 
 	$result = connectToDatabase($queryForHasCompanyPage);
+	
+	$companyId = -1;
 
 	if(mysqli_num_rows($result) == 1 ){
 		$hasCompanyPage = true;
+		$row = mysqli_fetch_assoc($result);
+		$companyId = $row['id'];
 	}
 	else{
 		$hasCompanyPage = false;
 	}
 
-	echo json_encode(array('hasCompanyPage' => $hasCompanyPage , 'profileVisitsCount' => $profileVisitsCount, 'CVdownloadsCount' => $CVdownloadsCount, 'loginName' => $loginName));	
+
+	echo json_encode(array('hasCompanyPage' => $hasCompanyPage , 'profileVisitsCount' => $profileVisitsCount, 'CVdownloadsCount' => $CVdownloadsCount, 'companyId' => $companyId, 'loginName' => $loginName));	
+
 }
 else{
 	echo json_encode(array('isNotLoggedIn' => true));

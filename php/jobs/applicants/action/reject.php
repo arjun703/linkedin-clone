@@ -1,7 +1,5 @@
 <?php 
 
-
-
 $loginName = $_GET['loginName'];
 
 $jobId = $_GET['jobId'];
