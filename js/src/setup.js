@@ -148,11 +148,12 @@ function createLeftSidebar(){
 
 			<div class = "rightSidebarOptionsHolder  ${EMPLOYER_MODE ? 'd-none' : ''} ">
 				<h6 class="text-center">Jobs Categories</h6>
-				<a href="">Networking and Hardware</a>
+				<span class = "softLink" onclick ="loadJobsByCategory('so')">Software</span>
 				<br>
-				<a href="">Human Resources</a>
+				<span class = "softLink" onclick ="loadJobsByCategory('ne')" >Networking and Hardware</span>
 				<br>
-				<a href="">Software</a>
+				<span class = "softLink" onclick ="loadJobsByCategory('hu')">Human Resources</span>
+				<br>
 			</div>
 		</div>
 	`	

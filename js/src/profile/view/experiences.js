@@ -32,7 +32,7 @@ return `
 		<div class = "fontSize20"> ${experience.position}</div>
 		<div class = "fontSize17"> ${experience.company}</div>
 		<div>${experience.description}</div>
-		<div> ${experience._from} to ${experience._to} </div>
+		<div class="fontSize17"> ${experience._from} to ${experience._to} </div>
 		
 		${ IS_LOGGED_IN
 			? (VIEWING_PROFILE_OF == LOGIN_NAME)

@@ -5,7 +5,7 @@ $noOfItemsPerPage = 10;
 function connectToDatabase($query){
 	
 
-/*
+
 
 $host  = 'sql305.epizy.com';
 $user = 'epiz_34225608';
@@ -14,11 +14,11 @@ $db = 'epiz_34225608_mydj';
 
 
 
-*/
 
 
 
 
+/*
 
 
 
@@ -26,6 +26,8 @@ $host  = 'localhost';
 $user = 'root';
 $pass = '';
 $db = 'mydj';
+
+*/
 
 	$dbc = mysqli_connect($host, $user, $pass, $db);
 

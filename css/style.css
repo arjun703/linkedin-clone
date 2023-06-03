@@ -308,6 +308,7 @@ z-index: 100;
 	width: 100%;
 	border-collapse: separate; 
 	border-spacing: 5px;
+	text-align: center;
 }
 
 .container{

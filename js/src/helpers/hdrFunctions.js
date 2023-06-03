@@ -75,11 +75,25 @@ hdrTextHolder.innerText = hdrText;
 
 newRow.appendChild(backBtnHolder);
 newRow.appendChild(hdrTextHolder);
+newRow.appendChild(createHomeButton());
 
 newTable.appendChild(newRow);
 return newTable;
 
 
+}
+
+
+function createHomeButton(){
+	var backBtnHolder = document.createElement('td');
+	backBtnHolder.className = "text-center"
+	var backBtn = document.createElement('button');
+	backBtn.className = "btn btn-primary";
+	backBtn.innerHTML = "<i class = 'fas fa-home'></i>";
+	backBtnHolder.appendChild(backBtn);
+	backBtnHolder.onclick = () => loadHome();
+
+	return backBtnHolder
 }
 
 

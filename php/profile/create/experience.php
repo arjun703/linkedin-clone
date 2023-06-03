@@ -43,7 +43,7 @@ if(isEmpty($too)){
 
 
 
-	$query = "INSERT INTO `experiences`(`login_name`, `position`, `company`, `_from`, `_to`, `description`, `currently_working_here`) VALUES ('$loginName','$position','$company','$fromm', '$too' '$taskDescription', 0)";
+	$query = "INSERT INTO `experiences`( `login_name`, `position`, `company`, `_from`, `_to`, `description`, `currently_working_here`) VALUES ('$loginName','$position','$company','$fromm', '$too', '$taskDescription',0)";
 
 }
 
