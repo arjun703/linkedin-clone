@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+<textarea id="shopify" rows="20" cols="80" onchange="changed()">
+	
+</textarea>
+
+<br><br>
+<div id="urlList">
+	
+</div>
+
+<script type="text/javascript">
+	
+function changed(){
+
+const paragraph = document.getElementById('shopify').value
+
+const regex = /https?:\/\/[^"\s]*wp-content[^"\s]*/g;
+const matches = paragraph.match(regex) || [];
+let urls = matches.map(match => match.trim());
+const uniqueUrls = [...new Set(urls)];
+alert(1)
+const urlListElement = document.getElementById("urlList");
+urlListElement.textContent = uniqueUrls.join('","').replaceAll("scorpionracingproducts.com", "scorpion.mysites.io");
+
+}
+
+</script>
+
+</body>
+</html>
